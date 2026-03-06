@@ -1,10 +1,10 @@
 import type { QueryClient, QueryKey } from '@tanstack/react-query'
 import { resolveTaskErrorMessage } from '@/lib/task/error-message'
 
-/** 从当前页面 URL 提取 locale 前缀（/zh/... → zh，/en/... → en），默认 zh */
+/** 从当前页面 URL 提取 locale 前缀（/zh|en|vi|ko/...），默认 zh */
 export function getPageLocale(): string {
   if (typeof window === 'undefined') return 'zh'
-  const match = window.location.pathname.match(/^\/(zh|en)(\/|$)/)
+  const match = window.location.pathname.match(/^\/(zh|en|vi|ko)(\/|$)/)
   return match?.[1] ?? 'zh'
 }
 

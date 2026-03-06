@@ -10,6 +10,8 @@ import { AppIcon } from '@/components/ui/icons'
 const LANGUAGE_LABELS: Record<Locale, string> = {
     zh: '简体中文',
     en: 'English',
+    vi: 'Tiếng Việt',
+    ko: '한국어',
 }
 
 const SWITCH_CONFIRM_COPY: Record<Locale, { title: string; message: string; action: string; cancel: string; triggerLabel: string }> = {
@@ -29,10 +31,26 @@ const SWITCH_CONFIRM_COPY: Record<Locale, { title: string; message: string; acti
         cancel: 'Cancel',
         triggerLabel: 'Switch language',
     },
+    vi: {
+        title: 'Chuyển ngôn ngữ?',
+        message:
+            'Khi chuyển sang {targetLanguage}, không chỉ văn bản giao diện thay đổi mà prompt đầu-cuối, nội dung tạo kịch bản và ngôn ngữ đầu ra của quy trình cũng sẽ được cập nhật. Bạn có muốn tiếp tục không?',
+        action: 'Chuyển ngay',
+        cancel: 'Hủy',
+        triggerLabel: 'Chuyển ngôn ngữ',
+    },
+    ko: {
+        title: '언어를 전환하시겠습니까?',
+        message:
+            '{targetLanguage}로 전환하면 인터페이스 텍스트뿐 아니라 전체 프롬프트 템플릿, 스크립트 생성 및 워크플로 출력 언어도 함께 변경됩니다. 계속하시겠습니까?',
+        action: '지금 전환',
+        cancel: '취소',
+        triggerLabel: '언어 전환',
+    },
 }
 
 function isSupportedLocale(locale?: string): locale is Locale {
-    return locale === 'zh' || locale === 'en'
+    return locale === 'zh' || locale === 'en' || locale === 'vi' || locale === 'ko'
 }
 
 export default function LanguageSwitcher() {
@@ -48,11 +66,11 @@ export default function LanguageSwitcher() {
         throw new Error('LanguageSwitcher requires a non-null pathname')
     }
     if (!isSupportedLocale(params?.locale)) {
-        throw new Error('LanguageSwitcher requires locale param to be zh or en')
+        throw new Error('LanguageSwitcher requires locale param to be one of zh, en, vi, ko')
     }
     const currentLocale: Locale = params.locale
-    const targetLocale: Locale = currentLocale === 'zh' ? 'en' : 'zh'
-    const activeLocaleForCopy: Locale = pendingLocale ?? targetLocale
+    const targetLocale: Locale = pendingLocale ?? currentLocale
+    const activeLocaleForCopy: Locale = pendingLocale ?? currentLocale
     const confirmCopy = SWITCH_CONFIRM_COPY[activeLocaleForCopy]
 
     useEffect(() => {

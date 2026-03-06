@@ -6,7 +6,8 @@ export default createMiddleware(routing);
 export const config = {
     // 匹配所有路径，除了 api、_next/static、_next/image、favicon.ico 等
     matcher: [
-        // 匹配所有路径
+        '/',
+        '/(zh|en|vi|ko)/:path*',
         '/((?!api|m|_next/static|_next/image|favicon.ico|.*\\.png|.*\\.jpg|.*\\.jpeg|.*\\.svg|.*\\.gif|.*\\.ico).*)'
     ]
 };

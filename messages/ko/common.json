@@ -1,0 +1,134 @@
+{
+    "appName": "waoowaoo",
+    "betaVersion": "베타 v0.2",
+    "loading": "로딩 중...",
+    "save": "저장",
+    "cancel": "취소",
+    "confirm": "확인",
+    "delete": "삭제",
+    "edit": "편집",
+    "search": "검색",
+    "clear": "지우기",
+    "close": "닫기",
+    "back": "뒤로",
+    "next": "다음",
+    "previous": "이전",
+    "submit": "제출",
+    "reset": "초기화",
+    "generate": "생성",
+    "regenerate": "재생성",
+    "preview": "미리보기",
+    "download": "다운로드",
+    "upload": "업로드",
+    "select": "선택하다",
+    "add": "추가하다",
+    "remove": "제거하다",
+    "refresh": "새로 고치다",
+    "expand": "확장하다",
+    "collapse": "무너지다",
+    "all": "모두",
+    "none": "없음",
+    "success": "성공",
+    "error": "오류",
+    "warning": "경고",
+    "info": "정보",
+    "copy": "복사",
+    "paste": "반죽",
+    "apply": "적용하다",
+    "autoSave": "자동 저장",
+    "saved": "저장됨",
+    "episode": "삽화",
+    "project": "프로젝트",
+    "editEpisodeName": "에피소드 이름 수정",
+    "deleteEpisode": "에피소드 삭제",
+    "deleteEpisodeConfirm": "삭제 확인",
+    "newEpisode": "새로운 에피소드",
+    "optional": "(선택 과목)",
+    "rename": "이름 바꾸기",
+    "dragToReorder": "드래그하여 재정렬하세요.",
+    "episodeNamePlaceholder": "에피소드 이름을 입력하세요...",
+    "cancelSelection": "선택 취소",
+    "referenceImage": "참고 이미지",
+    "previewLarge": "크게 미리보기",
+    "viewOriginal": "원본 보기",
+    "schemeN": "계획 {n}",
+    "insufficientBalance": "잔액 부족",
+    "insufficientBalanceDetail": "계정 잔액이 부족합니다. 계속하려면 충전하세요.",
+    "operationFailed": "작업 실패",
+    "pleaseRetry": "다시 시도해 주세요",
+    "recommended": "추천",
+    "language": {
+        "select": "언어 선택",
+        "zh": "중국어",
+        "en": "영어",
+        "switchConfirmTitle": "언어를 전환하시겠습니까?",
+        "switchConfirmMessage": "{targetLanguage}으로 전환하면 인터페이스 텍스트뿐만 아니라 엔드투엔드 프롬프트, 스크립트 생성 및 워크플로 출력도 업데이트됩니다. 계속하시겠습니까?",
+        "switchConfirmAction": "지금 전환"
+    },
+    "taskStatus": {
+        "intent": {
+            "generate": {
+                "running": {
+                    "image": "생성 중",
+                    "video": "생성 중",
+                    "audio": "생성 중",
+                    "text": "생성 중"
+                }
+            },
+            "regenerate": {
+                "running": {
+                    "image": "재생성",
+                    "video": "재생성",
+                    "audio": "재생성",
+                    "text": "재생성"
+                }
+            },
+            "modify": {
+                "running": {
+                    "image": "수정 중",
+                    "video": "수정 중",
+                    "audio": "수정 중",
+                    "text": "수정 중"
+                }
+            },
+            "analyze": {
+                "running": {
+                    "image": "분석 중",
+                    "video": "분석 중",
+                    "audio": "분석 중",
+                    "text": "분석 중"
+                }
+            },
+            "build": {
+                "running": {
+                    "image": "건물",
+                    "video": "건물",
+                    "audio": "건물",
+                    "text": "건물"
+                }
+            },
+            "convert": {
+                "running": {
+                    "image": "변환 중",
+                    "video": "변환 중",
+                    "audio": "변환 중",
+                    "text": "변환 중"
+                }
+            },
+            "process": {
+                "running": {
+                    "image": "처리",
+                    "video": "처리",
+                    "audio": "처리",
+                    "text": "처리"
+                }
+            }
+        },
+        "failed": {
+            "image": "실패한",
+            "video": "실패한",
+            "audio": "실패한",
+            "text": "실패한"
+        }
+    }
+}

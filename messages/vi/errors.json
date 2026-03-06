@@ -1,0 +1,19 @@
+{
+    "UNAUTHORIZED": "Vui lòng đăng nhập trước",
+    "FORBIDDEN": "Quyền truy cập bị từ chối",
+    "NOT_FOUND": "Không tìm thấy tài nguyên",
+    "INSUFFICIENT_BALANCE": "Số dư API không đủ. Vui lòng nạp tiền và thử lại",
+    "RATE_LIMIT": "Quá nhiều yêu cầu. Vui lòng thử lại sau {retryAfter} giây",
+    "QUOTA_EXCEEDED": "Đã vượt quá hạn ngạch. Vui lòng thử lại sau",
+    "GENERATION_FAILED": "Thế hệ thất bại. Vui lòng thử lại",
+    "GENERATION_TIMEOUT": "Đã hết thời gian thế hệ. Vui lòng thử lại",
+    "SENSITIVE_CONTENT": "Nội dung có thể chứa tài liệu nhạy cảm",
+    "INVALID_PARAMS": "Thông số không hợp lệ",
+    "MISSING_CONFIG": "Vui lòng hoàn tất cấu hình mô hình trước",
+    "INTERNAL_ERROR": "Lỗi máy chủ. Vui lòng thử lại sau",
+    "NETWORK_ERROR": "Lỗi mạng. Vui lòng kiểm tra kết nối của bạn",
+    "EXTERNAL_ERROR": "Dịch vụ bên ngoài tạm thời không khả dụng. Vui lòng thử lại sau",
+    "TASK_NOT_READY": "Tác vụ vẫn đang được xử lý",
+    "NO_RESULT": "Nhiệm vụ không có kết quả",
+    "CONFLICT": "Xung đột trạng thái tài nguyên"
+}

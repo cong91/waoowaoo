@@ -235,15 +235,7 @@ export default function NovelInputStage({
           <textarea
             value={novelText}
             onChange={(e) => onNovelTextChange(e.target.value)}
-            placeholder={`请输入您的剧本或小说内容...
-
-AI 将根据您的文本智能分析：
-• 自动识别场景切换
-• 提取角色对话和动作
-• 生成分镜脚本
-
-例如：
-清晨，阳光透过窗帘洒进房间。小明揉着惺忪的睡眼从床上坐起，看了一眼床头的闹钟——已经八点了！他猛地跳下床，手忙脚乱地开始穿衣服...`}
+            placeholder={t('storyInput.placeholder')}
             className="glass-textarea-base custom-scrollbar h-80 px-4 py-3 text-base resize-none placeholder:text-[var(--glass-text-tertiary)]"
             disabled={isSubmittingTask || isSwitchingStage}
           />

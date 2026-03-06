@@ -1,0 +1,134 @@
+{
+    "appName": "waoowaoo",
+    "betaVersion": "Beta v0.2",
+    "loading": "Đang tải...",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "confirm": "Xác nhận",
+    "delete": "Xóa",
+    "edit": "Chỉnh sửa",
+    "search": "Tìm kiếm",
+    "clear": "Xóa",
+    "close": "Đóng",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "previous": "Trước đó",
+    "submit": "Gửi",
+    "reset": "Đặt lại",
+    "generate": "Tạo",
+    "regenerate": "Tạo lại",
+    "preview": "Xem trước",
+    "download": "Tải xuống",
+    "upload": "Tải lên",
+    "select": "Chọn",
+    "add": "Thêm",
+    "remove": "Xóa",
+    "refresh": "Làm mới",
+    "expand": "Mở rộng",
+    "collapse": "Thu gọn",
+    "all": "Tất cả",
+    "none": "Không",
+    "success": "Thành công",
+    "error": "Lỗi",
+    "warning": "Cảnh báo",
+    "info": "Thông tin",
+    "copy": "Sao chép",
+    "paste": "Dán",
+    "apply": "Áp dụng",
+    "autoSave": "Tự động lưu",
+    "saved": "Đã lưu",
+    "episode": "Tập",
+    "project": "Dự án",
+    "editEpisodeName": "Chỉnh sửa tên tập",
+    "deleteEpisode": "Xóa tập",
+    "deleteEpisodeConfirm": "Xác nhận Xóa",
+    "newEpisode": "Tập mới",
+    "optional": "(Không bắt buộc)",
+    "rename": "Đổi tên",
+    "dragToReorder": "Kéo để sắp xếp lại",
+    "episodeNamePlaceholder": "Nhập tên tập...",
+    "cancelSelection": "Hủy lựa chọn",
+    "referenceImage": "Hình ảnh tham khảo",
+    "previewLarge": "Xem trước lớn",
+    "viewOriginal": "Xem bản gốc",
+    "schemeN": "Phương án {n}",
+    "insufficientBalance": "Số dư không đủ",
+    "insufficientBalanceDetail": "Số dư tài khoản không đủ, vui lòng nạp tiền để tiếp tục",
+    "operationFailed": "Thao tác không thành công",
+    "pleaseRetry": "Vui lòng thử lại",
+    "recommended": "Khuyến khích",
+    "language": {
+        "select": "Chọn ngôn ngữ",
+        "zh": "Tiếng Trung",
+        "en": "Tiếng Anh",
+        "switchConfirmTitle": "Chuyển ngôn ngữ?",
+        "switchConfirmMessage": "Việc chuyển sang {targetLanguage} sẽ cập nhật không chỉ văn bản giao diện mà còn cả các lời nhắc từ đầu đến cuối, tạo tập lệnh và đầu ra của quy trình làm việc. Tiếp tục?",
+        "switchConfirmAction": "Chuyển ngay"
+    },
+    "taskStatus": {
+        "intent": {
+            "generate": {
+                "running": {
+                    "image": "Đang tạo",
+                    "video": "Đang tạo",
+                    "audio": "Đang tạo",
+                    "text": "Đang tạo"
+                }
+            },
+            "regenerate": {
+                "running": {
+                    "image": "Tạo lại",
+                    "video": "Tạo lại",
+                    "audio": "Tạo lại",
+                    "text": "Tạo lại"
+                }
+            },
+            "modify": {
+                "running": {
+                    "image": "Chỉnh sửa",
+                    "video": "Chỉnh sửa",
+                    "audio": "Chỉnh sửa",
+                    "text": "Chỉnh sửa"
+                }
+            },
+            "analyze": {
+                "running": {
+                    "image": "Phân tích",
+                    "video": "Phân tích",
+                    "audio": "Phân tích",
+                    "text": "Phân tích"
+                }
+            },
+            "build": {
+                "running": {
+                    "image": "Xây dựng",
+                    "video": "Xây dựng",
+                    "audio": "Xây dựng",
+                    "text": "Xây dựng"
+                }
+            },
+            "convert": {
+                "running": {
+                    "image": "Chuyển đổi",
+                    "video": "Chuyển đổi",
+                    "audio": "Chuyển đổi",
+                    "text": "Chuyển đổi"
+                }
+            },
+            "process": {
+                "running": {
+                    "image": "Xử lý",
+                    "video": "Xử lý",
+                    "audio": "Xử lý",
+                    "text": "Xử lý"
+                }
+            }
+        },
+        "failed": {
+            "image": "Thất bại",
+            "video": "Thất bại",
+            "audio": "Thất bại",
+            "text": "Thất bại"
+        }
+    }
+}

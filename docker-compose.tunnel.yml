@@ -1,0 +1,21 @@
+services:
+  cloudflared-vat:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared-vat
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_started
+    # Follow TrendLab pattern: token-based tunnel runtime.
+    # Multi-hostname routing (web/admin) must be configured on Cloudflare Tunnel ingress rules.
+    command:
+      - tunnel
+      - --no-autoupdate
+      - run
+      - --token
+      - ${CLOUDFLARE_TUNNEL_TOKEN}
+    healthcheck:
+      test: ["CMD", "cloudflared", "--version"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

@@ -1,0 +1,13 @@
+# VAT Cloudflare Tunnel config (template)
+# NOTE: TrendLab pattern is token-based. This file is kept for reference
+# if switching to config-file/credentials-file mode later.
+
+tunnel: 0616f2c1-f7c2-488f-a335-7c45d341f9ab
+credentials-file: /etc/cloudflared/0616f2c1-f7c2-488f-a335-7c45d341f9ab.json
+
+ingress:
+  - hostname: videoai.linkto.com.vn
+    service: http://waoowaoo-app:3000
+  - hostname: videoai-admin.linkto.com.vn
+    service: http://waoowaoo-app:3010
+  - service: http_status:404

@@ -56,7 +56,7 @@ services:
       # 存储：默认本地存储
       STORAGE_TYPE: local
       # 认证
-      NEXTAUTH_URL: "http://localhost:3000"
+      NEXTAUTH_URL: "https://videoai.linkto.com.vn"
       NEXTAUTH_SECRET: "waoowaoo-default-secret-2026"
       # 内部密钥
       CRON_SECRET: "waoowaoo-docker-cron-secret"

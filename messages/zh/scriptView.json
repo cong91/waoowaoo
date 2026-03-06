@@ -33,7 +33,9 @@
         "subAppearance": "子形象",
         "defaultAppearance": "初始形象",
         "clickToRemove": "点击移除 {name}",
-        "clickToAdd": "点击添加 {name}"
+        "clickToAdd": "点击添加 {name}",
+        "allClipsCharacterEditHint": "当前为“全部片段”视图，文案要求仅在单片段视图可编辑",
+        "allClipsLocationEditHint": "当前为“全部片段”视图，场景文案要求仅在单片段视图可编辑"
     },
     "screenplay": {
         "scene": "场景 {number}",

@@ -55,6 +55,7 @@
       "title": "Smart Splitting Complete",
       "episodeCount": "Automatically split into {count} episodes",
       "totalWords": "Total {count} words",
+      "separator": ", ",
       "autoSaved": "✓ Auto-saved",
       "reanalyze": "Re-analyze",
       "confirm": "Confirm Complete",
@@ -93,6 +94,7 @@
     "currentEditing": "Currently editing: {name}",
     "editingTip": "The following workflow is for this episode only. Switch episodes in the top left if needed",
     "wordCount": "Word count:",
+    "placeholder": "Enter your screenplay or novel content...\n\nAI will intelligently analyze your text:\n• Automatically identify scene transitions\n• Extract character dialogue and actions\n• Generate storyboard script\n\nExample:\nEarly morning, sunlight streams through the curtains into the room. Xiao Ming rubs his sleepy eyes and sits up in bed, glancing at the alarm clock on the nightstand — it's already eight! He jumps out of bed and frantically starts getting dressed...",
     "assetLibraryTip": {
       "title": "Need custom characters and locations?",
       "description": "Click the 「Asset Library」 button in the top right to upload asset setting documents or manually add characters/locations. AI will prioritize using settings from the asset library for analysis."

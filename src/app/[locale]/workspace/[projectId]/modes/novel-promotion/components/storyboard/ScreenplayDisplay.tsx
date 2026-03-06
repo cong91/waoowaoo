@@ -82,7 +82,7 @@ export default function ScreenplayDisplay({ screenplay, originalContent }: Scree
                                     <span className="text-[var(--glass-text-tertiary)]">
                                         {typeof scene.heading === 'string'
                                             ? scene.heading
-                                            : `${scene.heading.int_ext} · ${scene.heading.location} · ${scene.heading.time}`}
+                                            : `${scene.heading.int_ext}${t('screenplay.headingSeparator')}${scene.heading.location}${t('screenplay.headingSeparator')}${scene.heading.time}`}
                                     </span>
                                 </div>
 

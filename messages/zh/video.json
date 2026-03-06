@@ -60,6 +60,7 @@
     "location": "场景：",
     "locationUnknown": "未知",
     "characters": "角色：",
+    "listSeparator": "、",
     "charactersNone": "无",
     "description": "描述：",
     "text": "对应文本：",

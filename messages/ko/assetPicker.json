@@ -1,0 +1,18 @@
+{
+    "selectCharacter": "자산 허브에서 캐릭터 선택",
+    "selectLocation": "자산 허브에서 위치 선택",
+    "selectVoice": "자산 허브에서 음성 선택",
+    "searchPlaceholder": "이름이나 폴더로 검색...",
+    "noAssets": "자산 허브에 자산이 없습니다.",
+    "createInAssetHub": "먼저 자산 허브에서 캐릭터/위치/목소리를 생성하세요.",
+    "noSearchResults": "일치하는 자산이 없습니다.",
+    "appearances": "형세",
+    "images": "이미지",
+    "cancel": "취소",
+    "confirmCopy": "복사 확인",
+    "copyFromGlobal": "자산 허브에서 복사",
+    "copySuccess": "복사 성공",
+    "copyFailed": "복사 실패",
+    "preview": "미리보기",
+    "stop": "멈추다"
+}

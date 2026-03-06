@@ -26,6 +26,7 @@
     "speakerVoice": {
         "title": "发言人音色状态",
         "hint": "请在资产库为角色上传参考音频",
+        "hintWrapped": "（{hint}）",
         "linesCount": "{count} 条台词",
         "noVoice": "无参考音色",
         "configured": "✓ 已设置",

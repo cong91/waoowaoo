@@ -1,0 +1,14 @@
+{
+    "title": "자산 라이브러리",
+    "button": "자산",
+    "characters": "캐릭터",
+    "locations": "위치",
+    "noCharacters": "문자 없음",
+    "noLocations": "위치 없음",
+    "addCharacter": "캐릭터 추가",
+    "addLocation": "위치 추가",
+    "generateImage": "이미지 생성",
+    "regenerateImage": "재생성",
+    "analyzeAssets": "자산 분석",
+    "analyzing": "분석 중..."
+}

@@ -26,6 +26,7 @@
     "speakerVoice": {
         "title": "Speaker Voice Status",
         "hint": "Please upload reference audio for characters in Asset Library",
+        "hintWrapped": "({hint})",
         "linesCount": "{count} lines",
         "noVoice": "No reference voice",
         "configured": "✓ Configured",

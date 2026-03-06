@@ -1,0 +1,24 @@
+{
+    "globalAssets": "Tài sản toàn cầu",
+    "createFailed": "Tạo không thành công",
+    "deleteFailed": "Xóa không thành công",
+    "renameFailed": "Đổi tên không thành công",
+    "refreshFailed": "Làm mới không thành công",
+    "projectNotFound": "Dự án không tìm thấy",
+    "backToWorkspace": "Quay lại Không gian làm việc",
+    "episode": "Tập",
+    "sidebar": {
+        "dragToMove": "Kéo để di chuyển vị trí",
+        "listTitle": "Danh sách tập",
+        "episodeCount": "{count} tập",
+        "empty": "Chưa có tập nào. Tạo một cái bên dưới.",
+        "save": "Lưu",
+        "deleteConfirm": "Xóa \"{name}\"?",
+        "delete": "Xóa",
+        "cancel": "Hủy",
+        "rename": "Đổi tên",
+        "newEpisodePlaceholder": "Nhập tên tập...",
+        "create": "Tạo nên",
+        "addEpisode": "Thêm tập"
+    }
+}

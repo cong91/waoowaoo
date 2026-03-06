@@ -1,0 +1,141 @@
+{
+    "stages": {
+        "story": "이야기",
+        "script": "스크립트",
+        "storyboard": "스토리보드",
+        "video": "동영상",
+        "editor": "AI 에디터",
+        "editorComingSoon": "곧 출시됩니다. 업데이트를 받으려면 우리를 팔로우하세요."
+    },
+    "buttons": {
+        "assetLibrary": "자산 라이브러리",
+        "settings": "설정",
+        "refreshData": "데이터 새로 고침",
+        "enterVideoGeneration": "비디오 생성 입력 →"
+    },
+    "smartImport": {
+        "title": "창의적인 여정을 시작하세요",
+        "subtitle": "먼저 생성 방법을 선택하세요.",
+        "manualCreate": {
+            "title": "에피소드 1에서 만들기",
+            "description": "에피소드 1부터 시작하세요. 에피소드 제작이나 단일 짧은 동영상에 적합합니다.",
+            "button": "만들기 시작"
+        },
+        "smartImport": {
+            "title": "스마트 가져오기 전체 도서",
+            "description": "완전한 소설이나 대본을 업로드하면 AI 엔진이 자동으로 장 구조를 인식하고 에피소드로 분할합니다.",
+            "button": "지금 가져오기",
+            "recommended": "추천"
+        },
+        "upload": {
+            "title": "원자재 업로드",
+            "subtitle": "AI 엔진 준비, 자동 에피소드 분할 및 서식 지정",
+            "maxWords": "(최대 30,000단어)",
+            "textInput": "텍스트 내용 입력",
+            "documentUpload": "전체 문서 업로드",
+            "placeholder": "여기에 소설 장이나 대본 내용을 붙여넣으세요...",
+            "filePlaceholder": "파일 업로드 모드",
+            "clickUpload": "문서를 업로드하려면 클릭하세요.",
+            "clearTextFirst": "먼저 왼쪽 텍스트를 지워주세요",
+            "supportedFormats": "Word, TXT 형식 지원",
+            "preview": "미리보기",
+            "expandPreview": "더 확장하기",
+            "collapsePreview": "무너지다",
+            "deleteFile": "파일 삭제",
+            "startAnalysis": "스마트 분석 시작",
+            "back": "뒤로",
+            "words": "단어"
+        },
+        "analyzing": {
+            "title": "AI가 당신의 이야기를 분석하고 있습니다",
+            "description": "챕터 구조 인식 중, 스마트 분할 진행중...",
+            "autoSave": "분석 완료 후 자동 저장됩니다."
+        },
+        "preview": {
+            "title": "스마트 분할 완료",
+            "episodeCount": "자동으로 {count} 에피소드로 분할",
+            "totalWords": "총 {count} 단어",
+            "separator": ", ",
+            "autoSaved": "✓ 자동 저장",
+            "reanalyze": "재분석",
+            "confirm": "완료 확인",
+            "saving": "절약...",
+            "episodeList": "에피소드 목록",
+            "addEpisode": "에피소드 추가",
+            "averageWords": "에피소드당 평균",
+            "episodeContent": "에피소드 내용",
+            "episodePlaceholder": "에피소드 제목을 입력하세요...",
+            "summaryPlaceholder": "줄거리 요약 입력...",
+            "newEpisode": "새로운 에피소드",
+            "deleteEpisode": "에피소드 삭제",
+            "deleteConfirm": {
+                "title": "삭제 확인",
+                "message": "정말로 \"{title}\"을(를) 삭제하시겠습니까?",
+                "cancel": "취소",
+                "confirm": "삭제 확인"
+            },
+            "tip": {
+                "title": "팁",
+                "content": "제목, 요약, 내용을 직접 편집할 수 있습니다. [완료 확인]을 클릭하면 에피소드가 공식적으로 프로젝트로 가져옵니다."
+            }
+        },
+        "errors": {
+            "fileTooLarge": "파일이 너무 큽니다. 10MB보다 작은 파일을 업로드해 주세요.",
+            "docNotSupported": ".doc 형식은 지원되지 않습니다. Word에서 .docx로 변환하세요.",
+            "fileEmpty": "파일 내용이 비어 있습니다.",
+            "fileReadError": "파일을 읽지 못했습니다. 다시 시도해 주세요.",
+            "uploadFirst": "먼저 콘텐츠를 업로드하거나 붙여넣으세요.",
+            "analyzeFailed": "분석 실패",
+            "saveFailed": "저장 실패"
+        },
+        "cancelConfirm": "정말로 취소하시겠습니까? 분석된 에피소드가 삭제됩니다."
+    },
+    "storyInput": {
+        "currentEditing": "현재 수정 중: {name}",
+        "editingTip": "다음 작업 흐름은 이 에피소드에만 적용됩니다. 필요한 경우 왼쪽 상단에서 에피소드를 전환하세요.",
+        "wordCount": "단어 수:",
+        "placeholder": "각본 또는 소설 내용을 입력하세요...\n\nAI가 텍스트를 지능적으로 분석합니다:\n• 장면 전환 자동 인식\n• 캐릭터 대화 및 행동 추출\n• 스토리보드 스크립트 생성\n\n예시:\n이른 아침, 햇빛이 커튼 사이로 방에 들어옵니다. 샤오밍은 졸린 눈을 비비며 침대에서 일어나 머리맡의 알람 시계를 보았습니다 — 벌써 8시입니다! 그는 침대에서 뛰어내려 허둥지둥 옷을 입기 시작합니다...",
+        "assetLibraryTip": {
+            "title": "맞춤형 캐릭터와 위치가 필요하십니까?",
+            "description": "오른쪽 상단의 「자산 라이브러리」버튼을 클릭하면 자산 설정 문서를 업로드하거나 캐릭터/위치를 수동으로 추가할 수 있습니다. AI는 분석을 위해 자산 라이브러리의 설정을 우선적으로 사용합니다."
+        },
+        "videoRatio": "비디오 비율",
+        "visualStyle": "비주얼 스타일",
+        "moreConfig": "더 많은 구성 옵션을 보려면 오른쪽 상단의 「설정」 버튼을 클릭하세요.",
+        "narration": {
+            "title": "내레이션 음성 해설 활성화",
+            "description": "TTS 음성 내레이션을 생성하여 비디오에 해설을 추가하세요"
+        },
+        "creating": "AI 생성 중...",
+        "ready": "✓ 구성 완료, 다음 단계 준비 완료",
+        "pleaseInput": "스크립트 내용을 먼저 입력해주세요"
+    },
+    "execution": {
+        "selectEpisode": "먼저 에피소드를 선택하세요.",
+        "fillContentFirst": "내용을 먼저 입력해주세요",
+        "requestAborted": "요청이 중단되었습니다(페이지 새로고침으로 인해 발생했을 수 있음).",
+        "analysisFailed": "자산 분석 실패",
+        "prepareFailed": "준비 실패",
+        "generationFailed": "생성 실패",
+        "batchVideoFailed": "일괄 비디오 생성 실패",
+        "updateFailed": "업데이트 실패",
+        "saveFailed": "저장 실패",
+        "storyToScriptRunning": "스토리→스크립트 V2 실행 중",
+        "scriptToStoryboardRunning": "스크립트→스토리보드 V2 실행 중",
+        "storyToScriptFailed": "스토리 대본 작성 실패",
+        "scriptToStoryboardFailed": "스토리보드 스크립트 실패",
+        "taskStreamTimeout": "작업 시간이 초과되었습니다. 작업이 여전히 백그라운드에서 실행 중일 수 있습니다. 상태를 확인하거나 다시 시도하세요."
+    },
+    "rebuildConfirm": {
+        "storyToScript": {
+            "title": "스크립트 흐름이 재구축됩니다",
+            "message": "이 에피소드에 대한 다운스트림 스토리보드 데이터가 감지되었습니다({storyboardCount} 스토리보드, {panelCount} 패널). 계속하면 이 데이터가 지워지고 다시 작성됩니다. 계속하시겠습니까?"
+        },
+        "scriptToStoryboard": {
+            "title": "스토리보드 데이터가 다시 작성됩니다.",
+            "message": "이 에피소드에 대한 기존 스토리보드 데이터가 감지되었습니다({storyboardCount} 스토리보드, {panelCount} 패널). 계속하면 현재 스토리보드가 지워지고 다시 생성됩니다. 계속하시겠습니까?"
+        },
+        "confirm": "계속하고 지우기",
+        "cancel": "취소"
+    }
+}
