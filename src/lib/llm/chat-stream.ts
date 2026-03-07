@@ -445,6 +445,7 @@ export async function chatCompletionStream(
         const aiOpenAI = createOpenAI({
           baseURL: providerConfig.baseUrl,
           apiKey: providerConfig.apiKey,
+          headers: providerConfig.extraHeaders,
           name: providerName,
         })
         // 只有确定是支持 OpenAI 推理参数的提供商（如 OpenAI 官方、deepseek-r1 等）才传 reasoning provider options
@@ -744,7 +745,8 @@ export async function chatCompletionStream(
 
       const client = new OpenAI({
         baseURL: providerConfig.baseUrl,
-        apiKey: providerConfig.apiKey,
+        apiKey: providerConfig.apiKey || 'no-key',
+        defaultHeaders: providerConfig.extraHeaders,
       })
 
       const extraParams: Record<string, unknown> = {}

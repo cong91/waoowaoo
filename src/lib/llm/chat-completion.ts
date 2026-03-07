@@ -369,6 +369,7 @@ export async function chatCompletion(
         const aiOpenAI = createOpenAI({
           baseURL: providerConfig.baseUrl,
           apiKey: providerConfig.apiKey,
+          headers: providerConfig.extraHeaders,
           name: providerName,
         })
         // 只有原生 OpenAI 推理模型才支持 forceReasoning/reasoningEffort
@@ -439,7 +440,8 @@ export async function chatCompletion(
 
       const client = new OpenAI({
         baseURL: providerConfig.baseUrl,
-        apiKey: providerConfig.apiKey,
+        apiKey: providerConfig.apiKey || 'no-key',
+        defaultHeaders: providerConfig.extraHeaders,
       })
 
       const extraParams: Record<string, unknown> = {}
