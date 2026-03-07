@@ -35,7 +35,8 @@
         "clickToRemove": "{name}을(를) 제거하려면 클릭하세요.",
         "clickToAdd": "{name}을(를) 추가하려면 클릭하세요.",
         "allClipsCharacterEditHint": "\"모든 클립\" 보기입니다. 캐릭터 문구는 단일 클립 보기에서만 편집할 수 있습니다.",
-        "allClipsLocationEditHint": "\"모든 클립\" 보기입니다. 장면 문구는 단일 클립 보기에서만 편집할 수 있습니다."
+        "allClipsLocationEditHint": "\"모든 클립\" 보기입니다. 장면 문구는 단일 클립 보기에서만 편집할 수 있습니다.",
+        "editorSeparator": " - "
     },
     "screenplay": {
         "scene": "장면 {number}",

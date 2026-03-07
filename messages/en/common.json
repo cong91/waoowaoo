@@ -28,6 +28,7 @@
     "collapse": "Collapse",
     "all": "All",
     "none": "None",
+    "listSeparator": ", ",
     "success": "Success",
     "error": "Error",
     "warning": "Warning",

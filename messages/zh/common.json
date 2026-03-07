@@ -28,6 +28,7 @@
     "collapse": "收起",
     "all": "全部",
     "none": "无",
+    "listSeparator": "、",
     "success": "成功",
     "error": "错误",
     "warning": "警告",

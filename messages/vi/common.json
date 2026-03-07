@@ -28,6 +28,7 @@
     "collapse": "Thu gọn",
     "all": "Tất cả",
     "none": "Không",
+    "listSeparator": ", ",
     "success": "Thành công",
     "error": "Lỗi",
     "warning": "Cảnh báo",

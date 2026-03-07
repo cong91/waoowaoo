@@ -130,10 +130,10 @@ function parseDescriptions(raw: string | null | undefined): string[] {
 
 // 阶段进度映射
 export const PHASE_PROGRESS: Record<string, { start: number, end: number, label: string, labelKey: string }> = {
-    '1': { start: 10, end: 40, label: '规划分镜', labelKey: 'phases.planning' },
-    '2-cinematography': { start: 40, end: 55, label: '设计摄影', labelKey: 'phases.cinematography' },
-    '2-acting': { start: 55, end: 70, label: '设计演技', labelKey: 'phases.acting' },
-    '3': { start: 70, end: 100, label: '补充细节', labelKey: 'phases.detail' }
+    '1': { start: 10, end: 40, label: 'Storyboard planning', labelKey: 'phases.planning' },
+    '2-cinematography': { start: 40, end: 55, label: 'Cinematography design', labelKey: 'phases.cinematography' },
+    '2-acting': { start: 55, end: 70, label: 'Acting direction', labelKey: 'phases.acting' },
+    '3': { start: 70, end: 100, label: 'Detail refinement', labelKey: 'phases.detail' }
 }
 
 // 中间结果存储接口

@@ -35,7 +35,8 @@
         "clickToRemove": "Nhấp để xóa {name}",
         "clickToAdd": "Nhấp để thêm {name}",
         "allClipsCharacterEditHint": "Bạn đang ở chế độ \"Tất cả các clip\". Chỉ có thể chỉnh sửa nội dung nhân vật trong chế độ một clip.",
-        "allClipsLocationEditHint": "Bạn đang ở chế độ \"Tất cả các clip\". Chỉ có thể chỉnh sửa nội dung bối cảnh trong chế độ một clip."
+        "allClipsLocationEditHint": "Bạn đang ở chế độ \"Tất cả các clip\". Chỉ có thể chỉnh sửa nội dung bối cảnh trong chế độ một clip.",
+        "editorSeparator": " - "
     },
     "screenplay": {
         "scene": "Cảnh {number}",

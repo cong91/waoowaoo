@@ -7,7 +7,10 @@
     "QUOTA_EXCEEDED": "配额已用尽，请稍后重试",
     "GENERATION_FAILED": "生成失败，请重试",
     "GENERATION_TIMEOUT": "生成超时，请重试",
+    "WATCHDOG_TIMEOUT": "任务执行超时，系统已终止该任务。",
+    "WORKER_EXECUTION_ERROR": "任务执行失败，请稍后重试。",
     "SENSITIVE_CONTENT": "内容可能包含敏感信息",
+
     "INVALID_PARAMS": "参数错误",
     "MISSING_CONFIG": "请先完成模型配置",
     "INTERNAL_ERROR": "服务器错误，请稍后重试",

@@ -7,6 +7,8 @@
     "QUOTA_EXCEEDED": "Quota exceeded. Please try again later",
     "GENERATION_FAILED": "Generation failed. Please retry",
     "GENERATION_TIMEOUT": "Generation timed out. Please retry",
+    "WATCHDOG_TIMEOUT": "Task execution timed out. The system has terminated the task.",
+    "WORKER_EXECUTION_ERROR": "Task execution failed. Please try again later.",
     "SENSITIVE_CONTENT": "Content may contain sensitive material",
     "INVALID_PARAMS": "Invalid parameters",
     "MISSING_CONFIG": "Please complete model configuration first",
