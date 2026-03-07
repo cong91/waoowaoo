@@ -376,8 +376,8 @@
     "modelTitle": "First/Last Frame Model"
   },
   "fixes": {
-    "novelInputPlaceHolder": "Enter your screenplay or novel content...",
-    "novelInputPlaceholder": "Enter your screenplay or novel content...",
+    "novelInputPlaceHolder": "Enter your screenplay or novel content...\n\nAI will intelligently analyze your text:\n• Automatically identify scene transitions\n• Extract character dialogue and actions\n• Generate storyboard script\n\nExample:\nEarly morning, sunlight streams through the curtains into the room. Xiao Ming rubs his sleepy eyes and sits up in bed, glancing at the alarm clock on the nightstand — it's already eight! He jumps out of bed and frantically starts getting dressed...",
+    "novelInputPlaceholder": "Enter your screenplay or novel content...\n\nAI will intelligently analyze your text:\n• Automatically identify scene transitions\n• Extract character dialogue and actions\n• Generate storyboard script\n\nExample:\nEarly morning, sunlight streams through the curtains into the room. Xiao Ming rubs his sleepy eyes and sits up in bed, glancing at the alarm clock on the nightstand — it's already eight! He jumps out of bed and frantically starts getting dressed...",
     "segmentWithTitle": "Segment [{title}]",
     "groupFailedTitle": "Warning Failed",
     "previewSeparator": ", ",

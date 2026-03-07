@@ -376,8 +376,8 @@
     "modelTitle": "Mô hình khung đầu tiên/cuối cùng"
   },
   "fixes": {
-    "novelInputPlaceHolder": "Nhập nội dung kịch bản hoặc tiểu thuyết của bạn...",
-    "novelInputPlaceholder": "Nhập nội dung kịch bản hoặc tiểu thuyết của bạn...",
+    "novelInputPlaceHolder": "Nhập nội dung kịch bản hoặc tiểu thuyết của bạn...\n\nAI sẽ phân tích thông minh văn bản của bạn:\n• Tự động nhận diện chuyển cảnh\n• Trích xuất hội thoại và hành động nhân vật\n• Tạo kịch bản phân cảnh\n\nVí dụ:\nSáng sớm, ánh nắng xuyên qua rèm cửa tràn vào phòng. Tiểu Minh dụi mắt ngái ngủ ngồi dậy trên giường, liếc nhìn đồng hồ báo thức — đã tám giờ rồi! Anh nhảy khỏi giường và vội vàng mặc quần áo...",
+    "novelInputPlaceholder": "Nhập nội dung kịch bản hoặc tiểu thuyết của bạn...\n\nAI sẽ phân tích thông minh văn bản của bạn:\n• Tự động nhận diện chuyển cảnh\n• Trích xuất hội thoại và hành động nhân vật\n• Tạo kịch bản phân cảnh\n\nVí dụ:\nSáng sớm, ánh nắng xuyên qua rèm cửa tràn vào phòng. Tiểu Minh dụi mắt ngái ngủ ngồi dậy trên giường, liếc nhìn đồng hồ báo thức — đã tám giờ rồi! Anh nhảy khỏi giường và vội vàng mặc quần áo...",
     "segmentWithTitle": "Phân đoạn [{title}]",
     "groupFailedTitle": "Cảnh báo Thất bại",
     "previewSeparator": ", ",
