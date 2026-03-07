@@ -390,6 +390,7 @@ describe('api specific - user api-config PUT provider uniqueness', () => {
             baseUrl: 'https://oa.test/v1',
             apiKey: 'oa-key',
             apiMode: 'openai-official',
+            extraHeaders: { 'x-proxy-token': 'abc123' },
           },
         ],
         models: [
@@ -414,6 +415,9 @@ describe('api specific - user api-config PUT provider uniqueness', () => {
     const res = await route.PUT(req, routeContext)
     expect(res.status).toBe(200)
     expect(prismaMock.userPreference.upsert).toHaveBeenCalledTimes(1)
+
+    const savedProviders = readSavedProvidersFromUpsert()
+    expect(savedProviders[0]?.extraHeaders).toEqual({ 'x-proxy-token': 'abc123' })
   })
 
   it('requires llmProtocol when adding a new openai-compatible llm model', async () => {

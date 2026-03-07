@@ -62,6 +62,7 @@ interface StoredProvider {
   baseUrl?: string
   apiKey?: string
   hidden?: boolean
+  extraHeaders?: Record<string, string>
   apiMode?: ApiModeType
   gatewayRoute?: GatewayRouteType
 }
@@ -219,6 +220,32 @@ function normalizeMinimaxProviderBaseUrl(input: {
     })
   }
   return MINIMAX_OFFICIAL_BASE_URL
+}
+
+function normalizeStringRecord(value: unknown, field: string): Record<string, string> | undefined {
+  if (value === undefined || value === null) return undefined
+  if (!isRecord(value)) {
+    throw new ApiError('INVALID_PARAMS', {
+      code: 'PROVIDER_PAYLOAD_INVALID',
+      field,
+    })
+  }
+
+  const out: Record<string, string> = {}
+  for (const [key, raw] of Object.entries(value)) {
+    if (typeof raw !== 'string') {
+      throw new ApiError('INVALID_PARAMS', {
+        code: 'PROVIDER_PAYLOAD_INVALID',
+        field: `${field}.${key}`,
+      })
+    }
+    const normalizedKey = key.trim()
+    const normalizedValue = raw.trim()
+    if (!normalizedKey || !normalizedValue) continue
+    out[normalizedKey] = normalizedValue
+  }
+
+  return Object.keys(out).length > 0 ? out : undefined
 }
 
 function formatPriceAmount(amount: number): string {
@@ -917,6 +944,7 @@ function normalizeProvidersInput(rawProviders: unknown): StoredProvider[] {
       baseUrl,
       apiKey: typeof item.apiKey === 'string' ? item.apiKey.trim() : undefined,
       hidden: hiddenRaw === true,
+      extraHeaders: normalizeStringRecord(item.extraHeaders, `providers[${index}].extraHeaders`),
       apiMode: apiModeRaw,
       gatewayRoute,
     })
@@ -1334,6 +1362,10 @@ function validateDefaultModelPricing(defaultModels: DefaultModelsPayload) {
     if (OPTIONAL_PRICING_PROVIDER_KEYS.has(getProviderKey(parsed.provider))) continue
     const apiType = DEFAULT_FIELD_TO_PRICING_API_TYPE[field]
 
+    if (OPTIONAL_PRICING_PROVIDER_KEYS.has(getProviderKey(parsed.provider))) {
+      continue
+    }
+
     if (!hasBuiltinPricingForModel(apiType, parsed.provider, parsed.modelId)) {
       throw new ApiError('INVALID_PARAMS', {
         code: 'DEFAULT_MODEL_PRICING_NOT_CONFIGURED',
@@ -1374,6 +1406,11 @@ function sanitizeDefaultModelsForBilling(defaultModels: DefaultModelsPayload): D
       sanitized[field] = ''
       continue
     }
+    if (OPTIONAL_PRICING_PROVIDER_KEYS.has(getProviderKey(parsed.provider))) {
+      sanitized[field] = parsed.modelKey
+      continue
+    }
+
     if (OPTIONAL_PRICING_PROVIDER_KEYS.has(getProviderKey(parsed.provider))) {
       sanitized[field] = parsed.modelKey
       continue
@@ -1474,6 +1511,7 @@ function parseStoredProviders(rawProviders: string | null | undefined): StoredPr
       baseUrl,
       apiKey: typeof raw.apiKey === 'string' ? raw.apiKey.trim() : undefined,
       hidden: hiddenRaw === true,
+      extraHeaders: normalizeStringRecord(raw.extraHeaders, `customProviders[${index}].extraHeaders`),
       apiMode,
       gatewayRoute,
     })
@@ -1679,6 +1717,7 @@ export const GET = apiHandler(async () => {
   const providers = parseStoredProviders(pref?.customProviders).map((provider) => ({
     ...provider,
     apiKey: provider.apiKey ? decryptApiKey(provider.apiKey) : '',
+    extraHeaders: provider.extraHeaders,
   }))
 
   const billingMode = await getBillingMode()
@@ -1835,6 +1874,7 @@ export const PUT = apiHandler(async (request: NextRequest) => {
         name: provider.name,
         baseUrl: provider.baseUrl,
         hidden: finalHidden,
+        extraHeaders: provider.extraHeaders,
         apiMode: provider.apiMode,
         gatewayRoute: provider.gatewayRoute,
         apiKey: finalApiKey,

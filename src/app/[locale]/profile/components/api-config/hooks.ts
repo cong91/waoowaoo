@@ -55,6 +55,7 @@ interface UseProvidersReturn {
     updateProviderApiKey: (providerId: string, apiKey: string) => void
     updateProviderBaseUrl: (providerId: string, baseUrl: string) => void
     reorderProviders: (activeProviderId: string, overProviderId: string) => void
+    updateProviderExtraHeaders: (providerId: string, extraHeaders?: Record<string, string>) => void
     addProvider: (provider: Omit<Provider, 'hasApiKey'>) => void
     deleteProvider: (providerId: string) => void
     updateProviderInfo: (providerId: string, name: string, baseUrl?: string) => void
@@ -657,6 +658,17 @@ export function useProviders(): UseProvidersReturn {
         })
     }, [performSave])
 
+    const updateProviderExtraHeaders = useCallback((providerId: string, extraHeaders?: Record<string, string>) => {
+        setProviders(prev => {
+            const next = prev.map(p =>
+                p.id === providerId ? { ...p, extraHeaders } : p
+            )
+            latestProvidersRef.current = next
+            void performSave(undefined, true)
+            return next
+        })
+    }, [performSave])
+
     // 模型操作
     const toggleModel = useCallback((modelKey: string, providerId?: string) => {
         if (isPresetComingSoonModelKey(modelKey)) {
@@ -778,6 +790,7 @@ export function useProviders(): UseProvidersReturn {
         updateProviderApiKey,
         updateProviderBaseUrl,
         reorderProviders,
+        updateProviderExtraHeaders,
         addProvider,
         deleteProvider,
         updateProviderInfo,

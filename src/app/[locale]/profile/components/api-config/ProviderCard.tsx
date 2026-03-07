@@ -24,6 +24,8 @@ export function ProviderCard({
   onFlushConfig,
   hideProviderLabel,
   showProviderLabel,
+  onUpdateExtraHeaders,
+  onFetchProviderModels,
 }: ProviderCardProps) {
   const t = useTranslations('apiConfig')
 
@@ -34,9 +36,11 @@ export function ProviderCard({
     defaultModels,
     onUpdateApiKey,
     onUpdateBaseUrl,
+    onUpdateExtraHeaders,
     onUpdateModel,
     onAddModel,
     onFlushConfig,
+    onFetchProviderModels,
     t,
   })
 

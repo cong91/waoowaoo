@@ -20,6 +20,7 @@ export interface Provider {
     apiKey?: string
     hasApiKey?: boolean
     hidden?: boolean
+    extraHeaders?: Record<string, string>
     apiMode?: 'gemini-sdk' | 'openai-official'
     gatewayRoute?: 'official' | 'openai-compat'
 }
@@ -202,6 +203,7 @@ export const PRESET_PROVIDERS: Omit<Provider, 'apiKey' | 'hasApiKey'>[] = [
     { id: 'google', name: 'Google AI Studio' },
     { id: 'bailian', name: 'Alibaba Bailian' },
     { id: 'openrouter', name: 'OpenRouter', baseUrl: 'https://openrouter.ai/api/v1' },
+    { id: 'openai-compatible', name: 'OpenAI Compatible', baseUrl: 'https://api.openai.com/v1', apiMode: 'openai-official' },
     { id: 'minimax', name: 'MiniMax Hailuo', baseUrl: 'https://api.minimaxi.com/v1' },
     { id: 'vidu', name: 'Vidu' },
     { id: 'fal', name: 'FAL' },
