@@ -1,4 +1,4 @@
-import { redis } from '@/lib/redis'
+import { redis, shouldSkipRedisInBuild, shouldSuppressRedisErrorInBuild } from '@/lib/redis'
 import { appendRunEventWithSeq } from './service'
 import type { RunEventInput } from './types'
 
@@ -24,7 +24,15 @@ export async function publishRunEvent(input: RunEventInput) {
     payload: event.payload || null,
     ts: event.createdAt,
   }
-  await redis.publish(getProjectRunChannel(event.projectId), JSON.stringify(message))
+  if (!shouldSkipRedisInBuild()) {
+    try {
+      await redis.publish(getProjectRunChannel(event.projectId), JSON.stringify(message))
+    } catch (error) {
+      if (!shouldSuppressRedisErrorInBuild(error)) {
+        throw error
+      }
+    }
+  }
   return message
 }
 

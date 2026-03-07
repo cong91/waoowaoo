@@ -16,6 +16,25 @@ const REDIS_USERNAME = process.env.REDIS_USERNAME
 const REDIS_PASSWORD = process.env.REDIS_PASSWORD
 const REDIS_TLS = process.env.REDIS_TLS === 'true'
 const IS_TEST_ENV = process.env.NODE_ENV === 'test'
+const IS_BUILD_PHASE =
+  process.env.NEXT_PHASE === 'phase-production-build'
+  || process.env.npm_lifecycle_event === 'build'
+  || process.env.npm_lifecycle_event === 'build:turbo'
+
+function isRedisAuthError(message: string): boolean {
+  const normalized = message.toLowerCase()
+  return normalized.includes('noauth') || normalized.includes('authentication required')
+}
+
+export function shouldSkipRedisInBuild() {
+  return IS_BUILD_PHASE
+}
+
+export function shouldSuppressRedisErrorInBuild(error: unknown) {
+  if (!IS_BUILD_PHASE) return false
+  const message = error instanceof Error ? error.message : String(error || '')
+  return isRedisAuthError(message)
+}
 
 function buildBaseConfig() {
   return {
@@ -35,7 +54,14 @@ function buildBaseConfig() {
 
 function onConnectLog(scope: string, client: Redis) {
   client.on('connect', () => _ulogInfo(`[Redis:${scope}] connected ${REDIS_HOST}:${REDIS_PORT}`))
-  client.on('error', (err) => _ulogError(`[Redis:${scope}] error:`, err.message))
+  client.on('error', (err) => {
+    const message = err?.message || 'unknown redis error'
+    if (IS_BUILD_PHASE && isRedisAuthError(message)) {
+      _ulogInfo(`[Redis:${scope}] auth unavailable during build phase, skip noisy warning`)
+      return
+    }
+    _ulogError(`[Redis:${scope}] error:`, message)
+  })
 }
 
 function createAppRedis() {

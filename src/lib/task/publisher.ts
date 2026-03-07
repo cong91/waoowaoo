@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { redis } from '@/lib/redis'
+import { redis, shouldSkipRedisInBuild, shouldSuppressRedisErrorInBuild } from '@/lib/redis'
 import {
   TASK_EVENT_TYPE,
   TASK_SSE_EVENT_TYPE,
@@ -270,7 +270,15 @@ export async function publishTaskLifecycleEvent(params: {
     payload: params.payload || null,
   })
 
-  await redis.publish(getProjectChannel(params.projectId), JSON.stringify(message))
+  if (!shouldSkipRedisInBuild()) {
+    try {
+      await redis.publish(getProjectChannel(params.projectId), JSON.stringify(message))
+    } catch (error) {
+      if (!shouldSuppressRedisErrorInBuild(error)) {
+        throw error
+      }
+    }
+  }
   await mirrorTaskEventToRun(message)
   return message
 }
@@ -343,7 +351,15 @@ export async function publishTaskStreamEvent(params: {
     payload: normalizedPayload,
   })
 
-  await redis.publish(getProjectChannel(params.projectId), JSON.stringify(message))
+  if (!shouldSkipRedisInBuild()) {
+    try {
+      await redis.publish(getProjectChannel(params.projectId), JSON.stringify(message))
+    } catch (error) {
+      if (!shouldSuppressRedisErrorInBuild(error)) {
+        throw error
+      }
+    }
+  }
   await mirrorTaskEventToRun(message)
   return message
 }
