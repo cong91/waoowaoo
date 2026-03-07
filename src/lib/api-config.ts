@@ -39,6 +39,7 @@ interface CustomProvider {
   name: string
   baseUrl?: string
   apiKey?: string
+  extraHeaders?: Record<string, string>
   apiMode?: 'gemini-sdk' | 'openai-official'
 }
 
@@ -68,6 +69,39 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function readTrimmedString(value: unknown): string {
   return typeof value === 'string' ? value.trim() : ''
+}
+
+function parseStringRecord(value: unknown, field: string): Record<string, string> | undefined {
+  if (value === undefined || value === null) return undefined
+  if (!isRecord(value)) {
+    throw new Error(`PROVIDER_PAYLOAD_INVALID: ${field} must be an object`)
+  }
+
+  const out: Record<string, string> = {}
+  for (const [key, raw] of Object.entries(value)) {
+    if (typeof raw !== 'string') {
+      throw new Error(`PROVIDER_PAYLOAD_INVALID: ${field}.${key} must be string`)
+    }
+    const headerKey = key.trim()
+    const headerValue = raw.trim()
+    if (!headerKey || !headerValue) continue
+    out[headerKey] = headerValue
+  }
+  return Object.keys(out).length > 0 ? out : undefined
+}
+
+function parseJsonHeadersFromEnv(raw: string | undefined, envKey: string): Record<string, string> | undefined {
+  const text = readTrimmedString(raw)
+  if (!text) return undefined
+
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(text)
+  } catch {
+    throw new Error(`ENV_CONFIG_INVALID: ${envKey} is not valid JSON`)
+  }
+
+  return parseStringRecord(parsed, envKey)
 }
 
 function isUnifiedModelType(value: unknown): value is UnifiedModelType {
@@ -129,6 +163,7 @@ function parseCustomProviders(rawProviders: string | null | undefined): CustomPr
       name,
       baseUrl: readTrimmedString(raw.baseUrl) || undefined,
       apiKey: readTrimmedString(raw.apiKey) || undefined,
+      extraHeaders: parseStringRecord(raw.extraHeaders, `providers[${index}].extraHeaders`),
       apiMode,
     })
   }
@@ -192,16 +227,6 @@ function parseCustomModels(rawModels: string | null | undefined): CustomModel[] 
   }
 
   return models
-}
-
-function pickProviderStrict(
-  providers: CustomProvider[],
-  providerId: string,
-): CustomProvider {
-  const matched = providers.find((provider) => provider.id === providerId)
-  if (matched) return matched
-
-  throw new Error(`PROVIDER_NOT_FOUND: ${providerId} is not configured`)
 }
 
 async function readUserConfig(userId: string): Promise<{ models: CustomModel[]; providers: CustomProvider[] }> {
@@ -307,23 +332,87 @@ export interface ProviderConfig {
   name: string
   apiKey: string
   baseUrl?: string
+  extraHeaders?: Record<string, string>
   apiMode?: 'gemini-sdk' | 'openai-official'
+}
+
+function buildEnvProviderFallback(providerId: string): ProviderConfig | null {
+  const providerKey = getProviderKey(providerId)
+
+  if (providerKey === 'openai-compatible' || providerKey === 'openai_compatible') {
+    const baseUrl = normalizeProviderBaseUrl(
+      providerId,
+      process.env.OPENAI_COMPAT_BASE_URL,
+    )
+    if (!baseUrl) return null
+
+    const extraHeaders = parseJsonHeadersFromEnv(
+      process.env.OPENAI_COMPAT_EXTRA_HEADERS_JSON,
+      'OPENAI_COMPAT_EXTRA_HEADERS_JSON',
+    )
+    const apiModeRaw = readTrimmedString(process.env.OPENAI_COMPAT_API_MODE)
+    const apiMode = apiModeRaw === 'gemini-sdk' || apiModeRaw === 'openai-official'
+      ? apiModeRaw
+      : 'openai-official'
+
+    return {
+      id: providerId,
+      name: 'OpenAI-Compatible (env fallback)',
+      apiKey: readTrimmedString(process.env.OPENAI_COMPAT_API_KEY),
+      baseUrl,
+      extraHeaders,
+      apiMode,
+    }
+  }
+
+  if (providerKey === 'openrouter') {
+    const envBase = readTrimmedString(process.env.OPENROUTER_BASE_URL)
+    const baseUrl = envBase || 'https://openrouter.ai/api/v1'
+    return {
+      id: providerId,
+      name: 'OpenRouter (env fallback)',
+      apiKey: readTrimmedString(process.env.OPENROUTER_API_KEY),
+      baseUrl,
+    }
+  }
+
+  return null
 }
 
 export async function getProviderConfig(userId: string, providerId: string): Promise<ProviderConfig> {
   const { providers } = await readUserConfig(userId)
-  const provider = pickProviderStrict(providers, providerId)
+  const provider = providers.find((item) => item.id === providerId)
+  const fallback = provider ? null : buildEnvProviderFallback(providerId)
 
-  if (!provider.apiKey) {
-    throw new Error(`PROVIDER_API_KEY_MISSING: ${provider.id}`)
+  if (!provider && !fallback) {
+    throw new Error(`PROVIDER_NOT_FOUND: ${providerId} is not configured`)
+  }
+
+  const source = provider || fallback!
+  const providerKey = getProviderKey(source.id)
+  const allowsEmptyApiKey = providerKey === 'openai-compatible' || providerKey === 'openai_compatible'
+  const decryptedApiKey = provider
+    ? (source.apiKey ? decryptApiKey(source.apiKey) : '')
+    : (source.apiKey || '')
+  if (!allowsEmptyApiKey && !decryptedApiKey) {
+    throw new Error(`PROVIDER_API_KEY_MISSING: ${source.id}`)
+  }
+
+  const envExtraHeaders = (providerKey === 'openai-compatible' || providerKey === 'openai_compatible')
+    ? parseJsonHeadersFromEnv(process.env.OPENAI_COMPAT_EXTRA_HEADERS_JSON, 'OPENAI_COMPAT_EXTRA_HEADERS_JSON')
+    : undefined
+  const mergedExtraHeaders = {
+    ...(envExtraHeaders || {}),
+    ...(source.extraHeaders || {}),
   }
 
   return {
-    id: provider.id,
-    name: provider.name,
-    apiKey: decryptApiKey(provider.apiKey),
-    baseUrl: normalizeProviderBaseUrl(provider.id, provider.baseUrl),
-    apiMode: provider.apiMode,
+    id: source.id,
+    name: source.name,
+    apiKey: decryptedApiKey,
+    baseUrl: normalizeProviderBaseUrl(source.id, source.baseUrl),
+    extraHeaders: Object.keys(mergedExtraHeaders).length > 0 ? mergedExtraHeaders : undefined,
+    apiMode: source.apiMode,
   }
 }
 

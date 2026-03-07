@@ -12,9 +12,17 @@ vi.mock('@/lib/prisma', () => ({
 
 import { resolveAnalysisModel } from '@/lib/workers/handlers/resolve-analysis-model'
 
+const ORIGINAL_ENV = { ...process.env }
+
 describe('resolveAnalysisModel', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    process.env = { ...ORIGINAL_ENV }
+    delete process.env.TEXT_PROVIDER
+    delete process.env.OPENAI_COMPAT_BASE_URL
+    delete process.env.OPENAI_COMPAT_MODEL
+    delete process.env.OPENROUTER_API_KEY
+    delete process.env.OPENROUTER_MODEL
     prismaMock.userPreference.findUnique.mockResolvedValue({
       analysisModel: 'openai-compatible:pref::gpt-4.1-mini',
     })
@@ -63,6 +71,21 @@ describe('resolveAnalysisModel', () => {
 
     expect(result).toBe('openai-compatible:pref::gpt-4.1-mini')
     expect(prismaMock.userPreference.findUnique).toHaveBeenCalledTimes(1)
+  })
+
+  it('falls back to env openai-compatible model when preference is missing', async () => {
+    prismaMock.userPreference.findUnique.mockResolvedValueOnce({ analysisModel: null })
+    process.env.TEXT_PROVIDER = 'openai-compatible'
+    process.env.OPENAI_COMPAT_BASE_URL = 'https://proxy.example.com/v1'
+    process.env.OPENAI_COMPAT_MODEL = 'gpt-4.1-mini'
+
+    const result = await resolveAnalysisModel({
+      userId: 'user-1',
+      inputModel: '',
+      projectAnalysisModel: null,
+    })
+
+    expect(result).toBe('openai-compatible::gpt-4.1-mini')
   })
 
   it('throws explicit error when all levels are missing', async () => {

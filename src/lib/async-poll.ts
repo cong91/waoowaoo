@@ -224,9 +224,15 @@ async function pollOpenAIVideoTask(
     // Use raw fetch instead of SDK to handle varying response formats across gateways
     const baseUrl = config.baseUrl.replace(/\/+$/, '')
     const pollUrl = `${baseUrl}/videos/${encodeURIComponent(videoId)}`
+    const requestHeaders: Record<string, string> = {
+        ...(config.extraHeaders || {}),
+    }
+    if (config.apiKey) {
+        requestHeaders.Authorization = `Bearer ${config.apiKey}`
+    }
     const response = await fetch(pollUrl, {
         method: 'GET',
-        headers: { Authorization: `Bearer ${config.apiKey}` },
+        headers: requestHeaders,
     })
 
     if (!response.ok) {
@@ -268,13 +274,17 @@ async function pollOpenAIVideoTask(
     // Fallback: OpenAI standard /videos/:id/content endpoint
     const taskId = typeof task.id === 'string' ? task.id : videoId
     const contentUrl = `${baseUrl}/videos/${encodeURIComponent(taskId)}/content`
+    const downloadHeaders: Record<string, string> = {
+        ...(config.extraHeaders || {}),
+    }
+    if (config.apiKey) {
+        downloadHeaders.Authorization = `Bearer ${config.apiKey}`
+    }
     return {
         status: 'completed',
         videoUrl: contentUrl,
         resultUrl: contentUrl,
-        downloadHeaders: {
-            Authorization: `Bearer ${config.apiKey}`,
-        },
+        ...(Object.keys(downloadHeaders).length > 0 ? { downloadHeaders } : {}),
     }
 }
 

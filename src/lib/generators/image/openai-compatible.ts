@@ -216,8 +216,9 @@ export class OpenAICompatibleImageGenerator extends BaseImageGenerator {
     }
 
     const client = new OpenAI({
-      apiKey: config.apiKey,
+      apiKey: config.apiKey || 'no-key',
       baseURL: config.baseUrl,
+      defaultHeaders: config.extraHeaders,
     })
     const model = (this.modelId || normalizeModel(options.modelId) || 'gpt-image-1').trim()
     const responseFormat = normalizeResponseFormat(options.responseFormat)

@@ -136,14 +136,19 @@ async function createVideoViaFetchFallback(
   baseUrl: string,
   apiKey: string,
   payload: Record<string, unknown>,
+  extraHeaders?: Record<string, string>,
 ): Promise<{ id: string }> {
   const url = `${baseUrl.replace(/\/+$/, '')}/video/create`
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(extraHeaders || {}),
+  }
+  if (apiKey) {
+    headers.Authorization = `Bearer ${apiKey}`
+  }
   const response = await fetch(url, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
-    },
+    headers,
     body: JSON.stringify(payload),
   })
 
@@ -240,8 +245,9 @@ export class OpenAICompatibleVideoGenerator extends BaseVideoGenerator {
 
     try {
       const client = new OpenAI({
-        apiKey: config.apiKey,
+        apiKey: config.apiKey || 'no-key',
         baseURL: config.baseUrl,
+        defaultHeaders: config.extraHeaders,
       })
       const sdkPayload = {
         ...requestPayload,
@@ -268,6 +274,7 @@ export class OpenAICompatibleVideoGenerator extends BaseVideoGenerator {
         config.baseUrl,
         config.apiKey,
         fallbackPayload,
+        config.extraHeaders,
       )
       videoId = fallbackResult.id
     }
