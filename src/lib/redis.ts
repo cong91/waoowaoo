@@ -83,15 +83,50 @@ function createQueueRedis() {
   return client
 }
 
+type MinimalRedisClient = Pick<
+  Redis,
+  'on' | 'publish' | 'subscribe' | 'unsubscribe' | 'quit' | 'disconnect'
+>
+
+function createNoopRedis(scope: 'app' | 'queue' | 'sub'): Redis {
+  const noopClient: MinimalRedisClient = {
+    on() {
+      return noopClient as Redis
+    },
+    async publish() {
+      return 0
+    },
+    async subscribe() {
+      return 0
+    },
+    async unsubscribe() {
+      return 0
+    },
+    async quit() {
+      return 'OK'
+    },
+    disconnect() {
+      return undefined as unknown as Redis
+    },
+  }
+
+  _ulogInfo(`[Redis:${scope}] build phase detected, using noop client`)
+  return noopClient as Redis
+}
+
 const singleton = globalForRedis.__waoowaooRedis || {}
 if (!globalForRedis.__waoowaooRedis) {
   globalForRedis.__waoowaooRedis = singleton
 }
 
-export const redis = singleton.app || (singleton.app = createAppRedis())
-export const queueRedis = singleton.queue || (singleton.queue = createQueueRedis())
+export const redis = singleton.app || (singleton.app = IS_BUILD_PHASE ? createNoopRedis('app') : createAppRedis())
+export const queueRedis = singleton.queue
+  || (singleton.queue = IS_BUILD_PHASE ? createNoopRedis('queue') : createQueueRedis())
 
 export function createSubscriber() {
+  if (IS_BUILD_PHASE) {
+    return createNoopRedis('sub')
+  }
   const client = new Redis({
     ...buildBaseConfig(),
     maxRetriesPerRequest: null,
