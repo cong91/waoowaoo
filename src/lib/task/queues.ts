@@ -1,5 +1,5 @@
 import { JobsOptions, Queue } from 'bullmq'
-import { queueRedis, shouldSkipRedisInBuild } from '@/lib/redis'
+import { queueRedis } from '@/lib/redis'
 import { QueueType, TaskType, TASK_TYPE, type TaskJobData } from './types'
 
 export const QUEUE_NAME = {
@@ -19,7 +19,7 @@ const defaultJobOptions: JobsOptions = {
   },
 }
 
-const IS_BUILD_PHASE = shouldSkipRedisInBuild()
+const IS_BUILD_PHASE = process.env.NEXT_PHASE === 'phase-production-build'
 
 type JobLike = {
   remove: () => Promise<void>
