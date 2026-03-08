@@ -1,4 +1,4 @@
-import { logDebug as _ulogDebug, logError as _ulogError } from '@/lib/logging/core'
+import { logInfo as _ulogInfo, logError as _ulogError } from '@/lib/logging/core'
 import Redis from 'ioredis'
 
 type RedisSingleton = {
@@ -16,6 +16,32 @@ const REDIS_USERNAME = process.env.REDIS_USERNAME
 const REDIS_PASSWORD = process.env.REDIS_PASSWORD
 const REDIS_TLS = process.env.REDIS_TLS === 'true'
 const IS_TEST_ENV = process.env.NODE_ENV === 'test'
+const IS_BUILD_PHASE =
+  process.env.NEXT_PHASE === 'phase-production-build'
+  || process.env.npm_lifecycle_event === 'build'
+  || process.env.npm_lifecycle_event === 'build:turbo'
+
+const SHOULD_SKIP_REDIS_IN_TEST =
+  IS_TEST_ENV
+  && process.env.BILLING_TEST_BOOTSTRAP !== '1'
+  && process.env.SYSTEM_TEST_BOOTSTRAP !== '1'
+
+const SHOULD_USE_NOOP_REDIS = IS_BUILD_PHASE || SHOULD_SKIP_REDIS_IN_TEST
+
+function isRedisAuthError(message: string): boolean {
+  const normalized = message.toLowerCase()
+  return normalized.includes('noauth') || normalized.includes('authentication required')
+}
+
+export function shouldSkipRedisInBuild() {
+  return IS_BUILD_PHASE || SHOULD_SKIP_REDIS_IN_TEST
+}
+
+export function shouldSuppressRedisErrorInBuild(error: unknown) {
+  if (!IS_BUILD_PHASE) return false
+  const message = error instanceof Error ? error.message : String(error || '')
+  return isRedisAuthError(message)
+}
 
 function buildBaseConfig() {
   return {
@@ -34,8 +60,15 @@ function buildBaseConfig() {
 }
 
 function onConnectLog(scope: string, client: Redis) {
-  client.on('connect', () => _ulogDebug(`[Redis:${scope}] connected ${REDIS_HOST}:${REDIS_PORT}`))
-  client.on('error', (err) => _ulogError(`[Redis:${scope}] error:`, err.message))
+  client.on('connect', () => _ulogInfo(`[Redis:${scope}] connected ${REDIS_HOST}:${REDIS_PORT}`))
+  client.on('error', (err) => {
+    const message = err?.message || 'unknown redis error'
+    if (IS_BUILD_PHASE && isRedisAuthError(message)) {
+      _ulogInfo(`[Redis:${scope}] auth unavailable during build phase, skip noisy warning`)
+      return
+    }
+    _ulogError(`[Redis:${scope}] error:`, message)
+  })
 }
 
 function createAppRedis() {
@@ -84,7 +117,7 @@ function createNoopRedis(scope: 'app' | 'queue' | 'sub'): Redis {
     },
   }
 
-  _ulogInfo(`[Redis:${scope}] build phase detected, using noop client`)
+  _ulogInfo(`[Redis:${scope}] redis disabled for build/test mode, using noop client`)
   return noopClient as Redis
 }
 
@@ -93,12 +126,12 @@ if (!globalForRedis.__waoowaooRedis) {
   globalForRedis.__waoowaooRedis = singleton
 }
 
-export const redis = singleton.app || (singleton.app = IS_BUILD_PHASE ? createNoopRedis('app') : createAppRedis())
+export const redis = singleton.app || (singleton.app = SHOULD_USE_NOOP_REDIS ? createNoopRedis('app') : createAppRedis())
 export const queueRedis = singleton.queue
-  || (singleton.queue = IS_BUILD_PHASE ? createNoopRedis('queue') : createQueueRedis())
+  || (singleton.queue = SHOULD_USE_NOOP_REDIS ? createNoopRedis('queue') : createQueueRedis())
 
 export function createSubscriber() {
-  if (IS_BUILD_PHASE) {
+  if (SHOULD_USE_NOOP_REDIS) {
     return createNoopRedis('sub')
   }
   const client = new Redis({
