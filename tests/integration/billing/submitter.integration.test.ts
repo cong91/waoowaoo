@@ -43,6 +43,42 @@ describe('billing/submitter integration', () => {
     expect(billing?.source).toBe('task')
   })
 
+  it('accepts route-provided billingInfo when billable recompute is missing (story_to_script_run async)', async () => {
+    const user = await createTestUser()
+    await seedBalance(user.id, 10)
+
+    const billingInfo = buildDefaultTaskBillingInfo(TASK_TYPE.STORY_TO_SCRIPT_RUN, {
+      analysisModel: 'anthropic/claude-sonnet-4',
+      maxInputTokens: 1200,
+      maxOutputTokens: 800,
+    })
+    expect(billingInfo?.billable).toBe(true)
+
+    const result = await submitTask({
+      userId: user.id,
+      locale: 'en',
+      projectId: 'project-story',
+      episodeId: 'episode-1',
+      type: TASK_TYPE.STORY_TO_SCRIPT_RUN,
+      targetType: 'Episode',
+      targetId: 'episode-1',
+      payload: {
+        story: 'scene draft',
+        maxInputTokens: 1200,
+        maxOutputTokens: 800,
+      },
+      billingInfo,
+    })
+
+    expect(result.success).toBe(true)
+
+    const task = await prisma.task.findUnique({ where: { id: result.taskId } })
+    expect(task).toBeTruthy()
+    const savedBilling = task?.billingInfo as { billable?: boolean; model?: string } | null
+    expect(savedBilling?.billable).toBe(true)
+    expect(savedBilling?.model).toBe('anthropic/claude-sonnet-4')
+  })
+
   it('marks task as failed when balance is insufficient', async () => {
     const user = await createTestUser()
     await seedBalance(user.id, 0)
