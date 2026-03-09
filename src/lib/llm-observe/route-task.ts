@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getRequestId } from '@/lib/api-errors'
+import { ApiError, getRequestId } from '@/lib/api-errors'
 import { submitTask } from '@/lib/task/submitter'
 import { TASK_TYPE, type TaskType } from '@/lib/task/types'
 import { buildDefaultTaskBillingInfo, isBillableTaskType } from '@/lib/billing'
@@ -9,6 +9,7 @@ import { getLLMTaskPolicy } from './task-policy'
 import { getTaskFlowMeta } from './stage-pipeline'
 import { resolveRequiredTaskLocale } from '@/lib/task/resolve-locale'
 import { getProjectModelConfig, getUserModelConfig } from '@/lib/config-service'
+import { resolveAnalysisModel } from '@/lib/workers/handlers/resolve-analysis-model'
 
 export function toObject(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return {}
@@ -95,13 +96,16 @@ export async function maybeSubmitLLMTask(params: {
       ? payload.flowStageTitle.trim()
       : defaultFlowMeta.flowStageTitle
 
-  // 确保 payload 中包含真实的 analysisModel，用于精确计费
-  // 根据 worker 实际使用的 model 来源选择对应的配置
-  const hasModel = typeof payload.analysisModel === 'string' && payload.analysisModel.trim()
-    || typeof payload.model === 'string' && payload.model.trim()
+  // Ensure payload contains the same resolved analysis model the worker will actually use,
+  // so billing info can be generated consistently for billable text tasks.
+  const hasModel = Boolean(
+    (typeof payload.analysisModel === 'string' && payload.analysisModel.trim())
+      || (typeof payload.model === 'string' && payload.model.trim()),
+  )
   if (!hasModel && isBillableTaskType(params.type)) {
     const useUserLevelConfig = params.type === TASK_TYPE.EPISODE_SPLIT_LLM
       || params.type === TASK_TYPE.REFERENCE_TO_CHARACTER
+
     if (useUserLevelConfig) {
       const userConfig = await getUserModelConfig(params.userId)
       if (userConfig.analysisModel) {
@@ -109,8 +113,25 @@ export async function maybeSubmitLLMTask(params: {
       }
     } else {
       const modelConfig = await getProjectModelConfig(params.projectId, params.userId)
-      if (modelConfig.analysisModel) {
-        payload.analysisModel = modelConfig.analysisModel
+      const shouldFailFastOnMissingModel = params.type === TASK_TYPE.STORY_TO_SCRIPT_RUN
+        || params.type === TASK_TYPE.SCRIPT_TO_STORYBOARD_RUN
+
+      try {
+        const resolvedAnalysisModel = await resolveAnalysisModel({
+          userId: params.userId,
+          projectAnalysisModel: modelConfig.analysisModel,
+        })
+
+        if (resolvedAnalysisModel) {
+          payload.analysisModel = resolvedAnalysisModel
+        }
+      } catch (error) {
+        if (shouldFailFastOnMissingModel && error instanceof Error && error.message.includes('ANALYSIS_MODEL_NOT_CONFIGURED')) {
+          throw new ApiError('MISSING_CONFIG', {
+            code: 'ANALYSIS_MODEL_NOT_CONFIGURED',
+            message: 'ANALYSIS_MODEL_NOT_CONFIGURED: please configure an analysis model before starting story/script runs',
+          })
+        }
       }
     }
   }
