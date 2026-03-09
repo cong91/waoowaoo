@@ -20,6 +20,43 @@ export type QuickMangaHistoryItem = {
     colorMode: string
     style: string | null
   }
+  controls: {
+    styleLock: {
+      enabled: boolean
+      profile: 'auto' | 'line-consistent' | 'ink-contrast' | 'soft-tones'
+      strength: number
+    }
+    chapterContinuity: {
+      mode: 'off' | 'chapter-strict' | 'chapter-flex'
+      chapterId: string | null
+      conflictPolicy: 'balanced' | 'prefer-style-lock' | 'prefer-chapter-context'
+    }
+  }
+  continuity: {
+    sourceRunId: string
+    sourceStage: 'story-to-script' | 'script-to-storyboard'
+    shortcut: 'history-regenerate'
+    fallbackContentUsed: boolean
+    reusedOptions: {
+      preset: string
+      layout: string
+      colorMode: string
+      style: string | null
+    }
+    reusedControls?: {
+      styleLock: {
+        enabled: boolean
+        profile: 'auto' | 'line-consistent' | 'ink-contrast' | 'soft-tones'
+        strength: number
+      }
+      chapterContinuity: {
+        mode: 'off' | 'chapter-strict' | 'chapter-flex'
+        chapterId: string | null
+        conflictPolicy: 'balanced' | 'prefer-style-lock' | 'prefer-chapter-context'
+      }
+    }
+  } | null
+  continuityConflictHint: 'balanced' | 'style-lock-priority' | 'chapter-context-priority'
   preview: {
     inputSnippet: string | null
     outputSnippet: string | null

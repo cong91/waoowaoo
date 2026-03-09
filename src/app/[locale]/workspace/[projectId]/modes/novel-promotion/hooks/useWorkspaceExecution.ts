@@ -9,8 +9,10 @@ import {
   useQuickMangaHistory,
 } from '@/lib/query/hooks'
 import { buildQuickMangaStoryInput, type QuickMangaOptions } from '@/lib/novel-promotion/quick-manga'
+import type { QuickMangaGenerationControls } from '@/lib/novel-promotion/quick-manga-contract'
 import {
   buildQuickMangaContinuityContext,
+  buildQuickMangaGenerationControlsFromHistory,
   buildQuickMangaPayloadFromHistory,
   resolveQuickMangaRegenerateStoryContent,
 } from '@/lib/novel-promotion/quick-manga-regenerate'
@@ -21,14 +23,16 @@ interface UseWorkspaceExecutionParams {
   episodeId?: string
   analysisModel?: string | null
   novelText: string
-  quickManga: QuickMangaOptions
+  quickManga: QuickMangaOptions & {
+    controls: QuickMangaGenerationControls
+  }
   artStyle?: string | null
   t: (key: string) => string
   onRefresh: (options?: { scope?: string; mode?: string }) => Promise<void>
   onUpdateConfig: (key: string, value: unknown) => Promise<void>
   onStageChange: (stage: string) => void
   onOpenAssetLibrary: (focusCharacterId?: string | null, refreshAssets?: boolean) => void
-  onQuickMangaRegenerate: (history: QuickMangaHistoryItem) => Promise<void>
+  onQuickMangaRegenerate?: (history: QuickMangaHistoryItem) => Promise<void>
 }
 
 function isAbortError(err: unknown): boolean {
@@ -112,9 +116,16 @@ export function useWorkspaceExecution({
       return
     }
 
+    const quickMangaPayload = {
+      enabled: quickManga.enabled,
+      preset: quickManga.preset,
+      layout: quickManga.layout,
+      colorMode: quickManga.colorMode,
+    }
+
     const mergedStoryContent = buildQuickMangaStoryInput({
       storyContent,
-      options: quickManga,
+      options: quickMangaPayload,
       artStyle,
     })
 
@@ -130,6 +141,8 @@ export function useWorkspaceExecution({
         model: analysisModel || undefined,
         temperature: 0.7,
         reasoning: true,
+        quickManga: quickMangaPayload,
+        quickMangaControls: quickManga.controls,
       })
       if (runResult.status !== 'completed') {
         throw new Error(runResult.errorMessage || t('execution.storyToScriptFailed'))
@@ -169,6 +182,13 @@ export function useWorkspaceExecution({
         model: analysisModel || undefined,
         temperature: 0.7,
         reasoning: true,
+        quickManga: {
+          enabled: quickManga.enabled,
+          preset: quickManga.preset,
+          layout: quickManga.layout,
+          colorMode: quickManga.colorMode,
+        },
+        quickMangaControls: quickManga.controls,
       })
       if (runResult.status !== 'completed') {
         throw new Error(runResult.errorMessage || t('execution.scriptToStoryboardFailed'))
@@ -186,7 +206,7 @@ export function useWorkspaceExecution({
       setIsConfirmingAssets(false)
       setTransitionProgress({ message: '', step: '' })
     }
-  }, [analysisModel, episodeId, onRefresh, onStageChange, scriptToStoryboardStream, t])
+  }, [analysisModel, episodeId, onRefresh, onStageChange, quickManga, scriptToStoryboardStream, t])
 
   const runQuickMangaRegenerateFlow = useCallback(async (history: QuickMangaHistoryItem) => {
     if (!episodeId) {
@@ -217,6 +237,7 @@ export function useWorkspaceExecution({
     })
 
     const quickMangaPayload = buildQuickMangaPayloadFromHistory(history)
+    const quickMangaControls = buildQuickMangaGenerationControlsFromHistory(history)
 
     const mergedStoryContent = buildQuickMangaStoryInput({
       storyContent: resolvedContent.content,
@@ -236,6 +257,7 @@ export function useWorkspaceExecution({
         temperature: 0.7,
         reasoning: true,
         quickManga: quickMangaPayload,
+        quickMangaControls,
         continuity: continuityContext,
       })
 
@@ -243,7 +265,7 @@ export function useWorkspaceExecution({
         throw new Error(runResult.errorMessage || t('storyInput.quickManga.regenerate.failed'))
       }
 
-      await onQuickMangaRegenerate(history)
+      await onQuickMangaRegenerate?.(history)
       await onRefresh()
       onStageChange('script')
     } catch (err: unknown) {

@@ -1,174 +1,238 @@
 {
-    "stages": {
-        "story": "Câu chuyện",
-        "script": "Kịch bản",
-        "storyboard": "Bảng phân cảnh",
-        "video": "Băng hình",
-        "editor": "Trình chỉnh sửa AI",
-        "editorComingSoon": "Sắp có, hãy theo dõi chúng tôi để cập nhật"
-    },
-    "buttons": {
-        "assetLibrary": "Thư viện nội dung",
-        "settings": "Cài đặt",
-        "refreshData": "Làm mới dữ liệu",
-        "enterVideoGeneration": "Nhập video →"
+  "stages": {
+    "story": "Câu chuyện",
+    "script": "Kịch bản",
+    "storyboard": "Bảng phân cảnh",
+    "video": "Băng hình",
+    "editor": "Trình chỉnh sửa AI",
+    "editorComingSoon": "Sắp có, hãy theo dõi chúng tôi để cập nhật"
+  },
+  "buttons": {
+    "assetLibrary": "Thư viện nội dung",
+    "settings": "Cài đặt",
+    "refreshData": "Làm mới dữ liệu",
+    "enterVideoGeneration": "Nhập video →"
+  },
+  "smartImport": {
+    "title": "Bắt đầu hành trình sáng tạo của bạn",
+    "subtitle": "Đầu tiên, chọn phương pháp tạo của bạn",
+    "manualCreate": {
+      "title": "Tạo từ tập 1",
+      "description": "Bắt đầu từ tập 1, thích hợp làm nhiều tập hoặc video ngắn đơn lẻ",
+      "button": "Bắt đầu tạo"
     },
     "smartImport": {
-        "title": "Bắt đầu hành trình sáng tạo của bạn",
-        "subtitle": "Đầu tiên, chọn phương pháp tạo của bạn",
-        "manualCreate": {
-            "title": "Tạo từ tập 1",
-            "description": "Bắt đầu từ tập 1, thích hợp làm nhiều tập hoặc video ngắn đơn lẻ",
-            "button": "Bắt đầu tạo"
-        },
-        "smartImport": {
-            "title": "Nhập sách thông minh đầy đủ",
-            "description": "Tải lên một cuốn tiểu thuyết hoặc kịch bản hoàn chỉnh, công cụ AI sẽ tự động nhận dạng cấu trúc chương và chia thành các tập.",
-            "button": "Nhập ngay",
-            "recommended": "Khuyến khích"
-        },
-        "upload": {
-            "title": "Tải lên nguyên liệu thô",
-            "subtitle": "Công cụ AI đã sẵn sàng, tự động chia tách và định dạng tập",
-            "maxWords": "(Tối đa 30.000 từ)",
-            "textInput": "Nhập nội dung văn bản",
-            "documentUpload": "Tải lên tài liệu đầy đủ",
-            "placeholder": "Dán các chương tiểu thuyết hoặc nội dung kịch bản của bạn vào đây...",
-            "filePlaceholder": "Chế độ tải lên tập tin",
-            "clickUpload": "Bấm để tải tài liệu lên",
-            "clearTextFirst": "Vui lòng xóa văn bản bên trái trước",
-            "supportedFormats": "Hỗ trợ định dạng Word, TXT",
-            "preview": "Xem trước",
-            "expandPreview": "Mở rộng thêm",
-            "collapsePreview": "Thu gọn",
-            "deleteFile": "Xóa tập tin",
-            "startAnalysis": "Bắt đầu phân tích thông minh",
-            "back": "Quay lại",
-            "words": "từ"
-        },
-        "analyzing": {
-            "title": "AI đang phân tích câu chuyện của bạn",
-            "description": "Nhận dạng cấu trúc chương, đang tiến hành phân tách thông minh...",
-            "autoSave": "Sẽ tự động lưu sau khi phân tích hoàn tất"
-        },
-        "preview": {
-            "title": "Hoàn tất phân chia thông minh",
-            "episodeCount": "Tự động chia thành {count} tập",
-            "totalWords": "Tổng cộng {count} từ",
-            "separator": ", ",
-            "autoSaved": "✓ Tự động lưu",
-            "reanalyze": "Phân tích lại",
-            "confirm": "Xác nhận hoàn thành",
-            "saving": "Đang lưu...",
-            "episodeList": "Danh sách tập",
-            "addEpisode": "Thêm tập",
-            "averageWords": "Trung bình mỗi tập",
-            "episodeContent": "Nội dung tập",
-            "episodePlaceholder": "Nhập tiêu đề tập...",
-            "summaryPlaceholder": "Nhập tóm tắt cốt truyện...",
-            "newEpisode": "Tập mới",
-            "deleteEpisode": "Xóa tập",
-            "deleteConfirm": {
-                "title": "Xác nhận Xóa",
-                "message": "Bạn có chắc chắn muốn xóa \"{title}\" không?",
-                "cancel": "Hủy",
-                "confirm": "Xác nhận Xóa"
-            },
-            "tip": {
-                "title": "Mẹo",
-                "content": "Bạn có thể trực tiếp chỉnh sửa tiêu đề, tóm tắt và nội dung. Sau khi nhấp vào [Xác nhận hoàn thành], các tập sẽ được nhập chính thức vào dự án"
-            }
-        },
-        "errors": {
-            "fileTooLarge": "Tệp quá lớn, vui lòng tải lên tệp nhỏ hơn 10MB",
-            "docNotSupported": "Định dạng .doc không được hỗ trợ, vui lòng chuyển đổi sang .docx trong Word",
-            "fileEmpty": "Nội dung tập tin trống",
-            "fileReadError": "Đọc tệp không thành công, vui lòng thử lại",
-            "uploadFirst": "Vui lòng tải lên hoặc dán nội dung trước",
-            "analyzeFailed": "Phân tích không thành công",
-            "saveFailed": "Lưu không thành công"
-        },
-        "cancelConfirm": "Bạn có chắc chắn muốn hủy không? Các tập phim được phân tích sẽ bị xóa."
+      "title": "Nhập sách thông minh đầy đủ",
+      "description": "Tải lên một cuốn tiểu thuyết hoặc kịch bản hoàn chỉnh, công cụ AI sẽ tự động nhận dạng cấu trúc chương và chia thành các tập.",
+      "button": "Nhập ngay",
+      "recommended": "Khuyến khích"
     },
-    "storyInput": {
-        "currentEditing": "Hiện đang chỉnh sửa: {name}",
-        "editingTip": "Quy trình làm việc sau đây chỉ dành cho tập này. Chuyển các tập ở trên cùng bên trái nếu cần",
-        "wordCount": "Số từ:",
-        "placeholder": "Nhập nội dung kịch bản hoặc tiểu thuyết của bạn...\n\nAI sẽ phân tích thông minh văn bản của bạn:\n• Tự động nhận diện chuyển cảnh\n• Trích xuất hội thoại và hành động nhân vật\n• Tạo kịch bản phân cảnh\n\nVí dụ:\nSáng sớm, ánh nắng xuyên qua rèm cửa tràn vào phòng. Tiểu Minh dụi mắt ngái ngủ ngồi dậy trên giường, liếc nhìn đồng hồ báo thức — đã tám giờ rồi! Anh nhảy khỏi giường và vội vàng mặc quần áo...",
-        "assetLibraryTip": {
-            "title": "Cần các nhân vật và vị trí tùy chỉnh?",
-            "description": "Nhấp vào nút 「Thư viện nội dung」 ở trên cùng bên phải để tải lên tài liệu cài đặt nội dung hoặc thêm ký tự/vị trí theo cách thủ công. AI sẽ ưu tiên sử dụng cài đặt từ thư viện tài sản để phân tích."
-        },
-        "videoRatio": "Tỷ lệ video",
-        "visualStyle": "Phong cách trực quan",
-        "moreConfig": "Để biết thêm tùy chọn cấu hình, hãy nhấp vào nút 「Cài đặt」 ở trên cùng bên phải",
-        "quickManga": {
-            "title": "Quick Manga Entry (Phase 0)",
-            "description": "Bật preset manga source-aware ngay trong novel-promotion, không tạo mode mới",
-            "toggle": "Bật/tắt quick manga",
-            "preset": {
-                "label": "Preset",
-                "options": {
-                    "auto": "Tự động",
-                    "actionBattle": "Hành động / Chiến đấu",
-                    "romanceDrama": "Lãng mạn / Drama",
-                    "sliceOfLife": "Đời thường",
-                    "comedy4Koma": "Hài 4-koma"
-                }
-            },
-            "layout": {
-                "label": "Bố cục khung",
-                "options": {
-                    "auto": "Tự động",
-                    "cinematic": "Khung điện ảnh",
-                    "fourKoma": "Nhịp 4-koma",
-                    "verticalScroll": "Cuộn dọc"
-                }
-            },
-            "colorMode": {
-                "label": "Chế độ màu",
-                "options": {
-                    "auto": "Tự động",
-                    "fullColor": "Màu đầy đủ",
-                    "blackWhite": "Đen trắng",
-                    "limitedPalette": "Bảng màu giới hạn"
-                }
-            }
-        },
-        "narration": {
-            "title": "Bật thuyết minh thuyết minh",
-            "description": "Tạo tường thuật bằng giọng nói TTS để thêm bình luận vào video của bạn"
-        },
-        "creating": "AI sáng tạo...",
-        "ready": "✓ Cấu hình hoàn tất, sẵn sàng cho bước tiếp theo",
-        "pleaseInput": "Vui lòng nhập nội dung kịch bản trước"
+    "upload": {
+      "title": "Tải lên nguyên liệu thô",
+      "subtitle": "Công cụ AI đã sẵn sàng, tự động chia tách và định dạng tập",
+      "maxWords": "(Tối đa 30.000 từ)",
+      "textInput": "Nhập nội dung văn bản",
+      "documentUpload": "Tải lên tài liệu đầy đủ",
+      "placeholder": "Dán các chương tiểu thuyết hoặc nội dung kịch bản của bạn vào đây...",
+      "filePlaceholder": "Chế độ tải lên tập tin",
+      "clickUpload": "Bấm để tải tài liệu lên",
+      "clearTextFirst": "Vui lòng xóa văn bản bên trái trước",
+      "supportedFormats": "Hỗ trợ định dạng Word, TXT",
+      "preview": "Xem trước",
+      "expandPreview": "Mở rộng thêm",
+      "collapsePreview": "Thu gọn",
+      "deleteFile": "Xóa tập tin",
+      "startAnalysis": "Bắt đầu phân tích thông minh",
+      "back": "Quay lại",
+      "words": "từ"
     },
-    "execution": {
-        "selectEpisode": "Vui lòng chọn tập trước",
-        "fillContentFirst": "Vui lòng nhập nội dung trước",
-        "requestAborted": "Yêu cầu bị hủy (có thể do làm mới trang)",
-        "analysisFailed": "Phân tích tài sản không thành công",
-        "prepareFailed": "Chuẩn bị không thành công",
-        "generationFailed": "Thế hệ không thành công",
-        "batchVideoFailed": "Tạo video hàng loạt không thành công",
-        "updateFailed": "Cập nhật không thành công",
-        "saveFailed": "Lưu không thành công",
-        "storyToScriptRunning": "Câu chuyện→Tập lệnh V2 đang chạy",
-        "scriptToStoryboardRunning": "Kịch bản→Storyboard V2 đang chạy",
-        "storyToScriptFailed": "Kịch bản câu chuyện không thành công",
-        "scriptToStoryboardFailed": "Tập lệnh vào bảng phân cảnh không thành công",
-        "taskStreamTimeout": "Nhiệm vụ đã hết thời gian. Tác vụ có thể vẫn đang chạy ở chế độ nền — vui lòng kiểm tra trạng thái của tác vụ hoặc thử lại"
+    "analyzing": {
+      "title": "AI đang phân tích câu chuyện của bạn",
+      "description": "Nhận dạng cấu trúc chương, đang tiến hành phân tách thông minh...",
+      "autoSave": "Sẽ tự động lưu sau khi phân tích hoàn tất"
     },
-    "rebuildConfirm": {
-        "storyToScript": {
-            "title": "Luồng tập lệnh sẽ được xây dựng lại",
-            "message": "Đã phát hiện thấy dữ liệu bảng phân cảnh xuôi dòng cho tập này ({storyboardCount} bảng phân cảnh, {panelCount} bảng). Tiếp tục sẽ xóa và xây dựng lại dữ liệu này. Tiếp tục?"
+    "preview": {
+      "title": "Hoàn tất phân chia thông minh",
+      "episodeCount": "Tự động chia thành {count} tập",
+      "totalWords": "Tổng cộng {count} từ",
+      "separator": ", ",
+      "autoSaved": "✓ Tự động lưu",
+      "reanalyze": "Phân tích lại",
+      "confirm": "Xác nhận hoàn thành",
+      "saving": "Đang lưu...",
+      "episodeList": "Danh sách tập",
+      "addEpisode": "Thêm tập",
+      "averageWords": "Trung bình mỗi tập",
+      "episodeContent": "Nội dung tập",
+      "episodePlaceholder": "Nhập tiêu đề tập...",
+      "summaryPlaceholder": "Nhập tóm tắt cốt truyện...",
+      "newEpisode": "Tập mới",
+      "deleteEpisode": "Xóa tập",
+      "deleteConfirm": {
+        "title": "Xác nhận Xóa",
+        "message": "Bạn có chắc chắn muốn xóa \"{title}\" không?",
+        "cancel": "Hủy",
+        "confirm": "Xác nhận Xóa"
+      },
+      "tip": {
+        "title": "Mẹo",
+        "content": "Bạn có thể trực tiếp chỉnh sửa tiêu đề, tóm tắt và nội dung. Sau khi nhấp vào [Xác nhận hoàn thành], các tập sẽ được nhập chính thức vào dự án"
+      }
+    },
+    "errors": {
+      "fileTooLarge": "Tệp quá lớn, vui lòng tải lên tệp nhỏ hơn 10MB",
+      "docNotSupported": "Định dạng .doc không được hỗ trợ, vui lòng chuyển đổi sang .docx trong Word",
+      "fileEmpty": "Nội dung tập tin trống",
+      "fileReadError": "Đọc tệp không thành công, vui lòng thử lại",
+      "uploadFirst": "Vui lòng tải lên hoặc dán nội dung trước",
+      "analyzeFailed": "Phân tích không thành công",
+      "saveFailed": "Lưu không thành công"
+    },
+    "cancelConfirm": "Bạn có chắc chắn muốn hủy không? Các tập phim được phân tích sẽ bị xóa."
+  },
+  "storyInput": {
+    "currentEditing": "Hiện đang chỉnh sửa: {name}",
+    "editingTip": "Quy trình làm việc sau đây chỉ dành cho tập này. Chuyển các tập ở trên cùng bên trái nếu cần",
+    "wordCount": "Số từ:",
+    "placeholder": "Nhập nội dung kịch bản hoặc tiểu thuyết của bạn...\n\nAI sẽ phân tích thông minh văn bản của bạn:\n• Tự động nhận diện chuyển cảnh\n• Trích xuất hội thoại và hành động nhân vật\n• Tạo kịch bản phân cảnh\n\nVí dụ:\nSáng sớm, ánh nắng xuyên qua rèm cửa tràn vào phòng. Tiểu Minh dụi mắt ngái ngủ ngồi dậy trên giường, liếc nhìn đồng hồ báo thức — đã tám giờ rồi! Anh nhảy khỏi giường và vội vàng mặc quần áo...",
+    "assetLibraryTip": {
+      "title": "Cần các nhân vật và vị trí tùy chỉnh?",
+      "description": "Nhấp vào nút 「Thư viện nội dung」 ở trên cùng bên phải để tải lên tài liệu cài đặt nội dung hoặc thêm ký tự/vị trí theo cách thủ công. AI sẽ ưu tiên sử dụng cài đặt từ thư viện tài sản để phân tích."
+    },
+    "videoRatio": "Tỷ lệ video",
+    "visualStyle": "Phong cách trực quan",
+    "moreConfig": "Để biết thêm tùy chọn cấu hình, hãy nhấp vào nút 「Cài đặt」 ở trên cùng bên phải",
+    "quickManga": {
+      "title": "Quick Manga Entry (Phase 0)",
+      "description": "Bật preset manga source-aware ngay trong novel-promotion, không tạo mode mới",
+      "toggle": "Bật/tắt quick manga",
+      "preset": {
+        "label": "Preset",
+        "options": {
+          "auto": "Tự động",
+          "actionBattle": "Hành động / Chiến đấu",
+          "romanceDrama": "Lãng mạn / Drama",
+          "sliceOfLife": "Đời thường",
+          "comedy4Koma": "Hài 4-koma"
+        }
+      },
+      "layout": {
+        "label": "Bố cục khung",
+        "options": {
+          "auto": "Tự động",
+          "cinematic": "Khung điện ảnh",
+          "fourKoma": "Nhịp 4-koma",
+          "verticalScroll": "Cuộn dọc",
+          "splashFocus": "Tập trung splash"
+        }
+      },
+      "colorMode": {
+        "label": "Chế độ màu",
+        "options": {
+          "auto": "Tự động",
+          "fullColor": "Màu đầy đủ",
+          "blackWhite": "Đen trắng",
+          "limitedPalette": "Bảng màu giới hạn"
+        }
+      },
+      "history": {
+        "title": "Lịch sử Quick Manga",
+        "description": "Xem lại các run quick manga gần đây với trạng thái, continuity metadata và cấu hình có thể tái dùng",
+        "loading": "Đang tải lịch sử run...",
+        "empty": "Chưa có run quick manga cho bộ lọc này",
+        "noPreview": "Chưa có preview",
+        "filters": {
+          "all": "Tất cả",
+          "success": "Thành công",
+          "failed": "Thất bại",
+          "cancelled": "Đã hủy"
         },
-        "scriptToStoryboard": {
-            "title": "Dữ liệu bảng phân cảnh sẽ được xây dựng lại",
-            "message": "Đã phát hiện dữ liệu bảng phân cảnh hiện có cho tập này ({storyboardCount} bảng phân cảnh, {panelCount} bảng). Tiếp tục sẽ xóa bảng phân cảnh hiện tại và tạo lại chúng. Tiếp tục?"
+        "stage": {
+          "storyToScript": "Story → Script",
+          "scriptToStoryboard": "Script → Storyboard"
         },
-        "confirm": "Tiếp tục và Xóa",
-        "cancel": "Hủy"
-    }
+        "metadata": {
+          "stage": "Bước",
+          "status": "Trạng thái",
+          "preset": "Preset",
+          "layout": "Bố cục",
+          "colorMode": "Màu",
+          "style": "Phong cách",
+          "styleLockProfile": "Profile khóa style",
+          "styleLockStrength": "Độ mạnh khóa style",
+          "chapterContinuityMode": "Chế độ continuity chapter",
+          "chapterId": "Chapter ID",
+          "conflictPolicy": "Chính sách xung đột"
+        },
+        "continuityConflict": {
+          "title": "Xử lý xung đột continuity",
+          "helpText": "Khi style lock và chapter context xung đột, hệ thống áp dụng policy đã chọn để regenerate nhất quán."
+        },
+        "conflictHints": {
+          "balanced": "Balanced: cân bằng giữa style lock và chapter context.",
+          "styleLockPriority": "Ưu tiên style lock: giữ style hình ảnh ổn định ngay cả khi chapter context lệch.",
+          "chapterContextPriority": "Ưu tiên chapter context: bám continuity chapter trước, nới style lock khi cần."
+        },
+        "continuityShortcut": {
+          "sourceRun": "Run nguồn: {runId}",
+          "sourceStage": "Bước nguồn"
+        }
+      },
+      "controls": {
+        "title": "Điều khiển tạo sinh",
+        "styleLock": {
+          "enabled": "Bật Style Lock",
+          "profile": "Profile Style Lock",
+          "strength": "Độ mạnh Style Lock"
+        },
+        "chapter": {
+          "mode": "Chế độ continuity chapter",
+          "id": "Chapter ID",
+          "idPlaceholder": "Tùy chọn chapter id (vd: ch-02)",
+          "conflictPolicy": "Chính sách xung đột"
+        },
+        "conflictHelp": "Chọn policy để xử lý xung đột giữa style lock và chapter continuity khi regenerate."
+      },
+      "regenerate": {
+        "invalidSource": "Mục lịch sử đã chọn không phải nguồn quick manga hợp lệ",
+        "missingContent": "Không thể regenerate vì thiếu nội dung nguồn",
+        "failed": "Regenerate quick manga thất bại"
+      }
+    },
+    "narration": {
+      "title": "Bật thuyết minh thuyết minh",
+      "description": "Tạo tường thuật bằng giọng nói TTS để thêm bình luận vào video của bạn"
+    },
+    "creating": "AI sáng tạo...",
+    "ready": "✓ Cấu hình hoàn tất, sẵn sàng cho bước tiếp theo",
+    "pleaseInput": "Vui lòng nhập nội dung kịch bản trước"
+  },
+  "execution": {
+    "selectEpisode": "Vui lòng chọn tập trước",
+    "fillContentFirst": "Vui lòng nhập nội dung trước",
+    "requestAborted": "Yêu cầu bị hủy (có thể do làm mới trang)",
+    "analysisFailed": "Phân tích tài sản không thành công",
+    "prepareFailed": "Chuẩn bị không thành công",
+    "generationFailed": "Thế hệ không thành công",
+    "batchVideoFailed": "Tạo video hàng loạt không thành công",
+    "updateFailed": "Cập nhật không thành công",
+    "saveFailed": "Lưu không thành công",
+    "storyToScriptRunning": "Câu chuyện→Tập lệnh V2 đang chạy",
+    "scriptToStoryboardRunning": "Kịch bản→Storyboard V2 đang chạy",
+    "storyToScriptFailed": "Kịch bản câu chuyện không thành công",
+    "scriptToStoryboardFailed": "Tập lệnh vào bảng phân cảnh không thành công",
+    "taskStreamTimeout": "Nhiệm vụ đã hết thời gian. Tác vụ có thể vẫn đang chạy ở chế độ nền — vui lòng kiểm tra trạng thái của tác vụ hoặc thử lại"
+  },
+  "rebuildConfirm": {
+    "storyToScript": {
+      "title": "Luồng tập lệnh sẽ được xây dựng lại",
+      "message": "Đã phát hiện thấy dữ liệu bảng phân cảnh xuôi dòng cho tập này ({storyboardCount} bảng phân cảnh, {panelCount} bảng). Tiếp tục sẽ xóa và xây dựng lại dữ liệu này. Tiếp tục?"
+    },
+    "scriptToStoryboard": {
+      "title": "Dữ liệu bảng phân cảnh sẽ được xây dựng lại",
+      "message": "Đã phát hiện dữ liệu bảng phân cảnh hiện có cho tập này ({storyboardCount} bảng phân cảnh, {panelCount} bảng). Tiếp tục sẽ xóa bảng phân cảnh hiện tại và tạo lại chúng. Tiếp tục?"
+    },
+    "confirm": "Tiếp tục và Xóa",
+    "cancel": "Hủy"
+  }
 }

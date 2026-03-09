@@ -1,5 +1,8 @@
 import type { QuickMangaHistoryItem } from '@/lib/query/hooks/useQuickMangaHistory'
-import type { QuickMangaContinuityContext } from '@/lib/novel-promotion/quick-manga-history'
+import type {
+  QuickMangaContinuityContext,
+  QuickMangaGenerationControls,
+} from '@/lib/novel-promotion/quick-manga-contract'
 import type {
   QuickMangaColorMode,
   QuickMangaLayout,
@@ -86,8 +89,23 @@ export function buildQuickMangaPayloadFromHistory(source: Pick<QuickMangaHistory
   }
 }
 
+export function buildQuickMangaGenerationControlsFromHistory(source: Pick<QuickMangaHistoryItem, 'controls'>): QuickMangaGenerationControls {
+  return {
+    styleLock: {
+      enabled: source.controls.styleLock.enabled === true,
+      profile: source.controls.styleLock.profile,
+      strength: source.controls.styleLock.strength,
+    },
+    chapterContinuity: {
+      mode: source.controls.chapterContinuity.mode,
+      chapterId: source.controls.chapterContinuity.chapterId,
+      conflictPolicy: source.controls.chapterContinuity.conflictPolicy,
+    },
+  }
+}
+
 export function buildQuickMangaContinuityContext(params: {
-  source: Pick<QuickMangaHistoryItem, 'runId' | 'stage' | 'options'>
+  source: Pick<QuickMangaHistoryItem, 'runId' | 'stage' | 'options' | 'controls'>
   fallbackContentUsed: boolean
 }): QuickMangaContinuityContext {
   const payload = buildQuickMangaPayloadFromHistory(params.source)
@@ -103,5 +121,6 @@ export function buildQuickMangaContinuityContext(params: {
       colorMode: payload.colorMode,
       style: payload.style,
     },
+    reusedControls: buildQuickMangaGenerationControlsFromHistory(params.source),
   }
 }

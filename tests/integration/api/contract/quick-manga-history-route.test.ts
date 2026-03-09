@@ -166,6 +166,19 @@ describe('api contract - quick manga history route', () => {
         runId: string
         statusBucket: string
         latestEventType: string | null
+        continuityConflictHint: 'balanced' | 'style-lock-priority' | 'chapter-context-priority'
+        controls: {
+          styleLock: {
+            enabled: boolean
+            profile: string
+            strength: number
+          }
+          chapterContinuity: {
+            mode: string
+            chapterId: string | null
+            conflictPolicy: string
+          }
+        }
       }>
       filter: {
         status: string
@@ -178,6 +191,19 @@ describe('api contract - quick manga history route', () => {
     expect(payload.history[0]?.runId).toBe('run-script')
     expect(payload.history[0]?.statusBucket).toBe('failed')
     expect(payload.history[0]?.latestEventType).toBe('task.failed')
+    expect(payload.history[0]?.continuityConflictHint).toBe('balanced')
+    expect(payload.history[0]?.controls).toEqual({
+      styleLock: {
+        enabled: false,
+        profile: 'auto',
+        strength: 0.65,
+      },
+      chapterContinuity: {
+        mode: 'off',
+        chapterId: null,
+        conflictPolicy: 'balanced',
+      },
+    })
     expect(payload.history[1]?.runId).toBe('run-story')
     expect(payload.history[1]?.statusBucket).toBe('success')
     expect(payload.history[1]?.latestEventType).toBe('task.completed')

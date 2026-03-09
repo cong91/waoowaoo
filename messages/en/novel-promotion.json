@@ -122,7 +122,8 @@
           "auto": "Auto",
           "cinematic": "Cinematic Panels",
           "fourKoma": "4-koma Rhythm",
-          "verticalScroll": "Vertical Scroll"
+          "verticalScroll": "Vertical Scroll",
+          "splashFocus": "Splash Focus"
         }
       },
       "colorMode": {
@@ -156,8 +157,46 @@
           "preset": "Preset",
           "layout": "Layout",
           "colorMode": "Color",
-          "style": "Style"
+          "style": "Style",
+          "styleLockProfile": "Style Lock Profile",
+          "styleLockStrength": "Style Lock Strength",
+          "chapterContinuityMode": "Chapter Continuity Mode",
+          "chapterId": "Chapter ID",
+          "conflictPolicy": "Conflict Policy"
+        },
+        "continuityConflict": {
+          "title": "Continuity conflict handling",
+          "helpText": "When style lock and chapter context conflict, the selected policy is applied for deterministic regeneration."
+        },
+        "conflictHints": {
+          "balanced": "Balanced: blend style lock and chapter context.",
+          "styleLockPriority": "Style lock priority: keep visual style stable even if chapter context suggests otherwise.",
+          "chapterContextPriority": "Chapter context priority: follow chapter continuity first and relax style lock when needed."
+        },
+        "continuityShortcut": {
+          "sourceRun": "Source run: {runId}",
+          "sourceStage": "Source stage"
         }
+      },
+      "controls": {
+        "title": "Generation Controls",
+        "styleLock": {
+          "enabled": "Style Lock",
+          "profile": "Style Lock Profile",
+          "strength": "Style Lock Strength"
+        },
+        "chapter": {
+          "mode": "Chapter Continuity Mode",
+          "id": "Chapter ID",
+          "idPlaceholder": "Optional chapter id (e.g. ch-02)",
+          "conflictPolicy": "Conflict Policy"
+        },
+        "conflictHelp": "Choose policy to resolve style lock vs chapter continuity conflicts during regenerate."
+      },
+      "regenerate": {
+        "invalidSource": "Selected history item is not a valid quick manga source",
+        "missingContent": "Cannot regenerate because source content is missing",
+        "failed": "Quick manga regenerate failed"
       }
     },
     "narration": {

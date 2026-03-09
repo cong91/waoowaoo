@@ -9,6 +9,11 @@ import type {
   QuickMangaLayout,
   QuickMangaPreset,
 } from '@/lib/novel-promotion/quick-manga'
+import type {
+  QuickMangaContinuityConflictPolicy,
+  QuickMangaContinuityMode,
+  QuickMangaStyleLockProfile,
+} from '@/lib/novel-promotion/quick-manga-contract'
 
 export interface WorkspaceStageVideoModelOption {
   value: string
@@ -34,10 +39,22 @@ export interface WorkspaceStageRuntimeValue {
   quickMangaPreset: QuickMangaPreset
   quickMangaLayout: QuickMangaLayout
   quickMangaColorMode: QuickMangaColorMode
+  quickMangaStyleLockEnabled: boolean
+  quickMangaStyleLockProfile: QuickMangaStyleLockProfile
+  quickMangaStyleLockStrength: number
+  quickMangaChapterContinuityMode: QuickMangaContinuityMode
+  quickMangaChapterId: string | null
+  quickMangaConflictPolicy: QuickMangaContinuityConflictPolicy
   onQuickMangaEnabledChange: (enabled: boolean) => Promise<void>
   onQuickMangaPresetChange: (value: QuickMangaPreset) => Promise<void>
   onQuickMangaLayoutChange: (value: QuickMangaLayout) => Promise<void>
   onQuickMangaColorModeChange: (value: QuickMangaColorMode) => Promise<void>
+  onQuickMangaStyleLockEnabledChange: (enabled: boolean) => Promise<void>
+  onQuickMangaStyleLockProfileChange: (value: QuickMangaStyleLockProfile) => Promise<void>
+  onQuickMangaStyleLockStrengthChange: (value: number) => Promise<void>
+  onQuickMangaChapterContinuityModeChange: (value: QuickMangaContinuityMode) => Promise<void>
+  onQuickMangaChapterIdChange: (value: string | null) => Promise<void>
+  onQuickMangaConflictPolicyChange: (value: QuickMangaContinuityConflictPolicy) => Promise<void>
   onVideoRatioChange: (value: string) => Promise<void>
   onArtStyleChange: (value: string) => Promise<void>
   onRunStoryToScript: () => Promise<void>

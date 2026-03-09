@@ -1,4 +1,10 @@
 import { RUN_STATUS, type RunStatus } from '@/lib/run-runtime/types'
+import {
+  readQuickMangaContinuityContextFromPayload,
+  readQuickMangaControlsFromPayload,
+  type QuickMangaContinuityContext,
+  type QuickMangaGenerationControls,
+} from '@/lib/novel-promotion/quick-manga-contract'
 
 export type QuickMangaHistoryStatusFilter = 'all' | 'success' | 'failed' | 'cancelled'
 
@@ -31,6 +37,11 @@ export type QuickMangaHistoryTaskSnapshot = {
   latestEventAt?: string | null
 }
 
+export type QuickMangaHistoryContinuityConflictHint =
+  | 'balanced'
+  | 'style-lock-priority'
+  | 'chapter-context-priority'
+
 export type QuickMangaHistoryItem = {
   runId: string
   taskId: string | null
@@ -41,6 +52,9 @@ export type QuickMangaHistoryItem = {
   status: RunStatus
   statusBucket: Exclude<QuickMangaHistoryStatusFilter, 'all'>
   options: QuickMangaHistoryOptions
+  controls: QuickMangaGenerationControls
+  continuity: QuickMangaContinuityContext | null
+  continuityConflictHint: QuickMangaHistoryContinuityConflictHint
   preview: {
     inputSnippet: string | null
     outputSnippet: string | null
@@ -136,6 +150,45 @@ function resolveQuickMangaOptions(params: {
   return QUICK_MANGA_DEFAULT_OPTIONS
 }
 
+function resolveQuickMangaControls(params: {
+  runInput: Record<string, unknown>
+  taskPayload: Record<string, unknown>
+}): QuickMangaGenerationControls {
+  const runControls = readQuickMangaControlsFromPayload(params.runInput)
+  if (runControls.styleLock.enabled || runControls.chapterContinuity.mode !== 'off') {
+    return runControls
+  }
+
+  const taskControls = readQuickMangaControlsFromPayload(params.taskPayload)
+  if (taskControls.styleLock.enabled || taskControls.chapterContinuity.mode !== 'off') {
+    return taskControls
+  }
+
+  return runControls
+}
+
+function resolveQuickMangaContinuityContext(params: {
+  runInput: Record<string, unknown>
+  taskPayload: Record<string, unknown>
+}): QuickMangaContinuityContext | null {
+  const runContinuity = readQuickMangaContinuityContextFromPayload(params.runInput)
+  if (runContinuity) return runContinuity
+
+  return readQuickMangaContinuityContextFromPayload(params.taskPayload)
+}
+
+function resolveContinuityConflictHint(params: {
+  controls: QuickMangaGenerationControls
+  continuity: QuickMangaContinuityContext | null
+}): QuickMangaHistoryContinuityConflictHint {
+  const policy = params.controls.chapterContinuity.conflictPolicy
+  if (policy === 'prefer-style-lock') return 'style-lock-priority'
+  if (policy === 'prefer-chapter-context') return 'chapter-context-priority'
+  if (params.continuity?.reusedControls?.chapterContinuity.conflictPolicy === 'prefer-style-lock') return 'style-lock-priority'
+  if (params.continuity?.reusedControls?.chapterContinuity.conflictPolicy === 'prefer-chapter-context') return 'chapter-context-priority'
+  return 'balanced'
+}
+
 export function parseQuickMangaHistoryStatusFilter(value: unknown): QuickMangaHistoryStatusFilter {
   if (value === 'success' || value === 'failed' || value === 'cancelled') return value
   return 'all'
@@ -169,6 +222,14 @@ export function mapQuickMangaHistoryItem(params: {
   const runInput = toObject(params.run.input)
   const taskPayload = toObject(params.taskSnapshot?.payload)
   const statusBucket = resolveStatusBucket(params.run.status)
+  const controls = resolveQuickMangaControls({
+    runInput,
+    taskPayload,
+  })
+  const continuity = resolveQuickMangaContinuityContext({
+    runInput,
+    taskPayload,
+  })
 
   return {
     runId: params.run.id,
@@ -182,6 +243,12 @@ export function mapQuickMangaHistoryItem(params: {
     options: resolveQuickMangaOptions({
       runInput,
       taskPayload,
+    }),
+    controls,
+    continuity,
+    continuityConflictHint: resolveContinuityConflictHint({
+      controls,
+      continuity,
     }),
     preview: {
       inputSnippet: resolveInputSnippet(params.run),

@@ -112,7 +112,31 @@ describe('api contract - quick manga route continuity', () => {
             colorMode: 'full-color',
             style: 'line-art',
           },
+          reusedControls: {
+            styleLock: {
+              enabled: false,
+              profile: 'auto',
+              strength: 0.65,
+            },
+            chapterContinuity: {
+              mode: 'off',
+              chapterId: null,
+              conflictPolicy: 'balanced',
+            },
+          },
         }),
+        quickMangaControls: {
+          styleLock: {
+            enabled: false,
+            profile: 'auto',
+            strength: 0.65,
+          },
+          chapterContinuity: {
+            mode: 'off',
+            chapterId: null,
+            conflictPolicy: 'balanced',
+          },
+        },
       }),
     }))
   })

@@ -46,8 +46,89 @@ describe('quick manga history helpers', () => {
       colorMode: 'black-white',
       style: 'manga ink',
     })
+    expect(item.controls).toEqual({
+      styleLock: {
+        enabled: false,
+        profile: 'auto',
+        strength: 0.65,
+      },
+      chapterContinuity: {
+        mode: 'off',
+        chapterId: null,
+        conflictPolicy: 'balanced',
+      },
+    })
+    expect(item.continuity).toBeNull()
+    expect(item.continuityConflictHint).toBe('balanced')
     expect(item.preview.inputSnippet?.endsWith('…')).toBe(true)
     expect(item.preview.outputSnippet).toBe('done')
+  })
+
+  it('maps controls and continuity context when provided', () => {
+    const item = mapQuickMangaHistoryItem({
+      run: {
+        id: 'run-ctx',
+        workflowType: 'story_to_script_run',
+        taskId: 'task-ctx',
+        episodeId: 'episode-ctx',
+        status: RUN_STATUS.COMPLETED,
+        input: {
+          quickManga: {
+            enabled: true,
+            preset: 'slice-of-life',
+            layout: 'vertical-scroll',
+            colorMode: 'full-color',
+            style: 'warm-ink',
+          },
+          quickMangaControls: {
+            styleLock: {
+              enabled: true,
+              profile: 'line-consistent',
+              strength: 0.8,
+            },
+            chapterContinuity: {
+              mode: 'chapter-strict',
+              chapterId: 'ch-02',
+              conflictPolicy: 'prefer-style-lock',
+            },
+          },
+          continuity: {
+            sourceRunId: 'run-source',
+            sourceStage: 'story-to-script',
+            shortcut: 'history-regenerate',
+            fallbackContentUsed: false,
+            reusedOptions: {
+              preset: 'slice-of-life',
+              layout: 'vertical-scroll',
+              colorMode: 'full-color',
+              style: 'warm-ink',
+            },
+          },
+        },
+        output: {},
+        errorMessage: null,
+        createdAt: '2026-03-09T00:00:00.000Z',
+        updatedAt: '2026-03-09T00:00:10.000Z',
+      },
+    })
+
+    expect(item.controls).toEqual({
+      styleLock: {
+        enabled: true,
+        profile: 'line-consistent',
+        strength: 0.8,
+      },
+      chapterContinuity: {
+        mode: 'chapter-strict',
+        chapterId: 'ch-02',
+        conflictPolicy: 'prefer-style-lock',
+      },
+    })
+    expect(item.continuity).toEqual(expect.objectContaining({
+      sourceRunId: 'run-source',
+      shortcut: 'history-regenerate',
+    }))
+    expect(item.continuityConflictHint).toBe('style-lock-priority')
   })
 
   it('falls back to defaults and failed bucket when metadata is missing', () => {
@@ -75,6 +156,20 @@ describe('quick manga history helpers', () => {
       colorMode: 'auto',
       style: null,
     })
+    expect(item.controls).toEqual({
+      styleLock: {
+        enabled: false,
+        profile: 'auto',
+        strength: 0.65,
+      },
+      chapterContinuity: {
+        mode: 'off',
+        chapterId: null,
+        conflictPolicy: 'balanced',
+      },
+    })
+    expect(item.continuity).toBeNull()
+    expect(item.continuityConflictHint).toBe('balanced')
     expect(item.errorMessage).toBe('boom')
   })
 

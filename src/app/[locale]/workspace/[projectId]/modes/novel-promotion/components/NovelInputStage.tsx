@@ -14,6 +14,11 @@ import type {
   QuickMangaLayout,
   QuickMangaPreset,
 } from '@/lib/novel-promotion/quick-manga'
+import type {
+  QuickMangaContinuityConflictPolicy,
+  QuickMangaContinuityMode,
+  QuickMangaStyleLockProfile,
+} from '@/lib/novel-promotion/quick-manga-contract'
 import TaskStatusInline from '@/components/task/TaskStatusInline'
 import { resolveTaskPresentationState } from '@/lib/task/presentation'
 import { AppIcon, RatioPreviewIcon } from '@/components/ui/icons'
@@ -187,6 +192,18 @@ interface NovelInputStageProps {
   onQuickMangaPresetChange?: (value: QuickMangaPreset) => void
   onQuickMangaLayoutChange?: (value: QuickMangaLayout) => void
   onQuickMangaColorModeChange?: (value: QuickMangaColorMode) => void
+  quickMangaStyleLockEnabled?: boolean
+  quickMangaStyleLockProfile?: QuickMangaStyleLockProfile
+  quickMangaStyleLockStrength?: number
+  quickMangaChapterContinuityMode?: QuickMangaContinuityMode
+  quickMangaChapterId?: string | null
+  quickMangaConflictPolicy?: QuickMangaContinuityConflictPolicy
+  onQuickMangaStyleLockEnabledChange?: (enabled: boolean) => void
+  onQuickMangaStyleLockProfileChange?: (value: QuickMangaStyleLockProfile) => void
+  onQuickMangaStyleLockStrengthChange?: (value: number) => void
+  onQuickMangaChapterContinuityModeChange?: (value: QuickMangaContinuityMode) => void
+  onQuickMangaChapterIdChange?: (value: string | null) => void
+  onQuickMangaConflictPolicyChange?: (value: QuickMangaContinuityConflictPolicy) => void
   // 旁白开关
   enableNarration?: boolean
   onEnableNarrationChange?: (enabled: boolean) => void
@@ -212,6 +229,18 @@ export default function NovelInputStage({
   onQuickMangaPresetChange,
   onQuickMangaLayoutChange,
   onQuickMangaColorModeChange,
+  quickMangaStyleLockEnabled = false,
+  quickMangaStyleLockProfile = 'auto',
+  quickMangaStyleLockStrength = 0.65,
+  quickMangaChapterContinuityMode = 'off',
+  quickMangaChapterId = null,
+  quickMangaConflictPolicy = 'balanced',
+  onQuickMangaStyleLockEnabledChange,
+  onQuickMangaStyleLockProfileChange,
+  onQuickMangaStyleLockStrengthChange,
+  onQuickMangaChapterContinuityModeChange,
+  onQuickMangaChapterIdChange,
+  onQuickMangaConflictPolicyChange,
   enableNarration = false,
   onEnableNarrationChange,
   videoRatio = '9:16',
@@ -234,6 +263,7 @@ export default function NovelInputStage({
     { value: 'cinematic', label: t('storyInput.quickManga.layout.options.cinematic') },
     { value: 'four-koma', label: t('storyInput.quickManga.layout.options.fourKoma') },
     { value: 'vertical-scroll', label: t('storyInput.quickManga.layout.options.verticalScroll') },
+    { value: 'splash-focus', label: t('storyInput.quickManga.layout.options.splashFocus') },
   ] as const
   const quickMangaColorOptions = [
     { value: 'auto', label: t('storyInput.quickManga.colorMode.options.auto') },
@@ -322,44 +352,140 @@ export default function NovelInputStage({
         </div>
 
         {quickMangaEnabled && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <label className="space-y-2">
-              <span className="text-xs font-semibold text-[var(--glass-text-muted)]">{t('storyInput.quickManga.preset.label')}</span>
-              <select
-                value={quickMangaPreset}
-                onChange={(event) => onQuickMangaPresetChange?.(event.target.value as QuickMangaPreset)}
-                className="glass-input-base px-3 py-2.5 w-full text-sm"
-              >
-                {quickMangaPresetOptions.map((option) => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </select>
-            </label>
-            <label className="space-y-2">
-              <span className="text-xs font-semibold text-[var(--glass-text-muted)]">{t('storyInput.quickManga.layout.label')}</span>
-              <select
-                value={quickMangaLayout}
-                onChange={(event) => onQuickMangaLayoutChange?.(event.target.value as QuickMangaLayout)}
-                className="glass-input-base px-3 py-2.5 w-full text-sm"
-              >
-                {quickMangaLayoutOptions.map((option) => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </select>
-            </label>
-            <label className="space-y-2">
-              <span className="text-xs font-semibold text-[var(--glass-text-muted)]">{t('storyInput.quickManga.colorMode.label')}</span>
-              <select
-                value={quickMangaColorMode}
-                onChange={(event) => onQuickMangaColorModeChange?.(event.target.value as QuickMangaColorMode)}
-                className="glass-input-base px-3 py-2.5 w-full text-sm"
-              >
-                {quickMangaColorOptions.map((option) => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </select>
-            </label>
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <label className="space-y-2">
+                <span className="text-xs font-semibold text-[var(--glass-text-muted)]">{t('storyInput.quickManga.preset.label')}</span>
+                <select
+                  value={quickMangaPreset}
+                  onChange={(event) => onQuickMangaPresetChange?.(event.target.value as QuickMangaPreset)}
+                  className="glass-input-base px-3 py-2.5 w-full text-sm"
+                >
+                  {quickMangaPresetOptions.map((option) => (
+                    <option key={option.value} value={option.value}>{option.label}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="space-y-2">
+                <span className="text-xs font-semibold text-[var(--glass-text-muted)]">{t('storyInput.quickManga.layout.label')}</span>
+                <select
+                  value={quickMangaLayout}
+                  onChange={(event) => onQuickMangaLayoutChange?.(event.target.value as QuickMangaLayout)}
+                  className="glass-input-base px-3 py-2.5 w-full text-sm"
+                >
+                  {quickMangaLayoutOptions.map((option) => (
+                    <option key={option.value} value={option.value}>{option.label}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="space-y-2">
+                <span className="text-xs font-semibold text-[var(--glass-text-muted)]">{t('storyInput.quickManga.colorMode.label')}</span>
+                <select
+                  value={quickMangaColorMode}
+                  onChange={(event) => onQuickMangaColorModeChange?.(event.target.value as QuickMangaColorMode)}
+                  className="glass-input-base px-3 py-2.5 w-full text-sm"
+                >
+                  {quickMangaColorOptions.map((option) => (
+                    <option key={option.value} value={option.value}>{option.label}</option>
+                  ))}
+                </select>
+              </label>
+            </div>
+
+            <div className="rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/20 p-4 space-y-4">
+              <div className="text-xs font-semibold text-[var(--glass-text-muted)] uppercase tracking-wide">
+                {t('storyInput.quickManga.controls.title')}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <label className="space-y-2">
+                  <span className="text-xs font-semibold text-[var(--glass-text-muted)]">{t('storyInput.quickManga.controls.styleLock.enabled')}</span>
+                  <button
+                    type="button"
+                    onClick={() => onQuickMangaStyleLockEnabledChange?.(!quickMangaStyleLockEnabled)}
+                    className={`relative w-14 h-8 rounded-full transition-colors ${quickMangaStyleLockEnabled
+                      ? 'bg-[var(--glass-accent-from)]'
+                      : 'bg-[var(--glass-stroke-strong)]'
+                      }`}
+                  >
+                    <span
+                      className={`absolute top-1 left-1 w-6 h-6 bg-[var(--glass-bg-surface)] rounded-full shadow-sm transition-transform ${quickMangaStyleLockEnabled ? 'translate-x-6' : 'translate-x-0'}`}
+                    />
+                  </button>
+                </label>
+
+                <label className="space-y-2">
+                  <span className="text-xs font-semibold text-[var(--glass-text-muted)]">{t('storyInput.quickManga.controls.styleLock.profile')}</span>
+                  <select
+                    value={quickMangaStyleLockProfile}
+                    onChange={(event) => onQuickMangaStyleLockProfileChange?.(event.target.value as QuickMangaStyleLockProfile)}
+                    className="glass-input-base px-3 py-2.5 w-full text-sm"
+                  >
+                    <option value="auto">auto</option>
+                    <option value="line-consistent">line-consistent</option>
+                    <option value="ink-contrast">ink-contrast</option>
+                    <option value="soft-tones">soft-tones</option>
+                  </select>
+                </label>
+
+                <label className="space-y-2">
+                  <span className="text-xs font-semibold text-[var(--glass-text-muted)]">{t('storyInput.quickManga.controls.styleLock.strength')}</span>
+                  <input
+                    type="range"
+                    min={0}
+                    max={1}
+                    step={0.05}
+                    value={quickMangaStyleLockStrength}
+                    onChange={(event) => onQuickMangaStyleLockStrengthChange?.(Number(event.target.value))}
+                    className="w-full"
+                  />
+                  <div className="text-xs text-[var(--glass-text-tertiary)]">{Math.round(quickMangaStyleLockStrength * 100)}%</div>
+                </label>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <label className="space-y-2">
+                  <span className="text-xs font-semibold text-[var(--glass-text-muted)]">{t('storyInput.quickManga.controls.chapter.mode')}</span>
+                  <select
+                    value={quickMangaChapterContinuityMode}
+                    onChange={(event) => onQuickMangaChapterContinuityModeChange?.(event.target.value as QuickMangaContinuityMode)}
+                    className="glass-input-base px-3 py-2.5 w-full text-sm"
+                  >
+                    <option value="off">off</option>
+                    <option value="chapter-strict">chapter-strict</option>
+                    <option value="chapter-flex">chapter-flex</option>
+                  </select>
+                </label>
+
+                <label className="space-y-2">
+                  <span className="text-xs font-semibold text-[var(--glass-text-muted)]">{t('storyInput.quickManga.controls.chapter.id')}</span>
+                  <input
+                    value={quickMangaChapterId || ''}
+                    onChange={(event) => onQuickMangaChapterIdChange?.(event.target.value || null)}
+                    placeholder={t('storyInput.quickManga.controls.chapter.idPlaceholder')}
+                    className="glass-input-base px-3 py-2.5 w-full text-sm"
+                  />
+                </label>
+
+                <label className="space-y-2">
+                  <span className="text-xs font-semibold text-[var(--glass-text-muted)]">{t('storyInput.quickManga.controls.chapter.conflictPolicy')}</span>
+                  <select
+                    value={quickMangaConflictPolicy}
+                    onChange={(event) => onQuickMangaConflictPolicyChange?.(event.target.value as QuickMangaContinuityConflictPolicy)}
+                    className="glass-input-base px-3 py-2.5 w-full text-sm"
+                  >
+                    <option value="balanced">balanced</option>
+                    <option value="prefer-style-lock">prefer-style-lock</option>
+                    <option value="prefer-chapter-context">prefer-chapter-context</option>
+                  </select>
+                </label>
+              </div>
+
+              <p className="text-xs text-[var(--glass-text-tertiary)]">
+                {t('storyInput.quickManga.controls.conflictHelp')}
+              </p>
+            </div>
+          </>
         )}
       </div>
 

@@ -23,6 +23,11 @@ import type {
   QuickMangaLayout,
   QuickMangaPreset,
 } from '@/lib/novel-promotion/quick-manga'
+import type {
+  QuickMangaContinuityConflictPolicy,
+  QuickMangaContinuityMode,
+  QuickMangaStyleLockProfile,
+} from '@/lib/novel-promotion/quick-manga-contract'
 
 export function useNovelPromotionWorkspaceController({
   project,
@@ -48,6 +53,18 @@ export function useNovelPromotionWorkspaceController({
     preset: 'auto' as QuickMangaPreset,
     layout: 'auto' as QuickMangaLayout,
     colorMode: 'auto' as QuickMangaColorMode,
+    controls: {
+      styleLock: {
+        enabled: false,
+        profile: 'auto' as QuickMangaStyleLockProfile,
+        strength: 0.65,
+      },
+      chapterContinuity: {
+        mode: 'off' as QuickMangaContinuityMode,
+        chapterId: null as string | null,
+        conflictPolicy: 'balanced' as QuickMangaContinuityConflictPolicy,
+      },
+    },
   }), [])
   const [quickManga, setQuickManga] = useState(quickMangaDefaults)
 
@@ -65,6 +82,87 @@ export function useNovelPromotionWorkspaceController({
 
   const handleQuickMangaColorModeChange = useCallback(async (value: QuickMangaColorMode) => {
     setQuickManga((prev) => ({ ...prev, colorMode: value }))
+  }, [])
+
+  const handleQuickMangaStyleLockEnabledChange = useCallback(async (enabled: boolean) => {
+    setQuickManga((prev) => ({
+      ...prev,
+      controls: {
+        ...prev.controls,
+        styleLock: {
+          ...prev.controls.styleLock,
+          enabled,
+        },
+      },
+    }))
+  }, [])
+
+  const handleQuickMangaStyleLockProfileChange = useCallback(async (value: QuickMangaStyleLockProfile) => {
+    setQuickManga((prev) => ({
+      ...prev,
+      controls: {
+        ...prev.controls,
+        styleLock: {
+          ...prev.controls.styleLock,
+          profile: value,
+        },
+      },
+    }))
+  }, [])
+
+  const handleQuickMangaStyleLockStrengthChange = useCallback(async (value: number) => {
+    setQuickManga((prev) => {
+      const clamped = Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : prev.controls.styleLock.strength
+      return {
+        ...prev,
+        controls: {
+          ...prev.controls,
+          styleLock: {
+            ...prev.controls.styleLock,
+            strength: Math.round(clamped * 100) / 100,
+          },
+        },
+      }
+    })
+  }, [])
+
+  const handleQuickMangaChapterContinuityModeChange = useCallback(async (value: QuickMangaContinuityMode) => {
+    setQuickManga((prev) => ({
+      ...prev,
+      controls: {
+        ...prev.controls,
+        chapterContinuity: {
+          ...prev.controls.chapterContinuity,
+          mode: value,
+        },
+      },
+    }))
+  }, [])
+
+  const handleQuickMangaChapterIdChange = useCallback(async (value: string | null) => {
+    setQuickManga((prev) => ({
+      ...prev,
+      controls: {
+        ...prev.controls,
+        chapterContinuity: {
+          ...prev.controls.chapterContinuity,
+          chapterId: typeof value === 'string' && value.trim() ? value.trim() : null,
+        },
+      },
+    }))
+  }, [])
+
+  const handleQuickMangaConflictPolicyChange = useCallback(async (value: QuickMangaContinuityConflictPolicy) => {
+    setQuickManga((prev) => ({
+      ...prev,
+      controls: {
+        ...prev.controls,
+        chapterContinuity: {
+          ...prev.controls.chapterContinuity,
+          conflictPolicy: value,
+        },
+      },
+    }))
   }, [])
 
   const assetsLoading = false
@@ -165,6 +263,12 @@ export function useNovelPromotionWorkspaceController({
     quickMangaPreset: quickManga.preset,
     quickMangaLayout: quickManga.layout,
     quickMangaColorMode: quickManga.colorMode,
+    quickMangaStyleLockEnabled: quickManga.controls.styleLock.enabled,
+    quickMangaStyleLockProfile: quickManga.controls.styleLock.profile,
+    quickMangaStyleLockStrength: quickManga.controls.styleLock.strength,
+    quickMangaChapterContinuityMode: quickManga.controls.chapterContinuity.mode,
+    quickMangaChapterId: quickManga.controls.chapterContinuity.chapterId,
+    quickMangaConflictPolicy: quickManga.controls.chapterContinuity.conflictPolicy,
     videoModel: projectSnapshot.videoModel,
     capabilityOverrides: projectSnapshot.capabilityOverrides,
     userVideoModels: userModels.userVideoModels || [],
@@ -174,6 +278,12 @@ export function useNovelPromotionWorkspaceController({
     onQuickMangaPresetChange: handleQuickMangaPresetChange,
     onQuickMangaLayoutChange: handleQuickMangaLayoutChange,
     onQuickMangaColorModeChange: handleQuickMangaColorModeChange,
+    onQuickMangaStyleLockEnabledChange: handleQuickMangaStyleLockEnabledChange,
+    onQuickMangaStyleLockProfileChange: handleQuickMangaStyleLockProfileChange,
+    onQuickMangaStyleLockStrengthChange: handleQuickMangaStyleLockStrengthChange,
+    onQuickMangaChapterContinuityModeChange: handleQuickMangaChapterContinuityModeChange,
+    onQuickMangaChapterIdChange: handleQuickMangaChapterIdChange,
+    onQuickMangaConflictPolicyChange: handleQuickMangaConflictPolicyChange,
     runWithRebuildConfirm: rebuildState.runWithRebuildConfirm,
     runStoryToScriptFlow: execution.runStoryToScriptFlow,
     runScriptToStoryboardFlow: execution.runScriptToStoryboardFlow,

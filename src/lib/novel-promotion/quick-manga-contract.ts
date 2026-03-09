@@ -257,3 +257,7 @@ export function readQuickMangaOptionsFromPayload(payload: unknown): QuickMangaFa
 export function readQuickMangaControlsFromPayload(payload: unknown): QuickMangaGenerationControls {
   return parseGenerationControls(toObject(payload).quickMangaControls)
 }
+
+export function readQuickMangaContinuityContextFromPayload(payload: unknown): QuickMangaContinuityContext | null {
+  return parseContinuityContext(toObject(payload).continuity)
+}

@@ -32,8 +32,14 @@ interface ProjectSnapshotInput {
   artStyle: string | undefined
   quickMangaEnabled: boolean
   quickMangaPreset: 'auto' | 'action-battle' | 'romance-drama' | 'slice-of-life' | 'comedy-4koma'
-  quickMangaLayout: 'auto' | 'cinematic' | 'four-koma' | 'vertical-scroll'
+  quickMangaLayout: 'auto' | 'cinematic' | 'four-koma' | 'vertical-scroll' | 'splash-focus'
   quickMangaColorMode: 'auto' | 'full-color' | 'black-white' | 'limited-palette'
+  quickMangaStyleLockEnabled: boolean
+  quickMangaStyleLockProfile: 'auto' | 'line-consistent' | 'ink-contrast' | 'soft-tones'
+  quickMangaStyleLockStrength: number
+  quickMangaChapterContinuityMode: 'off' | 'chapter-strict' | 'chapter-flex'
+  quickMangaChapterId: string | null
+  quickMangaConflictPolicy: 'balanced' | 'prefer-style-lock' | 'prefer-chapter-context'
 }
 
 interface BuildWorkspaceControllerViewModelParams {

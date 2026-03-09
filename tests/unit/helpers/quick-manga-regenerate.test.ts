@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   buildQuickMangaContinuityContext,
+  buildQuickMangaGenerationControlsFromHistory,
   buildQuickMangaPayloadFromHistory,
   resolveQuickMangaRegenerateStoryContent,
 } from '@/lib/novel-promotion/quick-manga-regenerate'
@@ -50,6 +51,36 @@ describe('quick manga regenerate helpers', () => {
     })
   })
 
+  it('builds generation controls from history source', () => {
+    const controls = buildQuickMangaGenerationControlsFromHistory({
+      controls: {
+        styleLock: {
+          enabled: true,
+          profile: 'line-consistent',
+          strength: 0.75,
+        },
+        chapterContinuity: {
+          mode: 'chapter-flex',
+          chapterId: 'ch-03',
+          conflictPolicy: 'prefer-chapter-context',
+        },
+      },
+    })
+
+    expect(controls).toEqual({
+      styleLock: {
+        enabled: true,
+        profile: 'line-consistent',
+        strength: 0.75,
+      },
+      chapterContinuity: {
+        mode: 'chapter-flex',
+        chapterId: 'ch-03',
+        conflictPolicy: 'prefer-chapter-context',
+      },
+    })
+  })
+
   it('builds continuity context from history source', () => {
     const continuity = buildQuickMangaContinuityContext({
       source: {
@@ -61,6 +92,18 @@ describe('quick manga regenerate helpers', () => {
           layout: 'cinematic',
           colorMode: 'black-white',
           style: 'ink',
+        },
+        controls: {
+          styleLock: {
+            enabled: true,
+            profile: 'line-consistent',
+            strength: 0.8,
+          },
+          chapterContinuity: {
+            mode: 'chapter-strict',
+            chapterId: 'ch-01',
+            conflictPolicy: 'prefer-style-lock',
+          },
         },
       },
       fallbackContentUsed: true,
@@ -76,6 +119,18 @@ describe('quick manga regenerate helpers', () => {
         layout: 'cinematic',
         colorMode: 'black-white',
         style: 'ink',
+      },
+      reusedControls: {
+        styleLock: {
+          enabled: true,
+          profile: 'line-consistent',
+          strength: 0.8,
+        },
+        chapterContinuity: {
+          mode: 'chapter-strict',
+          chapterId: 'ch-01',
+          conflictPolicy: 'prefer-style-lock',
+        },
       },
     })
   })

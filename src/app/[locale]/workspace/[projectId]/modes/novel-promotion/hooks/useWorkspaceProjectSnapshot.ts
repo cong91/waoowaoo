@@ -8,6 +8,11 @@ import type {
   QuickMangaLayout,
   QuickMangaPreset,
 } from '@/lib/novel-promotion/quick-manga'
+import type {
+  QuickMangaContinuityConflictPolicy,
+  QuickMangaContinuityMode,
+  QuickMangaStyleLockProfile,
+} from '@/lib/novel-promotion/quick-manga-contract'
 
 function parseCapabilitySelections(raw: unknown): CapabilitySelections {
   if (!raw) return {}
@@ -54,6 +59,12 @@ export function useWorkspaceProjectSnapshot({
       quickMangaPreset: 'auto' as QuickMangaPreset,
       quickMangaLayout: 'auto' as QuickMangaLayout,
       quickMangaColorMode: 'auto' as QuickMangaColorMode,
+      quickMangaStyleLockEnabled: false,
+      quickMangaStyleLockProfile: 'auto' as QuickMangaStyleLockProfile,
+      quickMangaStyleLockStrength: 0.65,
+      quickMangaChapterContinuityMode: 'off' as QuickMangaContinuityMode,
+      quickMangaChapterId: null as string | null,
+      quickMangaConflictPolicy: 'balanced' as QuickMangaContinuityConflictPolicy,
     }
   }, [episode?.novelText, episode?.storyboards, project.novelPromotionData, urlStage])
 }

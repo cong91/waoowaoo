@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
   parseQuickMangaFacadeRequest,
+  readQuickMangaContinuityContextFromPayload,
+  readQuickMangaControlsFromPayload,
   readQuickMangaOptionsFromPayload,
   resolveQuickMangaTaskType,
 } from '@/lib/novel-promotion/quick-manga-contract'
@@ -103,6 +105,53 @@ describe('quick manga contract helpers', () => {
   it('maps stage to task type', () => {
     expect(resolveQuickMangaTaskType('story-to-script')).toBe(TASK_TYPE.STORY_TO_SCRIPT_RUN)
     expect(resolveQuickMangaTaskType('script-to-storyboard')).toBe(TASK_TYPE.SCRIPT_TO_STORYBOARD_RUN)
+  })
+
+  it('reads controls and continuity safely from payload', () => {
+    expect(readQuickMangaControlsFromPayload({
+      quickMangaControls: {
+        styleLock: {
+          enabled: true,
+          profile: 'ink-contrast',
+          strength: 0.95,
+        },
+        chapterContinuity: {
+          mode: 'chapter-flex',
+          chapterId: ' ch-08 ',
+          conflictPolicy: 'prefer-chapter-context',
+        },
+      },
+    })).toEqual({
+      styleLock: {
+        enabled: true,
+        profile: 'ink-contrast',
+        strength: 0.95,
+      },
+      chapterContinuity: {
+        mode: 'chapter-flex',
+        chapterId: 'ch-08',
+        conflictPolicy: 'prefer-chapter-context',
+      },
+    })
+
+    expect(readQuickMangaContinuityContextFromPayload({
+      continuity: {
+        shortcut: 'history-regenerate',
+        sourceRunId: 'run-123',
+        sourceStage: 'story-to-script',
+        fallbackContentUsed: false,
+        reusedOptions: {
+          preset: 'action-battle',
+          layout: 'splash-focus',
+          colorMode: 'full-color',
+          style: 'ink',
+        },
+      },
+    })).toEqual(expect.objectContaining({
+      sourceRunId: 'run-123',
+      sourceStage: 'story-to-script',
+      shortcut: 'history-regenerate',
+    }))
   })
 
   it('reads options from payload safely', () => {

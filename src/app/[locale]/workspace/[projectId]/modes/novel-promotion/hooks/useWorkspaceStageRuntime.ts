@@ -10,6 +10,11 @@ import type {
   QuickMangaLayout,
   QuickMangaPreset,
 } from '@/lib/novel-promotion/quick-manga'
+import type {
+  QuickMangaContinuityConflictPolicy,
+  QuickMangaContinuityMode,
+  QuickMangaStyleLockProfile,
+} from '@/lib/novel-promotion/quick-manga-contract'
 
 interface UseWorkspaceStageRuntimeParams {
   assetsLoading: boolean
@@ -22,6 +27,12 @@ interface UseWorkspaceStageRuntimeParams {
   quickMangaPreset: QuickMangaPreset
   quickMangaLayout: QuickMangaLayout
   quickMangaColorMode: QuickMangaColorMode
+  quickMangaStyleLockEnabled: boolean
+  quickMangaStyleLockProfile: QuickMangaStyleLockProfile
+  quickMangaStyleLockStrength: number
+  quickMangaChapterContinuityMode: QuickMangaContinuityMode
+  quickMangaChapterId: string | null
+  quickMangaConflictPolicy: QuickMangaContinuityConflictPolicy
   videoModel: string | undefined
   capabilityOverrides: CapabilitySelections
   userVideoModels: Array<{
@@ -38,6 +49,12 @@ interface UseWorkspaceStageRuntimeParams {
   onQuickMangaPresetChange: (value: QuickMangaPreset) => Promise<void>
   onQuickMangaLayoutChange: (value: QuickMangaLayout) => Promise<void>
   onQuickMangaColorModeChange: (value: QuickMangaColorMode) => Promise<void>
+  onQuickMangaStyleLockEnabledChange: (enabled: boolean) => Promise<void>
+  onQuickMangaStyleLockProfileChange: (value: QuickMangaStyleLockProfile) => Promise<void>
+  onQuickMangaStyleLockStrengthChange: (value: number) => Promise<void>
+  onQuickMangaChapterContinuityModeChange: (value: QuickMangaContinuityMode) => Promise<void>
+  onQuickMangaChapterIdChange: (value: string | null) => Promise<void>
+  onQuickMangaConflictPolicyChange: (value: QuickMangaContinuityConflictPolicy) => Promise<void>
   runWithRebuildConfirm: (action: 'storyToScript' | 'scriptToStoryboard', operation: () => Promise<void>) => Promise<void>
   runStoryToScriptFlow: () => Promise<void>
   runScriptToStoryboardFlow: () => Promise<void>
@@ -78,6 +95,12 @@ export function useWorkspaceStageRuntime({
   quickMangaPreset,
   quickMangaLayout,
   quickMangaColorMode,
+  quickMangaStyleLockEnabled,
+  quickMangaStyleLockProfile,
+  quickMangaStyleLockStrength,
+  quickMangaChapterContinuityMode,
+  quickMangaChapterId,
+  quickMangaConflictPolicy,
   videoModel,
   capabilityOverrides,
   userVideoModels,
@@ -87,6 +110,12 @@ export function useWorkspaceStageRuntime({
   onQuickMangaPresetChange,
   onQuickMangaLayoutChange,
   onQuickMangaColorModeChange,
+  onQuickMangaStyleLockEnabledChange,
+  onQuickMangaStyleLockProfileChange,
+  onQuickMangaStyleLockStrengthChange,
+  onQuickMangaChapterContinuityModeChange,
+  onQuickMangaChapterIdChange,
+  onQuickMangaConflictPolicyChange,
   runWithRebuildConfirm,
   runStoryToScriptFlow,
   runScriptToStoryboardFlow,
@@ -118,10 +147,22 @@ export function useWorkspaceStageRuntime({
     quickMangaPreset,
     quickMangaLayout,
     quickMangaColorMode,
+    quickMangaStyleLockEnabled,
+    quickMangaStyleLockProfile,
+    quickMangaStyleLockStrength,
+    quickMangaChapterContinuityMode,
+    quickMangaChapterId,
+    quickMangaConflictPolicy,
     onQuickMangaEnabledChange,
     onQuickMangaPresetChange,
     onQuickMangaLayoutChange,
     onQuickMangaColorModeChange,
+    onQuickMangaStyleLockEnabledChange,
+    onQuickMangaStyleLockProfileChange,
+    onQuickMangaStyleLockStrengthChange,
+    onQuickMangaChapterContinuityModeChange,
+    onQuickMangaChapterIdChange,
+    onQuickMangaConflictPolicyChange,
     onVideoRatioChange: (value) => handleUpdateConfig('videoRatio', value),
     onArtStyleChange: (value) => handleUpdateConfig('artStyle', value),
     onRunStoryToScript: () => runWithRebuildConfirm('storyToScript', runStoryToScriptFlow),
@@ -142,31 +183,43 @@ export function useWorkspaceStageRuntime({
   }), [
     artStyle,
     assetsLoading,
+    capabilityOverrides,
     handleGenerateAllVideos,
     handleGenerateVideo,
     handleStageChange,
     handleUpdateClip,
     handleUpdateConfig,
     handleUpdateEpisode,
-    onQuickMangaColorModeChange,
-    onQuickMangaEnabledChange,
-    onQuickMangaLayoutChange,
-    onQuickMangaPresetChange,
     handleUpdatePanelVideoModel,
     handleUpdateVideoPrompt,
     isConfirmingAssets,
     isSubmittingTTS,
     isTransitioning,
+    onQuickMangaChapterContinuityModeChange,
+    onQuickMangaChapterIdChange,
+    onQuickMangaColorModeChange,
+    onQuickMangaConflictPolicyChange,
+    onQuickMangaEnabledChange,
+    onQuickMangaLayoutChange,
+    onQuickMangaPresetChange,
+    onQuickMangaStyleLockEnabledChange,
+    onQuickMangaStyleLockProfileChange,
+    onQuickMangaStyleLockStrengthChange,
     openAssetLibrary,
+    quickMangaChapterContinuityMode,
+    quickMangaChapterId,
     quickMangaColorMode,
+    quickMangaConflictPolicy,
     quickMangaEnabled,
     quickMangaLayout,
     quickMangaPreset,
+    quickMangaStyleLockEnabled,
+    quickMangaStyleLockProfile,
+    quickMangaStyleLockStrength,
+    resolvedUserVideoModels,
     runScriptToStoryboardFlow,
     runStoryToScriptFlow,
     runWithRebuildConfirm,
-    resolvedUserVideoModels,
-    capabilityOverrides,
     videoModel,
     videoRatio,
   ])

@@ -23,6 +23,20 @@ function getStatusTone(statusBucket: QuickMangaHistoryItem['statusBucket']): str
   return 'text-rose-300'
 }
 
+function formatStrength(value: number): string {
+  const normalized = Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : 0
+  return `${Math.round(normalized * 100)}%`
+}
+
+function resolveConflictHintLabel(
+  hint: QuickMangaHistoryItem['continuityConflictHint'],
+  t: ReturnType<typeof useTranslations>,
+): string {
+  if (hint === 'style-lock-priority') return t('storyInput.quickManga.history.conflictHints.styleLockPriority')
+  if (hint === 'chapter-context-priority') return t('storyInput.quickManga.history.conflictHints.chapterContextPriority')
+  return t('storyInput.quickManga.history.conflictHints.balanced')
+}
+
 export default function QuickMangaHistoryPanel({ enabled }: QuickMangaHistoryPanelProps) {
   const t = useTranslations('novelPromotion')
   const { projectId } = useWorkspaceProvider()
@@ -141,7 +155,44 @@ export default function QuickMangaHistoryPanel({ enabled }: QuickMangaHistoryPan
                     <div className="text-[var(--glass-text-tertiary)]">{t('storyInput.quickManga.history.metadata.style')}</div>
                     <div className="text-[var(--glass-text-primary)] font-medium">{selected.options.style || 'auto'}</div>
                   </div>
+                  <div>
+                    <div className="text-[var(--glass-text-tertiary)]">{t('storyInput.quickManga.history.metadata.styleLockProfile')}</div>
+                    <div className="text-[var(--glass-text-primary)] font-medium">{selected.controls.styleLock.profile}</div>
+                  </div>
+                  <div>
+                    <div className="text-[var(--glass-text-tertiary)]">{t('storyInput.quickManga.history.metadata.styleLockStrength')}</div>
+                    <div className="text-[var(--glass-text-primary)] font-medium">{formatStrength(selected.controls.styleLock.strength)}</div>
+                  </div>
+                  <div>
+                    <div className="text-[var(--glass-text-tertiary)]">{t('storyInput.quickManga.history.metadata.chapterContinuityMode')}</div>
+                    <div className="text-[var(--glass-text-primary)] font-medium">{selected.controls.chapterContinuity.mode}</div>
+                  </div>
+                  <div>
+                    <div className="text-[var(--glass-text-tertiary)]">{t('storyInput.quickManga.history.metadata.chapterId')}</div>
+                    <div className="text-[var(--glass-text-primary)] font-medium">{selected.controls.chapterContinuity.chapterId || '—'}</div>
+                  </div>
+                  <div className="col-span-2">
+                    <div className="text-[var(--glass-text-tertiary)]">{t('storyInput.quickManga.history.metadata.conflictPolicy')}</div>
+                    <div className="text-[var(--glass-text-primary)] font-medium">{selected.controls.chapterContinuity.conflictPolicy}</div>
+                  </div>
                 </div>
+                <div className="rounded-lg border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/20 p-2.5 text-xs text-[var(--glass-text-secondary)]">
+                  <div className="font-semibold text-[var(--glass-text-primary)]">
+                    {t('storyInput.quickManga.history.continuityConflict.title')}
+                  </div>
+                  <div className="mt-1">{resolveConflictHintLabel(selected.continuityConflictHint, t)}</div>
+                  <div className="mt-1 text-[var(--glass-text-tertiary)]">{t('storyInput.quickManga.history.continuityConflict.helpText')}</div>
+                </div>
+                {selected.continuity && (
+                  <div className="rounded-lg border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/20 p-2.5 text-xs text-[var(--glass-text-secondary)]">
+                    <div>
+                      {t('storyInput.quickManga.history.continuityShortcut.sourceRun', { runId: selected.continuity.sourceRunId })}
+                    </div>
+                    <div className="mt-1">
+                      {t('storyInput.quickManga.history.continuityShortcut.sourceStage')}: {selected.continuity.sourceStage}
+                    </div>
+                  </div>
+                )}
                 {selected.errorMessage && (
                   <div className="rounded-lg border border-rose-400/40 bg-rose-400/10 p-2 text-xs text-rose-200">
                     {selected.errorMessage}
