@@ -79,10 +79,15 @@ vi.mock('@/lib/workers/handlers/llm-stream', () => ({
   createWorkerLLMStreamContext: vi.fn(() => ({ streamId: 'run-1' })),
   createWorkerLLMStreamCallbacks: vi.fn(() => ({ flush: vi.fn(async () => undefined) })),
 }))
-vi.mock('@/lib/prompt-i18n', () => ({
-  PROMPT_IDS: { NP_EPISODE_SPLIT: 'np_episode_split' },
-  buildPrompt: vi.fn(() => 'episode-split-prompt'),
-}))
+vi.mock('@/lib/prompt-i18n', async () => {
+  const actual = await vi.importActual<typeof import('@/lib/prompt-i18n')>('@/lib/prompt-i18n')
+  return {
+    ...actual,
+    buildPrompt: vi.fn(() => 'episode-split-prompt'),
+    buildPromptWithPolicy: vi.fn((input: Record<string, unknown>) =>
+      actual.buildPromptWithPolicy(input as Parameters<typeof actual.buildPromptWithPolicy>[0])),
+  }
+})
 vi.mock('@/lib/novel-promotion/story-to-script/clip-matching', () => ({
   createTextMarkerMatcher: (content: string) => ({
     matchMarker: (marker: string, fromIndex = 0) => {
