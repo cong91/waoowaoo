@@ -544,9 +544,10 @@ export function apiHandler<TParams extends RouteParams>(handler: ApiHandler<TPar
                 },
               },
               // Backward-compatible flattened fields.
+              // Keep canonical top-level code/message stable and never allow details to overwrite them.
+              ...rawDetails,
               code: apiError.code,
               message: apiError.message,
-              ...rawDetails,
             },
             { status: apiError.status }
           )

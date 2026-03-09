@@ -18,6 +18,11 @@ export interface NormalizedProviderModel {
   type: ProviderModelKind
 }
 
+export const FETCH_PROVIDER_MODELS_ERROR_CODE = {
+  PROVIDER_UNSUPPORTED: 'FETCH_MODELS_PROVIDER_UNSUPPORTED',
+  BASE_URL_REQUIRED: 'FETCH_MODELS_BASE_URL_REQUIRED',
+} as const
+
 function readTrimmedString(value: unknown): string {
   return typeof value === 'string' ? value.trim() : ''
 }
@@ -65,12 +70,21 @@ function normalizeBaseUrl(baseUrl: string): string {
 export async function fetchProviderModels(payload: FetchProviderModelsPayload): Promise<NormalizedProviderModel[]> {
   const providerKey = parseProviderKey(payload.providerId)
   if (providerKey !== 'openai-compatible') {
-    throw new ApiError('INVALID_PARAMS', { message: 'Only openai-compatible is supported for fetch-models' })
+    throw new ApiError('INVALID_PARAMS', {
+      code: FETCH_PROVIDER_MODELS_ERROR_CODE.PROVIDER_UNSUPPORTED,
+      field: 'providerId',
+      providerId: payload.providerId,
+      message: 'only openai-compatible is supported for fetch-models',
+    })
   }
 
   const baseUrl = readTrimmedString(payload.baseUrl)
   if (!baseUrl) {
-    throw new ApiError('INVALID_PARAMS', { message: 'baseUrl is required' })
+    throw new ApiError('INVALID_PARAMS', {
+      code: FETCH_PROVIDER_MODELS_ERROR_CODE.BASE_URL_REQUIRED,
+      field: 'baseUrl',
+      message: 'baseUrl is required',
+    })
   }
 
   const client = new OpenAI({

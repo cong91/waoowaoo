@@ -21,13 +21,14 @@ vi.mock('openai', () => ({
 
 import { testLlmConnection } from '@/lib/user-api/llm-test-connection'
 
-describe('user-api llm test connection: openai-compatible no-key + custom headers', () => {
+describe('user-api llm-test-connection contract', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     openAIState.create.mockResolvedValue({
       model: 'gpt-4.1-mini',
-      choices: [{ message: { content: 'pong' } }],
+      choices: [{ message: { content: '2' } }],
     })
+    openAIState.list.mockResolvedValue({ data: [] })
   })
 
   it('accepts openai-compatible without apiKey when baseUrl + extraHeadersJson are provided', async () => {
@@ -40,7 +41,35 @@ describe('user-api llm test connection: openai-compatible no-key + custom header
     })
 
     expect(result.provider).toBe('openai-compatible')
-    expect(result.message).toContain('连接成功')
+    expect(result.message).toBe('openai-compatible connection verified')
     expect(openAIState.create).toHaveBeenCalledTimes(1)
+  })
+
+  it('returns english contract error details when provider is missing', async () => {
+    await expect(testLlmConnection({})).rejects.toMatchObject({
+      code: 'INVALID_PARAMS',
+      message: 'provider is required',
+      details: {
+        code: 'CONNECTION_PROVIDER_REQUIRED',
+        field: 'provider',
+      },
+    })
+  })
+
+  it('returns english contract error details when extraHeadersJson is invalid JSON', async () => {
+    await expect(
+      testLlmConnection({
+        provider: 'openai-compatible',
+        baseUrl: 'https://proxy.example.com/v1',
+        extraHeadersJson: '{invalid-json}',
+      }),
+    ).rejects.toMatchObject({
+      code: 'INVALID_PARAMS',
+      message: 'extraHeadersJson must be a valid JSON object',
+      details: {
+        code: 'CONNECTION_EXTRA_HEADERS_JSON_INVALID',
+        field: 'extraHeadersJson',
+      },
+    })
   })
 })

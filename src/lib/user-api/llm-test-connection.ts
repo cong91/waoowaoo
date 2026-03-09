@@ -25,11 +25,33 @@ export type LlmConnectionTestResult = {
   answer?: string
 }
 
+const CONNECTION_SUCCESS_MESSAGE: Record<SupportedProvider, string> = {
+  openrouter: 'openrouter connection verified',
+  google: 'google connection verified',
+  anthropic: 'anthropic connection verified',
+  openai: 'openai connection verified',
+  custom: 'custom connection verified',
+  'openai-compatible': 'openai-compatible connection verified',
+}
+
+function throwInvalidParams(details: {
+  code: string
+  message: string
+  field?: string
+  provider?: string
+}): never {
+  throw new ApiError('INVALID_PARAMS', details)
+}
+
 function normalizeProvider(payload: TestConnectionPayload): SupportedProvider {
   const provider = typeof payload.provider === 'string' ? payload.provider.trim().toLowerCase() : ''
   if (!provider) {
     if (typeof payload.baseUrl === 'string' && payload.baseUrl.trim()) return 'custom'
-    throw new ApiError('INVALID_PARAMS', { message: '缺少必要参数 provider' })
+    throwInvalidParams({
+      code: 'CONNECTION_PROVIDER_REQUIRED',
+      field: 'provider',
+      message: 'provider is required',
+    })
   }
 
   switch (provider) {
@@ -41,14 +63,23 @@ function normalizeProvider(payload: TestConnectionPayload): SupportedProvider {
     case 'openai-compatible':
       return provider
     default:
-      throw new ApiError('INVALID_PARAMS', { message: `不支持的渠道: ${provider}` })
+      throwInvalidParams({
+        code: 'CONNECTION_PROVIDER_UNSUPPORTED',
+        field: 'provider',
+        provider,
+        message: `provider is not supported: ${provider}`,
+      })
   }
 }
 
 function requireApiKey(payload: TestConnectionPayload, options?: { allowEmpty?: boolean }): string {
   const apiKey = typeof payload.apiKey === 'string' ? payload.apiKey.trim() : ''
   if (!apiKey && !options?.allowEmpty) {
-    throw new ApiError('INVALID_PARAMS', { message: '缺少必要参数 apiKey' })
+    throwInvalidParams({
+      code: 'CONNECTION_API_KEY_REQUIRED',
+      field: 'apiKey',
+      message: 'apiKey is required',
+    })
   }
   return apiKey
 }
@@ -56,7 +87,11 @@ function requireApiKey(payload: TestConnectionPayload, options?: { allowEmpty?: 
 function requireBaseUrl(payload: TestConnectionPayload): string {
   const baseUrl = typeof payload.baseUrl === 'string' ? payload.baseUrl.trim() : ''
   if (!baseUrl) {
-    throw new ApiError('INVALID_PARAMS', { message: '自定义渠道需要提供 baseUrl' })
+    throwInvalidParams({
+      code: 'CONNECTION_BASE_URL_REQUIRED',
+      field: 'baseUrl',
+      message: 'baseUrl is required',
+    })
   }
   return baseUrl
 }
@@ -67,8 +102,12 @@ async function testGoogleAI(apiKey: string): Promise<void> {
     { method: 'GET' },
   )
   if (!response.ok) {
-    const error = await response.text()
-    throw new Error(`Google AI 认证失败: ${error}`)
+    throw new ApiError('EXTERNAL_ERROR', {
+      code: 'CONNECTION_GOOGLE_AUTH_FAILED',
+      provider: 'google',
+      message: `google auth failed with status ${response.status}`,
+      upstreamStatus: response.status,
+    })
   }
 }
 
@@ -80,17 +119,29 @@ function parseExtraHeadersJson(value: string | undefined): Record<string, string
   try {
     parsed = JSON.parse(raw)
   } catch {
-    throw new ApiError('INVALID_PARAMS', { message: 'extraHeadersJson 必须是合法 JSON 对象' })
+    throwInvalidParams({
+      code: 'CONNECTION_EXTRA_HEADERS_JSON_INVALID',
+      field: 'extraHeadersJson',
+      message: 'extraHeadersJson must be a valid JSON object',
+    })
   }
 
   if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
-    throw new ApiError('INVALID_PARAMS', { message: 'extraHeadersJson 必须是对象' })
+    throwInvalidParams({
+      code: 'CONNECTION_EXTRA_HEADERS_TYPE_INVALID',
+      field: 'extraHeadersJson',
+      message: 'extraHeadersJson must be a JSON object',
+    })
   }
 
   const out: Record<string, string> = {}
   for (const [k, v] of Object.entries(parsed)) {
     if (typeof v !== 'string') {
-      throw new ApiError('INVALID_PARAMS', { message: `extraHeadersJson.${k} 必须是字符串` })
+      throwInvalidParams({
+        code: 'CONNECTION_EXTRA_HEADER_VALUE_INVALID',
+        field: `extraHeadersJson.${k}`,
+        message: `extraHeadersJson.${k} must be a string`,
+      })
     }
     const key = k.trim()
     const val = v.trim()
@@ -116,7 +167,7 @@ async function testOpenAICompatibleConnection(params: {
   if (params.model) {
     const response = await client.chat.completions.create({
       model: params.model,
-      messages: [{ role: 'user', content: '1+1等于几？只回答数字' }],
+      messages: [{ role: 'user', content: 'What is 1+1? Reply with number only.' }],
       max_tokens: 10,
       temperature: 0,
     })
@@ -144,11 +195,11 @@ export async function testLlmConnection(payload: TestConnectionPayload): Promise
         baseURL: 'https://openrouter.ai/api/v1',
         model: requestedModel || undefined,
       })
-      return { provider, message: 'openrouter 连接成功', ...tested }
+      return { provider, message: CONNECTION_SUCCESS_MESSAGE[provider], ...tested }
     }
     case 'google':
       await testGoogleAI(apiKey)
-      return { provider, message: 'google 连接成功' }
+      return { provider, message: CONNECTION_SUCCESS_MESSAGE[provider] }
     case 'anthropic': {
       const tested = await testOpenAICompatibleConnection({
         apiKey,
@@ -156,14 +207,14 @@ export async function testLlmConnection(payload: TestConnectionPayload): Promise
         model: requestedModel || 'claude-3-haiku-20240307',
         defaultHeaders: { 'anthropic-version': '2023-06-01' },
       })
-      return { provider, message: 'anthropic 连接成功', ...tested }
+      return { provider, message: CONNECTION_SUCCESS_MESSAGE[provider], ...tested }
     }
     case 'openai': {
       const tested = await testOpenAICompatibleConnection({
         apiKey,
         model: requestedModel || undefined,
       })
-      return { provider, message: 'openai 连接成功', ...tested }
+      return { provider, message: CONNECTION_SUCCESS_MESSAGE[provider], ...tested }
     }
     case 'custom': {
       const tested = await testOpenAICompatibleConnection({
@@ -172,7 +223,7 @@ export async function testLlmConnection(payload: TestConnectionPayload): Promise
         model: requestedModel || undefined,
         defaultHeaders: extraHeaders,
       })
-      return { provider, message: 'custom 连接成功', ...tested }
+      return { provider, message: CONNECTION_SUCCESS_MESSAGE[provider], ...tested }
     }
     case 'openai-compatible': {
       const tested = await testOpenAICompatibleConnection({
@@ -181,7 +232,7 @@ export async function testLlmConnection(payload: TestConnectionPayload): Promise
         model: requestedModel || process.env.OPENAI_COMPAT_MODEL || undefined,
         defaultHeaders: extraHeaders,
       })
-      return { provider, message: 'openai-compatible 连接成功', ...tested }
+      return { provider, message: CONNECTION_SUCCESS_MESSAGE[provider], ...tested }
     }
   }
 }
