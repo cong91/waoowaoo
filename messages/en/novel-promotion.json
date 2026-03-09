@@ -102,6 +102,39 @@
     "videoRatio": "Video Ratio",
     "visualStyle": "Visual Style",
     "moreConfig": "For more configuration options, click the 「 Settings」 button in the top right",
+    "quickManga": {
+      "title": "Quick Manga Entry (Phase 0)",
+      "description": "Enable source-aware manga presets inside novel-promotion without creating a new mode",
+      "toggle": "Toggle quick manga",
+      "preset": {
+        "label": "Preset",
+        "options": {
+          "auto": "Auto",
+          "actionBattle": "Action / Battle",
+          "romanceDrama": "Romance / Drama",
+          "sliceOfLife": "Slice of Life",
+          "comedy4Koma": "Comedy 4-koma"
+        }
+      },
+      "layout": {
+        "label": "Panel Layout",
+        "options": {
+          "auto": "Auto",
+          "cinematic": "Cinematic Panels",
+          "fourKoma": "4-koma Rhythm",
+          "verticalScroll": "Vertical Scroll"
+        }
+      },
+      "colorMode": {
+        "label": "Color Mode",
+        "options": {
+          "auto": "Auto",
+          "fullColor": "Full Color",
+          "blackWhite": "Black & White",
+          "limitedPalette": "Limited Palette"
+        }
+      }
+    },
     "narration": {
       "title": "Enable Narration Voiceover",
       "description": "Generate TTS voice narration to add commentary to your video"

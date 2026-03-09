@@ -102,6 +102,39 @@
     "videoRatio": "画面比例",
     "visualStyle": "视觉风格",
     "moreConfig": "更多配置请点击右上角「 配置」按钮",
+    "quickManga": {
+      "title": "Quick Manga 入口（Phase 0）",
+      "description": "在 novel-promotion 内启用 source-aware 漫画预设，不创建新 mode",
+      "toggle": "切换 quick manga",
+      "preset": {
+        "label": "预设",
+        "options": {
+          "auto": "自动",
+          "actionBattle": "动作 / 战斗",
+          "romanceDrama": "恋爱 / 剧情",
+          "sliceOfLife": "日常",
+          "comedy4Koma": "搞笑 4-koma"
+        }
+      },
+      "layout": {
+        "label": "分镜布局",
+        "options": {
+          "auto": "自动",
+          "cinematic": "电影式分镜",
+          "fourKoma": "4-koma 节奏",
+          "verticalScroll": "竖向滚动"
+        }
+      },
+      "colorMode": {
+        "label": "色彩模式",
+        "options": {
+          "auto": "自动",
+          "fullColor": "全彩",
+          "blackWhite": "黑白",
+          "limitedPalette": "限色"
+        }
+      }
+    },
     "narration": {
       "title": "启用旁白配音",
       "description": "生成 TTS 语音旁白，为视频添加解说"

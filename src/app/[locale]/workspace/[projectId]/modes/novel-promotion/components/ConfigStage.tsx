@@ -15,6 +15,14 @@ export default function ConfigStage() {
       onNovelTextChange={runtime.onNovelTextChange}
       isSubmittingTask={runtime.isSubmittingTTS}
       isSwitchingStage={runtime.isTransitioning}
+      quickMangaEnabled={runtime.quickMangaEnabled}
+      quickMangaPreset={runtime.quickMangaPreset}
+      quickMangaLayout={runtime.quickMangaLayout}
+      quickMangaColorMode={runtime.quickMangaColorMode}
+      onQuickMangaEnabledChange={runtime.onQuickMangaEnabledChange}
+      onQuickMangaPresetChange={runtime.onQuickMangaPresetChange}
+      onQuickMangaLayoutChange={runtime.onQuickMangaLayoutChange}
+      onQuickMangaColorModeChange={runtime.onQuickMangaColorModeChange}
       videoRatio={runtime.videoRatio ?? undefined}
       artStyle={runtime.artStyle ?? undefined}
       onVideoRatioChange={runtime.onVideoRatioChange}

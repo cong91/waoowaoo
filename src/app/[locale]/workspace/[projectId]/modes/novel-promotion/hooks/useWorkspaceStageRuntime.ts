@@ -5,6 +5,11 @@ import type { WorkspaceStageRuntimeValue } from '../WorkspaceStageRuntimeContext
 import type { CapabilitySelections, ModelCapabilities } from '@/lib/model-config-contract'
 import type { VideoPricingTier } from '@/lib/model-pricing/video-tier'
 import type { BatchVideoGenerationParams, VideoGenerationOptions } from '../components/video'
+import type {
+  QuickMangaColorMode,
+  QuickMangaLayout,
+  QuickMangaPreset,
+} from '@/lib/novel-promotion/quick-manga'
 
 interface UseWorkspaceStageRuntimeParams {
   assetsLoading: boolean
@@ -13,6 +18,10 @@ interface UseWorkspaceStageRuntimeParams {
   isConfirmingAssets: boolean
   videoRatio: string | undefined
   artStyle: string | undefined
+  quickMangaEnabled: boolean
+  quickMangaPreset: QuickMangaPreset
+  quickMangaLayout: QuickMangaLayout
+  quickMangaColorMode: QuickMangaColorMode
   videoModel: string | undefined
   capabilityOverrides: CapabilitySelections
   userVideoModels: Array<{
@@ -25,6 +34,10 @@ interface UseWorkspaceStageRuntimeParams {
   }> | undefined
   handleUpdateEpisode: (key: string, value: unknown) => Promise<void>
   handleUpdateConfig: (key: string, value: unknown) => Promise<void>
+  onQuickMangaEnabledChange: (enabled: boolean) => Promise<void>
+  onQuickMangaPresetChange: (value: QuickMangaPreset) => Promise<void>
+  onQuickMangaLayoutChange: (value: QuickMangaLayout) => Promise<void>
+  onQuickMangaColorModeChange: (value: QuickMangaColorMode) => Promise<void>
   runWithRebuildConfirm: (action: 'storyToScript' | 'scriptToStoryboard', operation: () => Promise<void>) => Promise<void>
   runStoryToScriptFlow: () => Promise<void>
   runScriptToStoryboardFlow: () => Promise<void>
@@ -61,11 +74,19 @@ export function useWorkspaceStageRuntime({
   isConfirmingAssets,
   videoRatio,
   artStyle,
+  quickMangaEnabled,
+  quickMangaPreset,
+  quickMangaLayout,
+  quickMangaColorMode,
   videoModel,
   capabilityOverrides,
   userVideoModels,
   handleUpdateEpisode,
   handleUpdateConfig,
+  onQuickMangaEnabledChange,
+  onQuickMangaPresetChange,
+  onQuickMangaLayoutChange,
+  onQuickMangaColorModeChange,
   runWithRebuildConfirm,
   runStoryToScriptFlow,
   runScriptToStoryboardFlow,
@@ -93,6 +114,14 @@ export function useWorkspaceStageRuntime({
     capabilityOverrides,
     userVideoModels: resolvedUserVideoModels,
     onNovelTextChange: (value) => handleUpdateEpisode('novelText', value),
+    quickMangaEnabled,
+    quickMangaPreset,
+    quickMangaLayout,
+    quickMangaColorMode,
+    onQuickMangaEnabledChange,
+    onQuickMangaPresetChange,
+    onQuickMangaLayoutChange,
+    onQuickMangaColorModeChange,
     onVideoRatioChange: (value) => handleUpdateConfig('videoRatio', value),
     onArtStyleChange: (value) => handleUpdateConfig('artStyle', value),
     onRunStoryToScript: () => runWithRebuildConfirm('storyToScript', runStoryToScriptFlow),
@@ -119,12 +148,20 @@ export function useWorkspaceStageRuntime({
     handleUpdateClip,
     handleUpdateConfig,
     handleUpdateEpisode,
+    onQuickMangaColorModeChange,
+    onQuickMangaEnabledChange,
+    onQuickMangaLayoutChange,
+    onQuickMangaPresetChange,
     handleUpdatePanelVideoModel,
     handleUpdateVideoPrompt,
     isConfirmingAssets,
     isSubmittingTTS,
     isTransitioning,
     openAssetLibrary,
+    quickMangaColorMode,
+    quickMangaEnabled,
+    quickMangaLayout,
+    quickMangaPreset,
     runScriptToStoryboardFlow,
     runStoryToScriptFlow,
     runWithRebuildConfirm,

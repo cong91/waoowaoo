@@ -1,7 +1,7 @@
 'use client'
 
 import { logInfo as _ulogInfo } from '@/lib/logging/core'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { resolveTaskPresentationState } from '@/lib/task/presentation'
@@ -18,6 +18,11 @@ import { useWorkspaceStageRuntime } from './useWorkspaceStageRuntime'
 import { useWorkspaceConfigActions } from './useWorkspaceConfigActions'
 import { buildWorkspaceControllerViewModel } from './workspace-controller-view-model'
 import type { NovelPromotionWorkspaceProps } from '../types'
+import type {
+  QuickMangaColorMode,
+  QuickMangaLayout,
+  QuickMangaPreset,
+} from '@/lib/novel-promotion/quick-manga'
 
 export function useNovelPromotionWorkspaceController({
   project,
@@ -37,6 +42,30 @@ export function useNovelPromotionWorkspaceController({
 
   const projectSnapshot = useWorkspaceProjectSnapshot({ project, episode, urlStage })
   const { currentStage, episodeStoryboards, ...projectSection } = projectSnapshot
+
+  const quickMangaDefaults = useMemo(() => ({
+    enabled: false,
+    preset: 'auto' as QuickMangaPreset,
+    layout: 'auto' as QuickMangaLayout,
+    colorMode: 'auto' as QuickMangaColorMode,
+  }), [])
+  const [quickManga, setQuickManga] = useState(quickMangaDefaults)
+
+  const handleQuickMangaEnabledChange = useCallback(async (enabled: boolean) => {
+    setQuickManga((prev) => ({ ...prev, enabled }))
+  }, [])
+
+  const handleQuickMangaPresetChange = useCallback(async (value: QuickMangaPreset) => {
+    setQuickManga((prev) => ({ ...prev, preset: value }))
+  }, [])
+
+  const handleQuickMangaLayoutChange = useCallback(async (value: QuickMangaLayout) => {
+    setQuickManga((prev) => ({ ...prev, layout: value }))
+  }, [])
+
+  const handleQuickMangaColorModeChange = useCallback(async (value: QuickMangaColorMode) => {
+    setQuickManga((prev) => ({ ...prev, colorMode: value }))
+  }, [])
 
   const assetsLoading = false
   const assetsLoadingState = assetsLoading
@@ -94,6 +123,8 @@ export function useNovelPromotionWorkspaceController({
     episodeId,
     analysisModel: projectSnapshot.analysisModel,
     novelText: projectSnapshot.novelText,
+    quickManga,
+    artStyle: projectSnapshot.artStyle,
     t,
     onRefresh,
     onUpdateConfig: configActions.handleUpdateConfig,
@@ -130,11 +161,19 @@ export function useNovelPromotionWorkspaceController({
     isConfirmingAssets: execution.isConfirmingAssets,
     videoRatio: projectSnapshot.videoRatio,
     artStyle: projectSnapshot.artStyle,
+    quickMangaEnabled: quickManga.enabled,
+    quickMangaPreset: quickManga.preset,
+    quickMangaLayout: quickManga.layout,
+    quickMangaColorMode: quickManga.colorMode,
     videoModel: projectSnapshot.videoModel,
     capabilityOverrides: projectSnapshot.capabilityOverrides,
     userVideoModels: userModels.userVideoModels || [],
     handleUpdateEpisode: configActions.handleUpdateEpisode,
     handleUpdateConfig: configActions.handleUpdateConfig,
+    onQuickMangaEnabledChange: handleQuickMangaEnabledChange,
+    onQuickMangaPresetChange: handleQuickMangaPresetChange,
+    onQuickMangaLayoutChange: handleQuickMangaLayoutChange,
+    onQuickMangaColorModeChange: handleQuickMangaColorModeChange,
     runWithRebuildConfirm: rebuildState.runWithRebuildConfirm,
     runStoryToScriptFlow: execution.runStoryToScriptFlow,
     runScriptToStoryboardFlow: execution.runScriptToStoryboardFlow,

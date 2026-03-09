@@ -4,6 +4,11 @@ import { createContext, useContext, type ReactNode } from 'react'
 import type { CapabilitySelections, ModelCapabilities } from '@/lib/model-config-contract'
 import type { VideoPricingTier } from '@/lib/model-pricing/video-tier'
 import type { BatchVideoGenerationParams, VideoGenerationOptions } from './components/video'
+import type {
+  QuickMangaColorMode,
+  QuickMangaLayout,
+  QuickMangaPreset,
+} from '@/lib/novel-promotion/quick-manga'
 
 export interface WorkspaceStageVideoModelOption {
   value: string
@@ -25,6 +30,14 @@ export interface WorkspaceStageRuntimeValue {
   capabilityOverrides: CapabilitySelections
   userVideoModels: WorkspaceStageVideoModelOption[]
   onNovelTextChange: (value: string) => Promise<void>
+  quickMangaEnabled: boolean
+  quickMangaPreset: QuickMangaPreset
+  quickMangaLayout: QuickMangaLayout
+  quickMangaColorMode: QuickMangaColorMode
+  onQuickMangaEnabledChange: (enabled: boolean) => Promise<void>
+  onQuickMangaPresetChange: (value: QuickMangaPreset) => Promise<void>
+  onQuickMangaLayoutChange: (value: QuickMangaLayout) => Promise<void>
+  onQuickMangaColorModeChange: (value: QuickMangaColorMode) => Promise<void>
   onVideoRatioChange: (value: string) => Promise<void>
   onArtStyleChange: (value: string) => Promise<void>
   onRunStoryToScript: () => Promise<void>

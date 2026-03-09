@@ -3,6 +3,11 @@
 import { useMemo } from 'react'
 import type { NovelPromotionWorkspaceProps } from '../types'
 import type { CapabilitySelections } from '@/lib/model-config-contract'
+import type {
+  QuickMangaColorMode,
+  QuickMangaLayout,
+  QuickMangaPreset,
+} from '@/lib/novel-promotion/quick-manga'
 
 function parseCapabilitySelections(raw: unknown): CapabilitySelections {
   if (!raw) return {}
@@ -45,6 +50,10 @@ export function useWorkspaceProjectSnapshot({
       capabilityOverrides,
       ttsRate: projectData?.ttsRate,
       artStyle: projectData?.artStyle,
+      quickMangaEnabled: false,
+      quickMangaPreset: 'auto' as QuickMangaPreset,
+      quickMangaLayout: 'auto' as QuickMangaLayout,
+      quickMangaColorMode: 'auto' as QuickMangaColorMode,
     }
   }, [episode?.novelText, episode?.storyboards, project.novelPromotionData, urlStage])
 }

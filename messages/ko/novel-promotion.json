@@ -102,6 +102,39 @@
         "videoRatio": "비디오 비율",
         "visualStyle": "비주얼 스타일",
         "moreConfig": "더 많은 구성 옵션을 보려면 오른쪽 상단의 「설정」 버튼을 클릭하세요.",
+        "quickManga": {
+            "title": "퀵 망가 엔트리 (Phase 0)",
+            "description": "새 모드를 만들지 않고 novel-promotion 안에서 source-aware 망가 프리셋을 사용합니다",
+            "toggle": "퀵 망가 토글",
+            "preset": {
+                "label": "프리셋",
+                "options": {
+                    "auto": "자동",
+                    "actionBattle": "액션 / 배틀",
+                    "romanceDrama": "로맨스 / 드라마",
+                    "sliceOfLife": "일상물",
+                    "comedy4Koma": "코미디 4컷"
+                }
+            },
+            "layout": {
+                "label": "패널 레이아웃",
+                "options": {
+                    "auto": "자동",
+                    "cinematic": "시네마틱 패널",
+                    "fourKoma": "4컷 리듬",
+                    "verticalScroll": "세로 스크롤"
+                }
+            },
+            "colorMode": {
+                "label": "색상 모드",
+                "options": {
+                    "auto": "자동",
+                    "fullColor": "풀 컬러",
+                    "blackWhite": "흑백",
+                    "limitedPalette": "제한 팔레트"
+                }
+            }
+        },
         "narration": {
             "title": "내레이션 음성 해설 활성화",
             "description": "TTS 음성 내레이션을 생성하여 비디오에 해설을 추가하세요"

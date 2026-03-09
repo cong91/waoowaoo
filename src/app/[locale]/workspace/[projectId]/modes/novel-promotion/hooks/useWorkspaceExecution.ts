@@ -7,12 +7,15 @@ import {
   useScriptToStoryboardRunStream,
   useStoryToScriptRunStream,
 } from '@/lib/query/hooks'
+import { buildQuickMangaStoryInput, type QuickMangaOptions } from '@/lib/novel-promotion/quick-manga'
 
 interface UseWorkspaceExecutionParams {
   projectId: string
   episodeId?: string
   analysisModel?: string | null
   novelText: string
+  quickManga: QuickMangaOptions
+  artStyle?: string | null
   t: (key: string) => string
   onRefresh: (options?: { scope?: string; mode?: string }) => Promise<void>
   onUpdateConfig: (key: string, value: unknown) => Promise<void>
@@ -35,6 +38,8 @@ export function useWorkspaceExecution({
   episodeId,
   analysisModel,
   novelText,
+  quickManga,
+  artStyle,
   t,
   onRefresh,
   onUpdateConfig,
@@ -92,6 +97,12 @@ export function useWorkspaceExecution({
       return
     }
 
+    const mergedStoryContent = buildQuickMangaStoryInput({
+      storyContent,
+      options: quickManga,
+      artStyle,
+    })
+
     try {
       setIsTransitioning(true)
       setStoryToScriptConsoleMinimized(false)
@@ -100,7 +111,7 @@ export function useWorkspaceExecution({
       setTransitionProgress({ message: t('execution.storyToScriptRunning'), step: 'streaming' })
       const runResult = await storyToScriptStream.run({
         episodeId,
-        content: storyContent,
+        content: mergedStoryContent,
         model: analysisModel || undefined,
         temperature: 0.7,
         reasoning: true,
@@ -126,7 +137,7 @@ export function useWorkspaceExecution({
       setIsTransitioning(false)
       setTransitionProgress({ message: '', step: '' })
     }
-  }, [analysisModel, episodeId, novelText, onOpenAssetLibrary, onRefresh, onStageChange, onUpdateConfig, storyToScriptStream, t])
+  }, [analysisModel, artStyle, episodeId, novelText, onOpenAssetLibrary, onRefresh, onStageChange, onUpdateConfig, quickManga, storyToScriptStream, t])
 
   const runScriptToStoryboardFlow = useCallback(async () => {
     if (!episodeId) {

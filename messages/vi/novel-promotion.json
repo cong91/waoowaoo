@@ -102,6 +102,39 @@
         "videoRatio": "Tỷ lệ video",
         "visualStyle": "Phong cách trực quan",
         "moreConfig": "Để biết thêm tùy chọn cấu hình, hãy nhấp vào nút 「Cài đặt」 ở trên cùng bên phải",
+        "quickManga": {
+            "title": "Quick Manga Entry (Phase 0)",
+            "description": "Bật preset manga source-aware ngay trong novel-promotion, không tạo mode mới",
+            "toggle": "Bật/tắt quick manga",
+            "preset": {
+                "label": "Preset",
+                "options": {
+                    "auto": "Tự động",
+                    "actionBattle": "Hành động / Chiến đấu",
+                    "romanceDrama": "Lãng mạn / Drama",
+                    "sliceOfLife": "Đời thường",
+                    "comedy4Koma": "Hài 4-koma"
+                }
+            },
+            "layout": {
+                "label": "Bố cục khung",
+                "options": {
+                    "auto": "Tự động",
+                    "cinematic": "Khung điện ảnh",
+                    "fourKoma": "Nhịp 4-koma",
+                    "verticalScroll": "Cuộn dọc"
+                }
+            },
+            "colorMode": {
+                "label": "Chế độ màu",
+                "options": {
+                    "auto": "Tự động",
+                    "fullColor": "Màu đầy đủ",
+                    "blackWhite": "Đen trắng",
+                    "limitedPalette": "Bảng màu giới hạn"
+                }
+            }
+        },
         "narration": {
             "title": "Bật thuyết minh thuyết minh",
             "description": "Tạo tường thuật bằng giọng nói TTS để thêm bình luận vào video của bạn"
