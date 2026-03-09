@@ -16,12 +16,10 @@ export default createMiddleware({
 });
 
 export const config = {
-    // 匹配所有路径，除了 api、_next/static、_next/image、favicon.ico 等
+    // Match all app routes, but exclude API/static/internal endpoints.
     matcher: [
-        // 匹配根路径和所有带语言前缀的路径
         '/',
         '/(zh|en|vi|ko)/:path*',
-        // 匹配所有其他路径（用于重定向到带语言前缀的路径）
-        '/((?!api|m|_next/static|_next/image|favicon.ico|.*\\.png|.*\\.jpg|.*\\.jpeg|.*\\.svg|.*\\.gif|.*\\.ico).*)'
+        '/((?!api|m|_next/static|_next/image|_vercel|favicon.ico|.*\\.png|.*\\.jpg|.*\\.jpeg|.*\\.svg|.*\\.gif|.*\\.ico).*)'
     ]
 };
