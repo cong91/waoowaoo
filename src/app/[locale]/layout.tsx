@@ -6,8 +6,13 @@ import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import "../globals.css";
 import { Providers } from "./providers";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { locales } from '@/i18n/routing';
+
+const enableSpeedInsights =
+    process.env.NEXT_PUBLIC_ENABLE_SPEED_INSIGHTS === '1' ||
+    process.env.VERCEL === '1';
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -79,7 +84,7 @@ export default async function LocaleLayout({
                         {children}
                     </Providers>
                 </NextIntlClientProvider>
-
+                {enableSpeedInsights ? <SpeedInsights /> : null}
             </body>
         </html>
     );
