@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getRequestId } from '@/lib/api-errors'
+import { ApiError, getRequestId } from '@/lib/api-errors'
 import { submitTask } from '@/lib/task/submitter'
 import { TASK_TYPE, type TaskType } from '@/lib/task/types'
 import { buildDefaultTaskBillingInfo, isBillableTaskType } from '@/lib/billing'
@@ -113,13 +113,25 @@ export async function maybeSubmitLLMTask(params: {
       }
     } else {
       const modelConfig = await getProjectModelConfig(params.projectId, params.userId)
-      const resolvedAnalysisModel = await resolveAnalysisModel({
-        userId: params.userId,
-        projectAnalysisModel: modelConfig.analysisModel,
-      }).catch(() => null)
+      const shouldFailFastOnMissingModel = params.type === TASK_TYPE.STORY_TO_SCRIPT_RUN
+        || params.type === TASK_TYPE.SCRIPT_TO_STORYBOARD_RUN
 
-      if (resolvedAnalysisModel) {
-        payload.analysisModel = resolvedAnalysisModel
+      try {
+        const resolvedAnalysisModel = await resolveAnalysisModel({
+          userId: params.userId,
+          projectAnalysisModel: modelConfig.analysisModel,
+        })
+
+        if (resolvedAnalysisModel) {
+          payload.analysisModel = resolvedAnalysisModel
+        }
+      } catch (error) {
+        if (shouldFailFastOnMissingModel && error instanceof Error && error.message.includes('ANALYSIS_MODEL_NOT_CONFIGURED')) {
+          throw new ApiError('MISSING_CONFIG', {
+            code: 'ANALYSIS_MODEL_NOT_CONFIGURED',
+            message: 'ANALYSIS_MODEL_NOT_CONFIGURED: please configure an analysis model before starting story/script runs',
+          })
+        }
       }
     }
   }

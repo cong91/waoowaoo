@@ -136,6 +136,45 @@ describe('route-task helpers', () => {
     }))
   })
 
+  it('fails fast with MISSING_CONFIG for story_to_script_run when analysis model is not configured', async () => {
+    getProjectModelConfigMock.mockResolvedValue({ analysisModel: null })
+    resolveAnalysisModelMock.mockRejectedValue(new Error('ANALYSIS_MODEL_NOT_CONFIGURED: 请先在设置页面配置分析模型'))
+
+    const request = buildRequest('/api/novel-promotion/project_1/story-to-script-stream?async=1')
+
+    let thrown: unknown
+    try {
+      await maybeSubmitLLMTask({
+        request,
+        userId: 'user_1',
+        projectId: 'project_1',
+        episodeId: 'episode_1',
+        type: TASK_TYPE.STORY_TO_SCRIPT_RUN,
+        targetType: 'NovelPromotionEpisode',
+        targetId: 'episode_1',
+        routePath: '/api/novel-promotion/project_1/story-to-script-stream',
+        body: {
+          content: 'story content',
+          displayMode: 'detail',
+          meta: {
+            locale: 'en',
+          },
+        },
+        dedupeKey: 'story_to_script_run:episode_1',
+        priority: 2,
+      })
+    } catch (error) {
+      thrown = error
+    }
+
+    expect(resolveAnalysisModelMock).toHaveBeenCalledWith({
+      userId: 'user_1',
+      projectAnalysisModel: null,
+    })
+    expect(thrown).toMatchObject({ code: 'MISSING_CONFIG' })
+    expect(submitTaskMock).not.toHaveBeenCalled()
+  })
+
   it('keeps user-level model injection behavior for reference_to_character', async () => {
     getUserModelConfigMock.mockResolvedValue({ analysisModel: 'openai-compatible::gpt-4.1-mini' })
 
@@ -165,5 +204,43 @@ describe('route-task helpers', () => {
         model: 'openai-compatible::gpt-4.1-mini',
       }),
     }))
+  })
+
+  it('fails fast with MISSING_CONFIG for script_to_storyboard_run when analysis model is not configured', async () => {
+    getProjectModelConfigMock.mockResolvedValue({ analysisModel: null })
+    resolveAnalysisModelMock.mockRejectedValue(new Error('ANALYSIS_MODEL_NOT_CONFIGURED: 请先在设置页面配置分析模型'))
+
+    const request = buildRequest('/api/novel-promotion/project_1/script-to-storyboard-stream?async=1')
+
+    let thrown: unknown
+    try {
+      await maybeSubmitLLMTask({
+        request,
+        userId: 'user_1',
+        projectId: 'project_1',
+        episodeId: 'episode_1',
+        type: TASK_TYPE.SCRIPT_TO_STORYBOARD_RUN,
+        targetType: 'NovelPromotionEpisode',
+        targetId: 'episode_1',
+        routePath: '/api/novel-promotion/project_1/script-to-storyboard-stream',
+        body: {
+          displayMode: 'detail',
+          meta: {
+            locale: 'en',
+          },
+        },
+        dedupeKey: 'script_to_storyboard_run:episode_1',
+        priority: 2,
+      })
+    } catch (error) {
+      thrown = error
+    }
+
+    expect(resolveAnalysisModelMock).toHaveBeenCalledWith({
+      userId: 'user_1',
+      projectAnalysisModel: null,
+    })
+    expect(thrown).toMatchObject({ code: 'MISSING_CONFIG' })
+    expect(submitTaskMock).not.toHaveBeenCalled()
   })
 })
