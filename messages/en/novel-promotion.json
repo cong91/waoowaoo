@@ -133,6 +133,31 @@
           "blackWhite": "Black & White",
           "limitedPalette": "Limited Palette"
         }
+      },
+      "history": {
+        "title": "Quick Manga History",
+        "description": "Review recent quick manga runs with status, continuity metadata, and reusable settings",
+        "loading": "Loading run history...",
+        "empty": "No quick manga runs yet for this filter",
+        "noPreview": "No preview available",
+        "filters": {
+          "all": "All",
+          "success": "Success",
+          "failed": "Failed",
+          "cancelled": "Cancelled"
+        },
+        "stage": {
+          "storyToScript": "Story → Script",
+          "scriptToStoryboard": "Script → Storyboard"
+        },
+        "metadata": {
+          "stage": "Stage",
+          "status": "Status",
+          "preset": "Preset",
+          "layout": "Layout",
+          "colorMode": "Color",
+          "style": "Style"
+        }
       }
     },
     "narration": {

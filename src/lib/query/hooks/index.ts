@@ -195,6 +195,12 @@ export {
 } from './useScriptToStoryboardRunStream'
 
 export {
+    useQuickMangaHistory,
+    type QuickMangaHistoryItem,
+    type QuickMangaHistoryStatus,
+} from './useQuickMangaHistory'
+
+export {
     useAssetTaskPresentation,
     useStoryboardTaskPresentation,
     useVideoTaskPresentation,

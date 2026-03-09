@@ -18,6 +18,13 @@ const CONTRACT_TEST_BY_GROUP: Record<RouteCatalogEntry['contractGroup'], string>
   'infra-routes': 'tests/integration/api/contract/crud-routes.test.ts',
 }
 
+function resolveContractTest(entry: RouteCatalogEntry): string {
+  if (entry.routeFile.endsWith('/quick-manga/history/route.ts')) {
+    return 'tests/integration/api/contract/quick-manga-history-route.test.ts'
+  }
+  return CONTRACT_TEST_BY_GROUP[entry.contractGroup]
+}
+
 function resolveChainTest(routeFile: string): string {
   if (routeFile.includes('/generate-video/') || routeFile.includes('/lip-sync/')) {
     return 'tests/integration/chain/video.chain.test.ts'
@@ -43,7 +50,7 @@ export const ROUTE_BEHAVIOR_MATRIX: ReadonlyArray<RouteBehaviorMatrixEntry> = RO
   contractGroup: entry.contractGroup,
   caseId: `ROUTE:${entry.routeFile.replace(/^src\/app\/api\//, '').replace(/\/route\.ts$/, '')}`,
   tests: [
-    CONTRACT_TEST_BY_GROUP[entry.contractGroup],
+    resolveContractTest(entry),
     resolveChainTest(entry.routeFile),
   ],
 }))

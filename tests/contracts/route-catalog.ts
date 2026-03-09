@@ -106,6 +106,7 @@ const ROUTE_FILES = [
   'src/app/api/novel-promotion/[projectId]/screenplay-conversion/route.ts',
   'src/app/api/novel-promotion/[projectId]/script-to-storyboard-stream/route.ts',
   'src/app/api/novel-promotion/[projectId]/quick-manga/route.ts',
+  'src/app/api/novel-promotion/[projectId]/quick-manga/history/route.ts',
   'src/app/api/novel-promotion/[projectId]/select-character-image/route.ts',
   'src/app/api/novel-promotion/[projectId]/select-location-image/route.ts',
   'src/app/api/novel-promotion/[projectId]/speaker-voice/route.ts',
@@ -176,7 +177,7 @@ function resolveContractGroup(routeFile: string): RouteContractGroup {
     || routeFile.includes('/screenplay-conversion/')
     || routeFile.includes('/reference-to-character/')
     || routeFile.includes('/character-profile/')
-    || routeFile.includes('/quick-manga/')
+    || routeFile.endsWith('/quick-manga/route.ts')
     || routeFile.endsWith('/clips/route.ts')
     || routeFile.endsWith('/episodes/split/route.ts')
     || routeFile.endsWith('/voice-analyze/route.ts')

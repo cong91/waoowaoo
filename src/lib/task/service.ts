@@ -297,6 +297,18 @@ export async function getTaskById(taskId: string) {
   return await taskModel.findUnique({ where: { id: taskId } })
 }
 
+export async function getTasksByIds(taskIds: string[]) {
+  const normalizedIds = Array.from(new Set(taskIds.filter((id) => typeof id === 'string' && id.trim().length > 0)))
+  if (normalizedIds.length === 0) return []
+  return await taskModel.findMany({
+    where: {
+      id: {
+        in: normalizedIds,
+      },
+    },
+  })
+}
+
 export async function queryTasks(filters: {
   projectId?: string
   targetType?: string
