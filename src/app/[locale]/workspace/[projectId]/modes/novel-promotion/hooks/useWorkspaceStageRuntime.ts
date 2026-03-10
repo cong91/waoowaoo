@@ -34,6 +34,8 @@ interface UseWorkspaceStageRuntimeParams {
   quickMangaChapterId: string | null
   quickMangaConflictPolicy: QuickMangaContinuityConflictPolicy
   videoModel: string | undefined
+  journeyType: 'film_video' | 'manga_webtoon'
+  projectName: string
   capabilityOverrides: CapabilitySelections
   userVideoModels: Array<{
     value: string
@@ -102,6 +104,8 @@ export function useWorkspaceStageRuntime({
   quickMangaChapterId,
   quickMangaConflictPolicy,
   videoModel,
+  journeyType,
+  projectName,
   capabilityOverrides,
   userVideoModels,
   handleUpdateEpisode,
@@ -140,6 +144,8 @@ export function useWorkspaceStageRuntime({
     videoRatio,
     artStyle,
     videoModel,
+    journeyType,
+    projectName,
     capabilityOverrides,
     userVideoModels: resolvedUserVideoModels,
     onNovelTextChange: (value) => handleUpdateEpisode('novelText', value),
@@ -206,6 +212,8 @@ export function useWorkspaceStageRuntime({
     onQuickMangaStyleLockProfileChange,
     onQuickMangaStyleLockStrengthChange,
     openAssetLibrary,
+    journeyType,
+    projectName,
     quickMangaChapterContinuityMode,
     quickMangaChapterId,
     quickMangaColorMode,

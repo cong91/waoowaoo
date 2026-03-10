@@ -49,6 +49,9 @@ interface Project {
   updatedAt: string
   totalCost?: number  // 项目总费用（CNY）
   stats?: ProjectStats
+  onboardingContext?: {
+    journeyType?: 'film_video' | 'manga_webtoon'
+  } | null
 }
 
 interface Pagination {
@@ -628,6 +631,17 @@ export default function WorkspacePage() {
                   <h3 className="text-lg font-bold text-[var(--glass-text-primary)] mb-2 line-clamp-2 pr-20 group-hover:text-[var(--glass-tone-info-fg)] transition-colors">
                     {project.name}
                   </h3>
+
+                  <div className="mb-3">
+                    <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] font-semibold tracking-[0.08em] uppercase ${project.onboardingContext?.journeyType === 'manga_webtoon'
+                      ? 'border-fuchsia-400/35 bg-fuchsia-500/12 text-fuchsia-200'
+                      : 'border-cyan-400/35 bg-cyan-500/12 text-cyan-200'
+                      }`}>
+                      {project.onboardingContext?.journeyType === 'manga_webtoon'
+                        ? t('journeyBadgeManga')
+                        : t('journeyBadgeFilm')}
+                    </span>
+                  </div>
 
                   {/* 描述：优先用户描述，fallback 到第一集故事 */}
                   {(project.description || project.stats?.firstEpisodePreview) && (

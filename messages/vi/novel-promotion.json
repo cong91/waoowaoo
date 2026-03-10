@@ -110,8 +110,8 @@
     "ready": "✓ Cấu hình hoàn tất, sẵn sàng cho bước tiếp theo",
     "pleaseInput": "Vui lòng nhập nội dung kịch bản trước",
     "manga": {
-      "title": "Manga (Beta)",
-      "description": "Bật preset tối ưu cho Manga ngay trong editor hiện tại mà không cần chuyển sang mode riêng",
+      "title": "Manga / Webtoon",
+      "description": "Dùng bộ điều khiển ưu tiên manga/webtoon trong lane runtime này cho paneling và continuity theo chương",
       "toggle": "Bật chế độ Manga",
       "preset": {
         "label": "Preset",

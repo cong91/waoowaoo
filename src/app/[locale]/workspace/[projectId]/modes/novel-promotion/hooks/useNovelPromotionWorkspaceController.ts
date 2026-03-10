@@ -293,6 +293,8 @@ export function useNovelPromotionWorkspaceController({
     quickMangaChapterId: quickManga.controls.chapterContinuity.chapterId,
     quickMangaConflictPolicy: quickManga.controls.chapterContinuity.conflictPolicy,
     videoModel: projectSnapshot.videoModel,
+    journeyType: projectSnapshot.journeyType,
+    projectName: projectSnapshot.projectName,
     capabilityOverrides: projectSnapshot.capabilityOverrides,
     userVideoModels: userModels.userVideoModels || [],
     handleUpdateEpisode: configActions.handleUpdateEpisode,

@@ -12,6 +12,7 @@ import {
 import {
   buildWorkspaceOnboardingContext,
   mergeWorkspaceOnboardingContextIntoCapabilityOverrides,
+  readWorkspaceOnboardingContextFromCapabilityOverrides,
 } from '@/lib/workspace/onboarding-context'
 
 // GET - 获取用户的项目（支持分页和搜索）
@@ -49,6 +50,27 @@ export const GET = apiHandler(async (request: NextRequest) => {
       take: pageSize
     })
   ])
+
+  const onboardingFindMany = (prisma.novelPromotionProject as unknown as {
+    findMany?: (...args: unknown[]) => Promise<Array<{ projectId: string; capabilityOverrides: string | null }>>
+  }).findMany
+
+  const onboardingRows = typeof onboardingFindMany === 'function'
+    ? await onboardingFindMany({
+      where: { projectId: { in: allProjects.map((p) => p.id) } },
+      select: {
+        projectId: true,
+        capabilityOverrides: true,
+      },
+    })
+    : []
+
+  const onboardingByProjectId = new Map(
+    onboardingRows.map((row) => [
+      row.projectId,
+      readWorkspaceOnboardingContextFromCapabilityOverrides(row.capabilityOverrides),
+    ]),
+  )
 
   // 在应用层重新排序：
   // 1. 新创建但未访问过的项目（无 lastAccessedAt）按创建时间降序排在最前
@@ -150,10 +172,16 @@ export const GET = apiHandler(async (request: NextRequest) => {
   )
 
   // 合并项目、费用与统计
-  const projectsWithStats = projects.map(project => ({
-    ...project,
-    totalCost: costMap.get(project.id) ?? 0,
-    stats: statsMap.get(project.id) ?? { episodes: 0, images: 0, videos: 0, panels: 0, firstEpisodePreview: null }}))
+  const projectsWithStats = projects.map(project => {
+    const onboardingContext = onboardingByProjectId.get(project.id)
+
+    return {
+      ...project,
+      totalCost: costMap.get(project.id) ?? 0,
+      stats: statsMap.get(project.id) ?? { episodes: 0, images: 0, videos: 0, panels: 0, firstEpisodePreview: null },
+      onboardingContext,
+    }
+  })
 
   return NextResponse.json({
     projects: projectsWithStats,

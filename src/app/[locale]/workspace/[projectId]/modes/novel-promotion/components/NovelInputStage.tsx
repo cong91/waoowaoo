@@ -329,7 +329,7 @@ export default function NovelInputStage({
         </div>
       </div>
 
-      {/* Manga (Beta) entry */}
+      {/* Manga/Webtoon kickoff controls */}
       <div className="glass-surface p-6 relative z-10 space-y-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>

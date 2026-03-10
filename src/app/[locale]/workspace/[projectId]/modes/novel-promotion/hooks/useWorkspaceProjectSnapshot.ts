@@ -37,6 +37,11 @@ export function useWorkspaceProjectSnapshot({
   return useMemo(() => {
     const projectData = project.novelPromotionData
     const capabilityOverrides = parseCapabilitySelections(projectData?.capabilityOverrides)
+    const journeyType: 'film_video' | 'manga_webtoon' =
+      projectData?.onboardingContext?.journeyType === 'manga_webtoon'
+        ? 'manga_webtoon'
+        : 'film_video'
+
     return {
       projectData,
       projectCharacters: projectData?.characters || [],
@@ -51,6 +56,8 @@ export function useWorkspaceProjectSnapshot({
       storyboardModel: projectData?.storyboardModel,
       editModel: projectData?.editModel,
       videoModel: projectData?.videoModel,
+      journeyType,
+      projectName: project.name,
       videoRatio: projectData?.videoRatio,
       capabilityOverrides,
       ttsRate: projectData?.ttsRate,
@@ -66,5 +73,5 @@ export function useWorkspaceProjectSnapshot({
       quickMangaChapterId: null as string | null,
       quickMangaConflictPolicy: 'balanced' as QuickMangaContinuityConflictPolicy,
     }
-  }, [episode?.novelText, episode?.storyboards, project.novelPromotionData, urlStage])
+  }, [episode?.novelText, episode?.storyboards, project.name, project.novelPromotionData, urlStage])
 }

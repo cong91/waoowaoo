@@ -231,6 +231,13 @@ export interface NovelPromotionProject {
   id: string
   projectId: string
   stage: string
+  onboardingContext?: {
+    journeyType?: 'film_video' | 'manga_webtoon'
+    entryIntent?: 'film_story_studio' | 'video_ad_short' | 'cinematic_scene' | 'manga_quickstart' | 'manga_story_to_panels'
+    sourceType?: 'blank' | 'story_text' | 'import_script'
+    sourceContent?: string
+    capturedAt?: string
+  } | null
   globalAssetText: string | null
   novelText: string | null
   analysisModel: string

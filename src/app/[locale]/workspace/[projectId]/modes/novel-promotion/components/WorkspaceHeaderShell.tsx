@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { CapsuleNav, EpisodeSelector } from '@/components/ui/CapsuleNav'
 import { SettingsModal, WorldContextModal } from '@/components/ui/ConfigModals'
 import { AppIcon } from '@/components/ui/icons'
@@ -78,6 +79,7 @@ interface WorkspaceHeaderShellProps {
   assetLibraryLabel: string
   settingsLabel: string
   refreshTitle: string
+  journeyType: 'film_video' | 'manga_webtoon'
 }
 
 export default function WorkspaceHeaderShell({
@@ -117,9 +119,11 @@ export default function WorkspaceHeaderShell({
   assetLibraryLabel,
   settingsLabel,
   refreshTitle,
+  journeyType,
 }: WorkspaceHeaderShellProps) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const tWorkspace = useTranslations('workspace')
 
   const [isMobile, setIsMobile] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -173,6 +177,15 @@ export default function WorkspaceHeaderShell({
       return d !== 0 ? d : a.name.localeCompare(b.name, 'zh')
     })
   }, [episodes])
+
+  const isMangaJourney = journeyType === 'manga_webtoon'
+  const journeyBadgeLabel = isMangaJourney ? tWorkspace('journeyBadgeManga') : tWorkspace('journeyBadgeFilm')
+  const journeySubtitle = isMangaJourney
+    ? tWorkspace('journeyRuntimeSubtitleManga', { projectName })
+    : tWorkspace('journeyRuntimeSubtitleFilm', { projectName })
+  const kickoffButtonLabel = isMangaJourney
+    ? tWorkspace('journeyKickoffManga')
+    : tWorkspace('journeyKickoffFilm')
 
   const episodeSelectorNode = episodes.length > 0 && currentEpisodeId ? (
     <EpisodeSelector
@@ -229,6 +242,29 @@ export default function WorkspaceHeaderShell({
         text={globalAssetText}
         onChange={(value) => { onUpdateConfig('globalAssetText', value) }}
       />
+
+      <div className="fixed left-3 right-3 top-[calc(env(safe-area-inset-top,0px)+4.75rem)] z-[66] sm:left-6 sm:right-6 sm:top-[calc(env(safe-area-inset-top,0px)+4.25rem)]">
+        <div className="glass-surface-soft rounded-2xl border border-[var(--glass-stroke-soft)] px-3 py-2.5 sm:px-4 sm:py-3">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] font-semibold tracking-[0.08em] uppercase ${isMangaJourney
+                ? 'border-fuchsia-400/35 bg-fuchsia-500/12 text-fuchsia-200'
+                : 'border-cyan-400/35 bg-cyan-500/12 text-cyan-200'
+                }`}>
+                {journeyBadgeLabel}
+              </span>
+              <p className="mt-1.5 text-xs text-[var(--glass-text-secondary)] line-clamp-2">{journeySubtitle}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => onStageChange('config')}
+              className="glass-btn-base glass-btn-secondary shrink-0 px-3 py-1.5 text-xs font-semibold"
+            >
+              {kickoffButtonLabel}
+            </button>
+          </div>
+        </div>
+      </div>
 
       {isMobile && (
         <button

@@ -110,8 +110,8 @@
     "ready": "✓ 구성 완료, 다음 단계 준비 완료",
     "pleaseInput": "스크립트 내용을 먼저 입력해주세요",
     "manga": {
-      "title": "Manga (Beta)",
-      "description": "별도 모드로 이동하지 않고 현재 에디터에서 Manga 프리셋을 활성화합니다",
+      "title": "Manga / Webtoon",
+      "description": "이 런타임 레인에서 Manga/Webtoon 중심 컨트롤로 패널링과 챕터 연속성을 구성합니다",
       "toggle": "Manga 모드 켜기",
       "preset": {
         "label": "프리셋",

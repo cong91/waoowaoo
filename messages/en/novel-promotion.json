@@ -110,8 +110,8 @@
     "ready": "✓ Configuration complete, ready for next step",
     "pleaseInput": "Please enter script content first",
     "manga": {
-      "title": "Manga (Beta)",
-      "description": "Enable manga-focused presets inside the current editor flow without switching to a separate mode",
+      "title": "Manga / Webtoon",
+      "description": "Use manga/webtoon-focused controls in this runtime lane for paneling and chapter continuity",
       "toggle": "Enable Manga mode",
       "preset": {
         "label": "Preset",
