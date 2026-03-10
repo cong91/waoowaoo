@@ -3,7 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { withPrismaRetry } from '@/lib/prisma-retry'
 import { rollbackTaskBilling } from '@/lib/billing'
 import { locales } from '@/i18n/routing'
-import { TASK_STATUS, type CreateTaskInput, type TaskBillingInfo, type TaskStatus } from './types'
+import { TASK_STATUS, TASK_EVENT_TYPE, type CreateTaskInput, type TaskBillingInfo, type TaskStatus } from './types'
+import { publishTaskEvent } from './publisher'
 
 const ACTIVE_STATUSES: TaskStatus[] = [TASK_STATUS.QUEUED, TASK_STATUS.PROCESSING]
 const taskModel = prisma.task
@@ -54,6 +55,76 @@ function hasTaskLocale(payload: unknown): boolean {
   return locale !== null
 }
 
+function resolveRunIdFromPayload(payload: unknown): string | null {
+  const payloadObject = toObject(payload)
+  const directRunId = typeof payloadObject.runId === 'string' ? payloadObject.runId.trim() : ''
+  if (directRunId) return directRunId
+  const payloadMeta = toObject(payloadObject.meta)
+  const metaRunId = typeof payloadMeta.runId === 'string' ? payloadMeta.runId.trim() : ''
+  return metaRunId || null
+}
+
+async function publishLocaleMissingFailedEvent(params: {
+  taskId: string
+  userId: string
+  projectId: string
+  episodeId?: string | null
+  type: string
+  targetType: string
+  targetId: string
+  payload: unknown
+}) {
+  const runIds = new Set<string>()
+  const runIdFromPayload = resolveRunIdFromPayload(params.payload)
+  if (runIdFromPayload) runIds.add(runIdFromPayload)
+
+  const linkedRuns = await prisma.graphRun.findMany({
+    where: {
+      taskId: params.taskId,
+    },
+    select: {
+      id: true,
+    },
+    take: 5,
+  })
+  for (const run of linkedRuns) {
+    if (run.id) runIds.add(run.id)
+  }
+
+  const entries = runIds.size > 0 ? Array.from(runIds) : [null]
+  for (const runId of entries) {
+    await publishTaskEvent({
+      taskId: params.taskId,
+      projectId: params.projectId,
+      userId: params.userId,
+      type: TASK_EVENT_TYPE.FAILED,
+      taskType: params.type,
+      targetType: params.targetType,
+      targetId: params.targetId,
+      episodeId: params.episodeId || null,
+      payload: {
+        stage: 'validate_payload',
+        stageLabel: 'progress.stage.validatePayload',
+        message: 'progress.runtime.taskFailed',
+        errorCode: 'TASK_LOCALE_REQUIRED',
+        error: {
+          code: 'TASK_LOCALE_REQUIRED',
+          message: 'task locale is missing',
+        },
+        ...(runId ? { runId } : {}),
+        ...(runId
+          ? {
+              meta: {
+                runId,
+              },
+            }
+          : {}),
+      },
+      persist: false,
+    })
+  }
+}
+
 function toNullableJson(value?: Prisma.InputJsonValue | Record<string, unknown> | TaskBillingInfo | null) {
   if (value === undefined) return undefined
   if (value === null) return Prisma.JsonNull
@@ -101,6 +172,13 @@ function resolveCompensationFailure(
 
 async function failTaskWithMissingLocale(task: {
   id: string
+  userId: string
+  projectId: string
+  episodeId: string | null
+  type: string
+  targetType: string
+  targetId: string
+  payload: unknown
   billingInfo: unknown
 }) {
   const rollbackResult = await rollbackTaskBillingForTask({
@@ -123,6 +201,17 @@ async function failTaskWithMissingLocale(task: {
       heartbeatAt: null,
       dedupeKey: null,
     },
+  })
+
+  await publishLocaleMissingFailedEvent({
+    taskId: task.id,
+    userId: task.userId,
+    projectId: task.projectId,
+    episodeId: task.episodeId,
+    type: task.type,
+    targetType: task.targetType,
+    targetId: task.targetId,
+    payload: task.payload,
   })
 }
 
@@ -175,7 +264,17 @@ export async function createTask(input: CreateTaskInput) {
     if (existing) {
       if (isActiveStatus(existing.status)) {
         if (!hasTaskLocale(existing.payload)) {
-          await failTaskWithMissingLocale(existing)
+          await failTaskWithMissingLocale({
+            id: existing.id,
+            userId: existing.userId,
+            projectId: existing.projectId,
+            episodeId: existing.episodeId,
+            type: existing.type,
+            targetType: existing.targetType,
+            targetId: existing.targetId,
+            payload: existing.payload,
+            billingInfo: existing.billingInfo,
+          })
         } else {
           // 校验 BullMQ Job 是否真的还活着，防止 DB 与队列状态脱节导致永久卡死
           const jobAlive = await verifyJobAlive(existing.id)
@@ -247,7 +346,17 @@ export async function createTask(input: CreateTaskInput) {
       if (collided) {
         if (isActiveStatus(collided.status)) {
           if (!hasTaskLocale(collided.payload)) {
-            await failTaskWithMissingLocale(collided)
+            await failTaskWithMissingLocale({
+              id: collided.id,
+              userId: collided.userId,
+              projectId: collided.projectId,
+              episodeId: collided.episodeId,
+              type: collided.type,
+              targetType: collided.targetType,
+              targetId: collided.targetId,
+              payload: collided.payload,
+              billingInfo: collided.billingInfo,
+            })
           } else {
             // P2002 竞态路径：同样校验 BullMQ Job 状态
             const jobAlive = await verifyJobAlive(collided.id)

@@ -11,6 +11,8 @@
 import { prisma } from '@/lib/prisma'
 import { createScopedLogger } from '@/lib/logging/core'
 import { TASK_STATUS, TASK_EVENT_TYPE } from './types'
+import { RUN_EVENT_TYPE } from '@/lib/run-runtime/types'
+import { publishRunEvent } from '@/lib/run-runtime/publisher'
 import { publishTaskEvent } from './publisher'
 import { rollbackTaskBillingForTask } from './service'
 import {
@@ -44,6 +46,41 @@ const MISSING_RECONCILE_GRACE_MS = 30_000
 type JobState = 'alive' | 'terminal' | 'missing'
 
 const ALL_QUEUES = [imageQueue, videoQueue, voiceQueue, textQueue]
+
+async function failRunningGraphRunsLinkedToTask(params: {
+    taskId: string
+    errorCode: string
+    errorMessage: string
+}) {
+    const linkedRuns = await prisma.graphRun.findMany({
+        where: {
+            taskId: params.taskId,
+            status: {
+                in: ['queued', 'running', 'canceling'],
+            },
+        },
+        select: {
+            id: true,
+            projectId: true,
+            userId: true,
+        },
+        take: 10,
+    })
+
+    for (const run of linkedRuns) {
+        await publishRunEvent({
+            runId: run.id,
+            projectId: run.projectId,
+            userId: run.userId,
+            eventType: RUN_EVENT_TYPE.RUN_ERROR,
+            payload: {
+                taskId: params.taskId,
+                errorCode: params.errorCode,
+                message: params.errorMessage,
+            },
+        })
+    }
+}
 
 /**
  * 检查 BullMQ 中某个 Job 的真实状态。
@@ -144,6 +181,12 @@ async function failOrphanedTask(
                 compensationFailed,
             },
             persist: false,
+        })
+
+        await failRunningGraphRunsLinkedToTask({
+            taskId: task.id,
+            errorCode,
+            errorMessage,
         })
     }
 
