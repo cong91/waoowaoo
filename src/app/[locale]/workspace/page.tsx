@@ -556,7 +556,7 @@ export default function WorkspacePage() {
               <div className="relative z-10 flex h-full flex-col justify-between gap-4">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--glass-tone-info-fg)]">Manga</div>
+                    <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--glass-tone-info-fg)]">{t('journeyCardMangaLabel')}</div>
                     <h3 className="mt-2 text-lg font-bold text-[var(--glass-text-primary)]">{t('projectTypeMangaTitle')}</h3>
                     <p className="mt-2 text-sm text-[var(--glass-text-secondary)] leading-relaxed">{t('projectTypeMangaDesc')}</p>
                   </div>

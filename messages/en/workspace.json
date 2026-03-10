@@ -24,7 +24,8 @@
   "projectTypeStoryDesc": "Default screenplay/video workflow",
   "projectTypeMangaTitle": "Manga Quick Start",
   "projectTypeMangaDesc": "Jump to Script stage with Quick Manga enabled",
-  "journeyCardFilmLabel": "Film / Video",
+  "journeyCardFilmLabel": "Create Video / Film",
+  "journeyCardMangaLabel": "Create Manga / Webtoon",
   "wizard": {
     "stepJourney": "Journey",
     "stepTemplate": "Template",

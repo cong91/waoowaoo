@@ -9,10 +9,10 @@ describe('workspace dual journey feature flag', () => {
     delete process.env[FLAG_KEY]
   })
 
-  it('returns false when env var is missing', () => {
+  it('returns true when env var is missing (dual-journey default)', () => {
     delete process.env[FLAG_KEY]
 
-    expect(isWorkspaceDualJourneyEnabled()).toBe(false)
+    expect(isWorkspaceDualJourneyEnabled()).toBe(true)
   })
 
   it('returns true for enabled values', () => {

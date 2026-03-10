@@ -24,7 +24,8 @@
   "projectTypeStoryDesc": "标准剧本/视频工作流",
   "projectTypeMangaTitle": "Manga Quick Start",
   "projectTypeMangaDesc": "直达 Script 阶段并默认开启 Quick Manga",
-  "journeyCardFilmLabel": "视频 / 影视",
+  "journeyCardFilmLabel": "创建视频 / 影视",
+  "journeyCardMangaLabel": "创建 Manga / Webtoon",
   "wizard": {
     "stepJourney": "创作旅程",
     "stepTemplate": "模板",

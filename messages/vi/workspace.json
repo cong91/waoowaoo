@@ -24,7 +24,8 @@
   "projectTypeStoryDesc": "Flow chuẩn cho screenplay/video nhiều tập",
   "projectTypeMangaTitle": "Manga Quick Start",
   "projectTypeMangaDesc": "Vào thẳng Script + bật Quick Manga mặc định",
-  "journeyCardFilmLabel": "Video / Film",
+  "journeyCardFilmLabel": "Tạo Video / Film",
+  "journeyCardMangaLabel": "Tạo Manga / Webtoon",
   "wizard": {
     "stepJourney": "Hành trình",
     "stepTemplate": "Template",
