@@ -103,9 +103,9 @@
     "visualStyle": "Visual Style",
     "moreConfig": "For more configuration options, click the 「 Settings」 button in the top right",
     "quickManga": {
-      "title": "Quick Manga Entry (Phase 0)",
-      "description": "Enable source-aware manga presets inside novel-promotion without creating a new mode",
-      "toggle": "Toggle quick manga",
+      "title": "Manga (Beta)",
+      "description": "Enable manga-focused presets inside the current editor flow without switching to a separate mode",
+      "toggle": "Enable Manga mode",
       "preset": {
         "label": "Preset",
         "options": {

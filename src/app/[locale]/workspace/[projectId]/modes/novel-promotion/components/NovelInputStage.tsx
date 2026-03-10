@@ -329,26 +329,30 @@ export default function NovelInputStage({
         </div>
       </div>
 
-      {/* Quick Manga entry */}
+      {/* Manga (Beta) entry */}
       <div className="glass-surface p-6 relative z-10 space-y-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h3 className="text-sm font-semibold text-[var(--glass-text-muted)] tracking-[0.01em]">{t('storyInput.quickManga.title')}</h3>
             <p className="text-xs text-[var(--glass-text-tertiary)] mt-1">{t('storyInput.quickManga.description')}</p>
           </div>
-          <button
-            type="button"
-            onClick={() => onQuickMangaEnabledChange?.(!quickMangaEnabled)}
-            className={`relative w-14 h-8 rounded-full transition-colors ${quickMangaEnabled
-              ? 'bg-[var(--glass-accent-from)]'
-              : 'bg-[var(--glass-stroke-strong)]'
-              }`}
-            aria-label={t('storyInput.quickManga.toggle')}
-          >
-            <span
-              className={`absolute top-1 left-1 w-6 h-6 bg-[var(--glass-bg-surface)] rounded-full shadow-sm transition-transform ${quickMangaEnabled ? 'translate-x-6' : 'translate-x-0'}`}
-            />
-          </button>
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-medium text-[var(--glass-text-primary)]">{t('storyInput.quickManga.toggle')}</span>
+            <button
+              type="button"
+              onClick={() => onQuickMangaEnabledChange?.(!quickMangaEnabled)}
+              className={`relative w-14 h-8 rounded-full transition-colors ${quickMangaEnabled
+                ? 'bg-[var(--glass-accent-from)]'
+                : 'bg-[var(--glass-stroke-strong)]'
+                }`}
+              aria-label={t('storyInput.quickManga.toggle')}
+              aria-pressed={quickMangaEnabled}
+            >
+              <span
+                className={`absolute top-1 left-1 w-6 h-6 bg-[var(--glass-bg-surface)] rounded-full shadow-sm transition-transform ${quickMangaEnabled ? 'translate-x-6' : 'translate-x-0'}`}
+              />
+            </button>
+          </div>
         </div>
 
         {quickMangaEnabled && (

@@ -103,9 +103,9 @@
     "visualStyle": "视觉风格",
     "moreConfig": "更多配置请点击右上角「 配置」按钮",
     "quickManga": {
-      "title": "Quick Manga 入口（Phase 0）",
-      "description": "在 novel-promotion 内启用 source-aware 漫画预设，不创建新 mode",
-      "toggle": "切换 quick manga",
+      "title": "Manga (Beta)",
+      "description": "在当前编辑器流程内启用 Manga 预设，无需切换到独立模式",
+      "toggle": "开启 Manga 模式",
       "preset": {
         "label": "预设",
         "options": {

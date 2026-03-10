@@ -103,9 +103,9 @@
     "visualStyle": "비주얼 스타일",
     "moreConfig": "더 많은 구성 옵션을 보려면 오른쪽 상단의 「설정」 버튼을 클릭하세요.",
     "quickManga": {
-      "title": "퀵 망가 엔트리 (Phase 0)",
-      "description": "새 모드를 만들지 않고 novel-promotion 안에서 source-aware 망가 프리셋을 사용합니다",
-      "toggle": "퀵 망가 토글",
+      "title": "Manga (Beta)",
+      "description": "별도 모드로 이동하지 않고 현재 에디터에서 Manga 프리셋을 활성화합니다",
+      "toggle": "Manga 모드 켜기",
       "preset": {
         "label": "프리셋",
         "options": {

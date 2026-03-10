@@ -29,6 +29,10 @@ import type {
   QuickMangaStyleLockProfile,
 } from '@/lib/novel-promotion/quick-manga-contract'
 import { shouldEnableQuickMangaFromSearchParams } from '@/lib/workspace/quick-manga-entry'
+import {
+  readQuickMangaSessionPreference,
+  writeQuickMangaSessionPreference,
+} from '@/lib/workspace/quick-manga-session'
 
 export function useNovelPromotionWorkspaceController({
   project,
@@ -70,15 +74,20 @@ export function useNovelPromotionWorkspaceController({
   const [quickManga, setQuickManga] = useState(quickMangaDefaults)
 
   useEffect(() => {
-    if (!shouldEnableQuickMangaFromSearchParams(searchParams)) return
+    const enabledFromEntry = shouldEnableQuickMangaFromSearchParams(searchParams)
+    const sessionPreference = readQuickMangaSessionPreference()
+
+    if (!enabledFromEntry && sessionPreference == null) return
 
     setQuickManga((prev) => {
-      if (prev.enabled) return prev
-      return { ...prev, enabled: true }
+      const nextEnabled = enabledFromEntry ? true : sessionPreference
+      if (typeof nextEnabled !== 'boolean' || prev.enabled === nextEnabled) return prev
+      return { ...prev, enabled: nextEnabled }
     })
   }, [searchParams])
 
   const handleQuickMangaEnabledChange = useCallback(async (enabled: boolean) => {
+    writeQuickMangaSessionPreference(enabled)
     setQuickManga((prev) => ({ ...prev, enabled }))
   }, [])
 

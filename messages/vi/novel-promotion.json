@@ -103,9 +103,9 @@
     "visualStyle": "Phong cách trực quan",
     "moreConfig": "Để biết thêm tùy chọn cấu hình, hãy nhấp vào nút 「Cài đặt」 ở trên cùng bên phải",
     "quickManga": {
-      "title": "Quick Manga Entry (Phase 0)",
-      "description": "Bật preset manga source-aware ngay trong novel-promotion, không tạo mode mới",
-      "toggle": "Bật/tắt quick manga",
+      "title": "Manga (Beta)",
+      "description": "Bật preset tối ưu cho Manga ngay trong editor hiện tại mà không cần chuyển sang mode riêng",
+      "toggle": "Bật chế độ Manga",
       "preset": {
         "label": "Preset",
         "options": {
