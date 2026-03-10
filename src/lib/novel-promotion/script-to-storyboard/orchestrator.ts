@@ -58,6 +58,7 @@ export type ScriptToStoryboardOrchestratorInput = {
     characters: CharacterAsset[]
     locations: LocationAsset[]
   }
+  promptDirective?: string | null
   promptTemplates: ScriptToStoryboardPromptTemplates
   quickManga?: {
     options: QuickMangaOptions
@@ -154,6 +155,12 @@ function withStepMeta(
     stepIndex,
     stepTotal,
   }
+}
+
+function applyPromptDirective(basePrompt: string, directive?: string | null): string {
+  const normalizedDirective = typeof directive === 'string' ? directive.trim() : ''
+  if (!normalizedDirective) return basePrompt
+  return `${normalizedDirective}\n\n${basePrompt}`
 }
 
 function mergePanelsWithRules(params: {
@@ -265,7 +272,7 @@ async function runStepWithRetry<T>(
 export async function runScriptToStoryboardOrchestrator(
   input: ScriptToStoryboardOrchestratorInput,
 ): Promise<ScriptToStoryboardOrchestratorResult> {
-  const { clips, novelPromotionData, promptTemplates, runStep, quickManga } = input
+  const { clips, novelPromotionData, promptTemplates, runStep, quickManga, promptDirective } = input
   if (!Array.isArray(clips) || clips.length === 0) {
     throw new Error('No clips found')
   }
@@ -319,6 +326,7 @@ export async function runScriptToStoryboardOrchestrator(
       } else {
         phase1Prompt = phase1Prompt.replace('{clip_content}', clipContentForPrompt)
       }
+      phase1Prompt = applyPromptDirective(phase1Prompt, promptDirective)
 
       const phase1Meta = withStepMeta(
         `clip_${clip.id}_phase1`,
@@ -383,21 +391,30 @@ export async function runScriptToStoryboardOrchestrator(
         totalStepCount,
       )
 
-      const phase2Prompt = promptTemplates.phase2CinematographyTemplate
-        .replace('{panels_json}', JSON.stringify(planPanels, null, 2))
-        .replace(/\{panel_count\}/g, String(planPanels.length))
-        .replace('{locations_description}', filteredLocationsDescription)
-        .replace('{characters_info}', filteredFullDescription)
+      const phase2Prompt = applyPromptDirective(
+        promptTemplates.phase2CinematographyTemplate
+          .replace('{panels_json}', JSON.stringify(planPanels, null, 2))
+          .replace(/\{panel_count\}/g, String(planPanels.length))
+          .replace('{locations_description}', filteredLocationsDescription)
+          .replace('{characters_info}', filteredFullDescription),
+        promptDirective,
+      )
 
-      const phase2ActingPrompt = promptTemplates.phase2ActingTemplate
-        .replace('{panels_json}', JSON.stringify(planPanels, null, 2))
-        .replace(/\{panel_count\}/g, String(planPanels.length))
-        .replace('{characters_info}', filteredFullDescription)
+      const phase2ActingPrompt = applyPromptDirective(
+        promptTemplates.phase2ActingTemplate
+          .replace('{panels_json}', JSON.stringify(planPanels, null, 2))
+          .replace(/\{panel_count\}/g, String(planPanels.length))
+          .replace('{characters_info}', filteredFullDescription),
+        promptDirective,
+      )
 
-      const phase3Prompt = promptTemplates.phase3DetailTemplate
-        .replace('{panels_json}', JSON.stringify(planPanels, null, 2))
-        .replace('{characters_age_gender}', filteredFullDescription)
-        .replace('{locations_description}', filteredLocationsDescription)
+      const phase3Prompt = applyPromptDirective(
+        promptTemplates.phase3DetailTemplate
+          .replace('{panels_json}', JSON.stringify(planPanels, null, 2))
+          .replace('{characters_age_gender}', filteredFullDescription)
+          .replace('{locations_description}', filteredLocationsDescription),
+        promptDirective,
+      )
 
       const [
         { parsed: photographyRules },

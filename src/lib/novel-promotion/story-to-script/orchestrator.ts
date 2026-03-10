@@ -48,6 +48,7 @@ export type StoryToScriptOrchestratorInput = {
   baseCharacters: string[]
   baseLocations: string[]
   baseCharacterIntroductions: Array<{ name: string; introduction?: string | null }>
+  promptDirective?: string | null
   promptTemplates: StoryToScriptPromptTemplates
   runStep: (
     meta: StoryToScriptStepMeta,
@@ -89,6 +90,12 @@ function applyTemplate(template: string, replacements: Record<string, string>) {
     next = next.replace(new RegExp(`\\{${key}\\}`, 'g'), value)
   }
   return next
+}
+
+function applyPromptDirective(basePrompt: string, directive?: string | null): string {
+  const normalizedDirective = typeof directive === 'string' ? directive.trim() : ''
+  if (!normalizedDirective) return basePrompt
+  return `${normalizedDirective}\n\n${basePrompt}`
 }
 
 function parseJSONObject(responseText: string): Record<string, unknown> {
@@ -430,6 +437,7 @@ export async function runStoryToScriptOrchestrator(
     baseCharacters,
     baseLocations,
     baseCharacterIntroductions,
+    promptDirective,
     promptTemplates,
     runStep,
     onStepError,
@@ -442,15 +450,21 @@ export async function runStoryToScriptOrchestrator(
     ? baseCharacterIntroductions.map((item, index) => `${index + 1}. ${item.name}`).join('\n')
     : '暂无已有角色'
 
-  const characterPrompt = applyTemplate(promptTemplates.characterPromptTemplate, {
-    input: content,
-    characters_lib_name: baseCharactersText,
-    characters_lib_info: baseCharacterInfo,
-  })
-  const locationPrompt = applyTemplate(promptTemplates.locationPromptTemplate, {
-    input: content,
-    locations_lib_name: baseLocationsText,
-  })
+  const characterPrompt = applyPromptDirective(
+    applyTemplate(promptTemplates.characterPromptTemplate, {
+      input: content,
+      characters_lib_name: baseCharactersText,
+      characters_lib_info: baseCharacterInfo,
+    }),
+    promptDirective,
+  )
+  const locationPrompt = applyPromptDirective(
+    applyTemplate(promptTemplates.locationPromptTemplate, {
+      input: content,
+      locations_lib_name: baseLocationsText,
+    }),
+    promptDirective,
+  )
 
   onLog?.('开始步骤1：角色/场景分析（并行）')
   const [
@@ -526,12 +540,15 @@ export async function runStoryToScriptOrchestrator(
     locationsLibName,
   })
 
-  const splitPromptBase = applyTemplate(promptTemplates.clipPromptTemplate, {
-    input: content,
-    locations_lib_name: locationsLibName || '无',
-    characters_lib_name: charactersLibName || '无',
-    characters_introduction: charactersIntroduction || '暂无角色介绍',
-  })
+  const splitPromptBase = applyPromptDirective(
+    applyTemplate(promptTemplates.clipPromptTemplate, {
+      input: content,
+      locations_lib_name: locationsLibName || '无',
+      characters_lib_name: charactersLibName || '无',
+      characters_introduction: charactersIntroduction || '暂无角色介绍',
+    }),
+    promptDirective,
+  )
   const splitPrompt = `${splitPromptBase}${CLIP_BOUNDARY_SUFFIX}`
 
   let splitStep: StoryToScriptStepOutput | null = null
@@ -694,13 +711,16 @@ export async function runStoryToScriptOrchestrator(
       }
 
       try {
-        const screenplayPrompt = applyTemplate(promptTemplates.screenplayPromptTemplate, {
-          clip_content: clip.content,
-          locations_lib_name: locationsLibName || '无',
-          characters_lib_name: charactersLibName || '无',
-          characters_introduction: charactersIntroduction || '暂无角色介绍',
-          clip_id: clip.id,
-        })
+        const screenplayPrompt = applyPromptDirective(
+          applyTemplate(promptTemplates.screenplayPromptTemplate, {
+            clip_content: clip.content,
+            locations_lib_name: locationsLibName || '无',
+            characters_lib_name: charactersLibName || '无',
+            characters_introduction: charactersIntroduction || '暂无角色介绍',
+            clip_id: clip.id,
+          }),
+          promptDirective,
+        )
 
         const { parsed: screenplay } = await runStepWithRetry(
           runStep,

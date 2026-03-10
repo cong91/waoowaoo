@@ -14,6 +14,11 @@ import {
   type StoryToScriptStepOutput,
   type StoryToScriptOrchestratorResult,
 } from '@/lib/novel-promotion/story-to-script/orchestrator'
+import {
+  buildLanePromptDirective,
+  resolveLaneModelPolicyAdjustments,
+  resolveLaneOrchestrationMetadata,
+} from '@/lib/novel-promotion/lane-orchestration-policy'
 import { createWorkerLLMStreamCallbacks, createWorkerLLMStreamContext } from './llm-stream'
 import type { TaskJobData } from '@/lib/task/types'
 import {
@@ -40,9 +45,16 @@ export async function handleStoryToScriptTask(job: Job<TaskJobData>) {
   const episodeId = episodeIdRaw.trim()
   const contentRaw = asString(payload.content)
   const inputModel = asString(payload.model).trim()
-  const reasoning = payload.reasoning !== false
+  const policyMetadata = resolveLaneOrchestrationMetadata(payload)
+  const policyAdjustments = resolveLaneModelPolicyAdjustments(policyMetadata)
+
+  const reasoning = typeof payload.reasoning === 'boolean'
+    ? payload.reasoning
+    : (policyAdjustments.reasoning ?? true)
   const requestedReasoningEffort = parseEffort(payload.reasoningEffort)
-  const temperature = parseTemperature(payload.temperature)
+  const temperature = typeof payload.temperature === 'number'
+    ? parseTemperature(payload.temperature)
+    : (policyAdjustments.temperature ?? 0.7)
 
   if (!episodeId) {
     throw new Error('episodeId is required')
@@ -101,8 +113,12 @@ export async function handleStoryToScriptTask(job: Job<TaskJobData>) {
     modelKey: model,
   })
   const capabilityReasoningEffort = llmCapabilityOptions.reasoningEffort
+  const policyReasoningEffort = policyAdjustments.reasoningEffort
   const reasoningEffort = requestedReasoningEffort
+    || policyReasoningEffort
     || (isReasoningEffort(capabilityReasoningEffort) ? capabilityReasoningEffort : 'high')
+
+  const promptDirective = buildLanePromptDirective(policyMetadata)
 
   const mergedContent = contentRaw.trim() || (episode.novelText || '')
   if (!mergedContent.trim()) {
@@ -229,6 +245,7 @@ export async function handleStoryToScriptTask(job: Job<TaskJobData>) {
                       name: item.name,
                       introduction: item.introduction || '',
                     })),
+                    promptDirective,
                     promptTemplates: {
                       characterPromptTemplate,
                       locationPromptTemplate,
@@ -341,5 +358,14 @@ export async function handleStoryToScriptTask(job: Job<TaskJobData>) {
     persistedCharacters: createdCharacters.length,
     persistedLocations: createdLocations.length,
     persistedClips: createdClipRows.length,
+    lanePolicy: {
+      runtimeLane: policyMetadata.runtimeLane,
+      entryIntent: policyMetadata.entryIntent,
+      sourceType: policyMetadata.sourceType,
+      stageProfile: policyMetadata.stageProfile,
+      temperature,
+      reasoning,
+      reasoningEffort,
+    },
   }
 }

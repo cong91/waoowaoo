@@ -177,7 +177,7 @@ describe('worker story-to-script behavior', () => {
     const job = buildJob({ episodeId: 'episode-1', content: 'input content' })
     const result = await handleStoryToScriptTask(job)
 
-    expect(result).toEqual({
+    expect(result).toEqual(expect.objectContaining({
       episodeId: 'episode-1',
       clipCount: 1,
       screenplaySuccessCount: 1,
@@ -185,7 +185,13 @@ describe('worker story-to-script behavior', () => {
       persistedCharacters: 1,
       persistedLocations: 1,
       persistedClips: 1,
-    })
+    }))
+    expect(result).toEqual(expect.objectContaining({
+      lanePolicy: expect.objectContaining({
+        runtimeLane: 'film_video',
+        temperature: 0.7,
+      }),
+    }))
 
     expect(helperMock.persistClips).toHaveBeenCalledWith({
       episodeId: 'episode-1',
