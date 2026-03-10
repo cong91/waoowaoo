@@ -6,7 +6,7 @@ import type {
   ScriptToStoryboardStepMeta,
   ScriptToStoryboardStepOutput,
 } from '@/lib/novel-promotion/script-to-storyboard/orchestrator'
-import { listArtifacts } from '@/lib/run-runtime/service'
+import { prisma } from '@/lib/prisma'
 import {
   type ActingDirection,
   type CharacterAsset,
@@ -97,7 +97,7 @@ function parseJsonArray<T extends JsonRecord>(responseText: string, label: strin
   return rows as T[]
 }
 
-function shouldRetryStepError(error: unknown, message: string, retryable: boolean) {
+function shouldRetryStepError(_error: unknown, message: string, retryable: boolean) {
   if (retryable) return true
   const lowerMessage = message.toLowerCase()
   return lowerMessage.includes('json') || lowerMessage.includes('parse')
@@ -125,13 +125,16 @@ async function readArtifactRows<T extends JsonRecord>(params: {
   artifactType: string
   key: string
 }) {
-  const rows = await listArtifacts({
-    runId: params.runId,
-    artifactType: params.artifactType,
-    refId: params.clipId,
-    limit: 1,
+  const artifact = await prisma.graphArtifact.findFirst({
+    where: {
+      runId: params.runId,
+      artifactType: params.artifactType,
+      refId: params.clipId,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
   })
-  const artifact = rows[0]
   if (!artifact) return []
   return extractArtifactRows<T>(artifact.payload, params.key)
 }
@@ -175,17 +178,12 @@ function buildStepMeta(params: {
     totalClipCount: params.totalClipCount,
   })
   const stepKey = params.target.stepKey
-  const groupId = `clip_${params.target.clipId}`
-
   if (params.target.phase === 'phase1') {
     return {
       stepId: stepKey,
       stepTitle: 'progress.streamStep.storyboardPlan',
       stepIndex: stepNumbers.stepIndex,
       stepTotal: stepNumbers.stepTotal,
-      groupId,
-      parallelKey: 'phase1',
-      retryable: true,
     }
   }
   if (params.target.phase === 'phase2_cinematography') {
@@ -194,10 +192,6 @@ function buildStepMeta(params: {
       stepTitle: 'progress.streamStep.cinematographyRules',
       stepIndex: stepNumbers.stepIndex,
       stepTotal: stepNumbers.stepTotal,
-      dependsOn: [`clip_${params.target.clipId}_phase1`],
-      groupId,
-      parallelKey: 'phase2',
-      retryable: true,
     }
   }
   if (params.target.phase === 'phase2_acting') {
@@ -206,10 +200,6 @@ function buildStepMeta(params: {
       stepTitle: 'progress.streamStep.actingDirection',
       stepIndex: stepNumbers.stepIndex,
       stepTotal: stepNumbers.stepTotal,
-      dependsOn: [`clip_${params.target.clipId}_phase1`],
-      groupId,
-      parallelKey: 'phase2',
-      retryable: true,
     }
   }
   return {
@@ -217,13 +207,6 @@ function buildStepMeta(params: {
     stepTitle: 'progress.streamStep.storyboardDetailRefine',
     stepIndex: stepNumbers.stepIndex,
     stepTotal: stepNumbers.stepTotal,
-    dependsOn: [
-      `clip_${params.target.clipId}_phase2_cinematography`,
-      `clip_${params.target.clipId}_phase2_acting`,
-    ],
-    groupId,
-    parallelKey: 'phase3',
-    retryable: true,
   }
 }
 

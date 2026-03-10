@@ -1,7 +1,7 @@
 'use client'
 
-import { useChat } from '@ai-sdk/react'
-import { DefaultChatTransport, type ChatStatus, type UIMessage } from 'ai'
+import { Chat, useChat } from '@ai-sdk/react'
+import { type ChatStatus, type UIMessage } from 'ai'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { OpenAICompatMediaTemplate } from '@/lib/openai-compat-media-template'
 
@@ -137,17 +137,73 @@ export function useAssistantChat(params: UseAssistantChatParams): UseAssistantCh
     locale: params.context.locale,
   }), [params.context.locale, params.context.providerId])
 
-  const transport = useMemo(() => new DefaultChatTransport({
-    api: '/api/user/assistant/chat',
-    body: {
-      assistantId: params.assistantId,
-      context: contextPayload,
-    },
-  }), [contextPayload, params.assistantId])
+  const chatInstance = useMemo(
+    () => new Chat({
+      transport: {
+        sendMessages: async ({ abortSignal, headers, messages }) => {
+          const response = await fetch('/api/user/assistant/chat', {
+            method: 'POST',
+            headers: {
+              'content-type': 'application/json',
+              ...(headers ?? {}),
+            },
+            body: JSON.stringify({
+              id: params.assistantId,
+              messages,
+              context: contextPayload,
+            }),
+            signal: abortSignal,
+          })
+          if (!response.ok || !response.body) {
+            throw new Error(`assistant_chat_http_${response.status}`)
+          }
+          const reader = response.body.getReader()
+          const decoder = new TextDecoder()
+          let buffered = ''
 
-  const chat = useChat({
-    transport,
-  })
+          return new ReadableStream({
+            async pull(controller) {
+              while (true) {
+                const { done, value } = await reader.read()
+                if (done) {
+                  if (buffered.trim().length > 0) {
+                    for (const line of buffered.split('\n')) {
+                      const trimmed = line.trim()
+                      if (!trimmed.startsWith('data:')) continue
+                      const payload = trimmed.slice(5).trim()
+                      if (!payload || payload === '[DONE]') continue
+                      controller.enqueue(JSON.parse(payload) as Parameters<typeof controller.enqueue>[0])
+                    }
+                  }
+                  controller.close()
+                  return
+                }
+
+                buffered += decoder.decode(value, { stream: true })
+                const lines = buffered.split('\n')
+                buffered = lines.pop() ?? ''
+
+                for (const line of lines) {
+                  const trimmed = line.trim()
+                  if (!trimmed.startsWith('data:')) continue
+                  const payload = trimmed.slice(5).trim()
+                  if (!payload || payload === '[DONE]') continue
+                  controller.enqueue(JSON.parse(payload) as Parameters<typeof controller.enqueue>[0])
+                }
+              }
+            },
+            async cancel() {
+              await reader.cancel()
+            },
+          })
+        },
+        reconnectToStream: async () => null,
+      },
+    }),
+    [contextPayload, params.assistantId],
+  )
+
+  const chat = useChat({ chat: chatInstance })
 
   const pending = chat.status === 'submitted' || chat.status === 'streaming'
 

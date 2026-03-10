@@ -66,7 +66,6 @@ export async function runScriptToStoryboardGraph(
           timeoutMs: 1000 * 60 * 20,
           run: async (context) => {
             const nextResult = await runScriptToStoryboardOrchestrator({
-              concurrency: input.concurrency,
               clips: input.clips,
               novelPromotionData: input.novelPromotionData,
               promptTemplates: input.promptTemplates,

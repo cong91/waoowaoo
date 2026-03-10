@@ -52,7 +52,6 @@ export async function runStoryToScriptGraph(
         run: async (context) => {
           const orchestratorResult = await runStoryToScriptOrchestrator({
             content: input.content,
-            concurrency: input.concurrency,
             baseCharacters: input.baseCharacters,
             baseLocations: input.baseLocations,
             baseCharacterIntroductions: input.baseCharacterIntroductions,
