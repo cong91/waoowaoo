@@ -1,15 +1,36 @@
 'use client'
 
 import { AssistantChatModal } from '@/components/assistant/AssistantChatModal'
+import type { UIMessage } from 'ai'
 import type { ProviderCardTranslator } from './types'
-import {
-  getAssistantSavedModelLabel,
-  type UseProviderCardStateResult,
-} from './hooks/useProviderCardState'
+
+type AssistantSavedEvent = {
+  modelLabel?: string
+  model?: string
+  modelId?: string
+}
+
+type AssistantModalState = {
+  isAssistantOpen: boolean
+  closeAssistant: () => void
+  handleAssistantSend: () => Promise<void> | void
+  assistantSavedEvent: AssistantSavedEvent | null
+  assistantChat: {
+    messages: UIMessage[]
+    input: string
+    pending: boolean
+    error?: { message?: string } | null
+    setInput: (value: string) => void
+  }
+}
 
 interface ModelTemplateAssistantModalProps {
   t: ProviderCardTranslator
-  state: UseProviderCardStateResult
+  state: AssistantModalState
+}
+
+function getAssistantSavedModelLabel(savedEvent: AssistantSavedEvent): string {
+  return savedEvent.modelLabel || savedEvent.model || savedEvent.modelId || ''
 }
 
 export function ModelTemplateAssistantModal({ t, state }: ModelTemplateAssistantModalProps) {

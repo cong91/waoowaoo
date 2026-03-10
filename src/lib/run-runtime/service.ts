@@ -79,8 +79,10 @@ type GraphRunModel = {
 
 type GraphStepModel = {
   upsert: (args: unknown) => Promise<GraphStepRow>
+  findUnique: (args: unknown) => Promise<GraphStepRow | null>
   findMany: (args: unknown) => Promise<GraphStepRow[]>
   updateMany: (args: unknown) => Promise<{ count: number }>
+  update: (args: unknown) => Promise<GraphStepRow>
 }
 
 type GraphStepAttemptModel = {
@@ -496,6 +498,85 @@ export async function getRunSnapshot(runId: string) {
   return {
     run: mapRunRow(run),
     steps: steps.map(mapStepRow),
+  }
+}
+
+export async function retryFailedStep(params: {
+  runId: string
+  userId: string
+  stepKey: string
+}) {
+  const run = await runtimeClient.graphRun.findUnique({
+    where: { id: params.runId },
+    select: { id: true, userId: true },
+  })
+  if (!run || run.userId !== params.userId) {
+    throw new Error('RUN_STEP_NOT_FOUND')
+  }
+
+  const step = await runtimeClient.graphStep.findUnique({
+    where: {
+      runId_stepKey: {
+        runId: params.runId,
+        stepKey: params.stepKey,
+      },
+    },
+    select: {
+      currentAttempt: true,
+      status: true,
+    },
+  })
+
+  if (!step) {
+    throw new Error('RUN_STEP_NOT_FOUND')
+  }
+
+  if (step.status !== RUN_STEP_STATUS.FAILED) {
+    throw new Error('RUN_STEP_NOT_FAILED')
+  }
+
+  const retryAttempt = Math.max(1, (step.currentAttempt || 0) + 1)
+  const now = new Date()
+
+  await runtimeClient.graphStep.update({
+    where: {
+      runId_stepKey: {
+        runId: params.runId,
+        stepKey: params.stepKey,
+      },
+    },
+    data: {
+      status: RUN_STEP_STATUS.PENDING,
+      currentAttempt: retryAttempt,
+      startedAt: null,
+      finishedAt: null,
+      lastErrorCode: null,
+      lastErrorMessage: null,
+    },
+  })
+
+  await runtimeClient.graphRun.updateMany({
+    where: {
+      id: params.runId,
+      status: {
+        in: [RUN_STATUS.FAILED, RUN_STATUS.CANCELED, RUN_STATUS.CANCELING],
+      },
+    },
+    data: {
+      status: RUN_STATUS.QUEUED,
+      errorCode: null,
+      errorMessage: null,
+      cancelRequestedAt: null,
+      finishedAt: null,
+      queuedAt: now,
+      startedAt: null,
+    },
+  })
+
+  return {
+    runId: params.runId,
+    stepKey: params.stepKey,
+    retryAttempt,
   }
 }
 

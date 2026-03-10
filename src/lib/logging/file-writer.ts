@@ -223,3 +223,37 @@ export function onProjectNameAvailable(projectId: string, projectName: string): 
     registerProjectName(projectId, projectName)
     void flushBuffer(projectId, projectName)
 }
+
+/**
+ * Read all log files under <cwd>/logs and return a concatenated text blob.
+ * Returns null when logs directory is unavailable or empty.
+ */
+export async function readAllLogs(): Promise<string | null> {
+    const modules = await getNodeModules()
+    if (!modules) return null
+
+    try {
+        const logsDir = modules.path.join(modules.cwd, 'logs')
+        if (!modules.fs.existsSync(logsDir)) return null
+
+        const entries = modules.fs
+            .readdirSync(logsDir, { withFileTypes: true })
+            .filter((entry) => entry.isFile() && entry.name.endsWith('.log'))
+            .map((entry) => entry.name)
+            .sort((a, b) => a.localeCompare(b))
+
+        if (entries.length === 0) return null
+
+        const parts: string[] = []
+        for (const fileName of entries) {
+            const filePath = modules.path.join(logsDir, fileName)
+            const content = modules.fs.readFileSync(filePath, 'utf8')
+            parts.push(`===== ${fileName} =====\n${content}`)
+        }
+
+        return parts.join('\n\n')
+    } catch (error) {
+        console.error('[file-writer] Failed to read logs', error)
+        return null
+    }
+}

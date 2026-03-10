@@ -51,7 +51,7 @@ export type AiStepExecutionInput = {
   userId: string
   model: string
   messages: AiTextMessages
-  projectId: string
+  projectId?: string
   action: string
   meta: AiStepMeta
   promptTelemetry?: AiPromptTelemetry

@@ -57,7 +57,7 @@ export const POST = apiHandler(async (
   const modelOverride = readString(payload.modelOverride)
   const reason = readString(payload.reason)
 
-  let prepared: Awaited<ReturnType<typeof retryFailedStep>> = null
+  let prepared: Awaited<ReturnType<typeof retryFailedStep>> | null = null
   try {
     prepared = await retryFailedStep({
       runId,
