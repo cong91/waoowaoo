@@ -4,6 +4,7 @@ export type WorkspaceMangaAnalyticsEvent =
   | 'workspace_manga_cta_view'
   | 'workspace_manga_cta_click'
   | 'workspace_project_mode_selected'
+  | 'workspace_project_created'
 
 export function trackWorkspaceMangaEvent(
   event: WorkspaceMangaAnalyticsEvent,

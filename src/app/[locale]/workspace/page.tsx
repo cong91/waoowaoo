@@ -188,6 +188,13 @@ export default function WorkspacePage() {
         setShowCreateModal(false)
         setFormData({ name: '', description: '', entryMode: 'story' })
 
+        trackWorkspaceMangaEvent('workspace_project_created', {
+          projectMode: formData.entryMode,
+          locale,
+          surface: 'create_project_modal',
+          projectId: createdProjectId || null,
+        })
+
         if (createdProjectId) {
           router.push(buildProjectEntryUrl(createdProjectId, formData.entryMode))
         }

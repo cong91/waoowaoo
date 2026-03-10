@@ -29,4 +29,27 @@ describe('manga discovery analytics helper', () => {
       }),
     }))
   })
+
+  it('emits project created telemetry with selected mode', () => {
+    trackWorkspaceMangaEvent('workspace_project_created', {
+      surface: 'create_project_modal',
+      locale: 'vi',
+      projectMode: 'manga',
+      projectId: 'project-123',
+    })
+
+    expect(logEvent).toHaveBeenCalledWith(expect.objectContaining({
+      level: 'INFO',
+      module: 'workspace',
+      action: 'WORKSPACE_MANGA_DISCOVERY',
+      message: 'workspace_project_created',
+      details: expect.objectContaining({
+        event: 'workspace_project_created',
+        surface: 'create_project_modal',
+        locale: 'vi',
+        projectMode: 'manga',
+        projectId: 'project-123',
+      }),
+    }))
+  })
 })
