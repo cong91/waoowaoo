@@ -3,8 +3,7 @@ import { logError as _ulogError } from '@/lib/logging/core'
 
 import { useState, useEffect, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import { Link, useRouter } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
 import Navbar from '@/components/Navbar'
 import ConfirmDialog from '@/components/ConfirmDialog'
@@ -78,7 +77,7 @@ export default function WorkspacePage() {
   useEffect(() => {
     if (status === 'loading') return
     if (!session) {
-      router.push('/auth/signin')
+      router.push({ pathname: '/auth/signin' })
       return
     }
   }, [session, status, router])
@@ -337,7 +336,7 @@ export default function WorkspacePage() {
             projects.map((project) => (
               <Link
                 key={project.id}
-                href={`/workspace/${project.id}`}
+                href={{ pathname: `/workspace/${project.id}` }}
                 className="glass-surface cursor-pointer relative group block hover:border-[var(--glass-tone-info-fg)]/40 transition-all duration-300 overflow-hidden"
               >
                 {/* 悬停光效 */}
