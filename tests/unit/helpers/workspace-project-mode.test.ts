@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
   buildProjectEntryUrl,
+  mapJourneyTypeToProjectMode,
+  resolveProjectModeCompatibility,
   toProjectCreatePayload,
 } from '@/lib/workspace/project-mode'
 import { shouldEnableQuickMangaFromSearchParams } from '@/lib/workspace/quick-manga-entry'
@@ -27,17 +29,48 @@ describe('workspace project mode helpers', () => {
         name: ' Manga launch ',
         description: ' quick start ',
         entryMode: 'manga',
+        journeyType: 'manga_webtoon',
+        entryIntent: 'manga_quickstart',
       }),
     ).toEqual({
       name: 'Manga launch',
       description: 'quick start',
       mode: 'novel-promotion',
       projectMode: 'manga',
+      journeyType: 'manga_webtoon',
+      entryIntent: 'manga_quickstart',
     })
   })
 
   it('builds manga entry url that jumps directly to script stage with quick manga enabled', () => {
     expect(buildProjectEntryUrl('project-123', 'manga')).toBe('/workspace/project-123?stage=script&quickManga=1')
+  })
+
+  it('maps journeyType to compatibility projectMode deterministically', () => {
+    expect(mapJourneyTypeToProjectMode('film_video')).toBe('story')
+    expect(mapJourneyTypeToProjectMode('manga_webtoon')).toBe('manga')
+  })
+
+  it('prefers explicit projectMode over journeyType for backward compatibility', () => {
+    expect(
+      resolveProjectModeCompatibility({
+        projectMode: 'story',
+        journeyType: 'manga_webtoon',
+      }),
+    ).toBe('story')
+  })
+
+  it('falls back to journeyType mapping when projectMode is missing', () => {
+    expect(
+      resolveProjectModeCompatibility({
+        journeyType: 'manga_webtoon',
+      }),
+    ).toBe('manga')
+    expect(
+      resolveProjectModeCompatibility({
+        journeyType: 'film_video',
+      }),
+    ).toBe('story')
   })
 
   it('keeps story entry url on default workspace route', () => {

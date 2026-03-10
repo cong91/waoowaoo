@@ -104,4 +104,52 @@ describe('api contract - /api/projects POST projectMode compatibility', () => {
     expect(res.status).toBe(201)
     expect(logProjectActionMock).not.toHaveBeenCalled()
   })
+
+  it('maps journeyType=manga_webtoon to manga compatibility when projectMode is absent', async () => {
+    const { POST } = await import('@/app/api/projects/route')
+    const req = buildMockRequest({
+      path: '/api/projects',
+      method: 'POST',
+      body: {
+        name: 'Manga via Journey',
+        description: 'desc',
+        journeyType: 'manga_webtoon',
+        entryIntent: 'manga_story_to_panels',
+      },
+    })
+
+    const res = await POST(req)
+    expect(res.status).toBe(201)
+    expect(logProjectActionMock).toHaveBeenCalledWith(
+      'WORKSPACE_MANGA_CONVERSION',
+      'workspace manga conversion captured',
+      expect.objectContaining({
+        event: 'workspace_manga_conversion',
+        projectMode: 'manga',
+        journeyType: 'manga_webtoon',
+        entryIntent: 'manga_story_to_panels',
+        projectId: 'project-1',
+      }),
+      'user-1',
+    )
+  })
+
+  it('keeps explicit projectMode precedence even when journeyType conflicts', async () => {
+    const { POST } = await import('@/app/api/projects/route')
+    const req = buildMockRequest({
+      path: '/api/projects',
+      method: 'POST',
+      body: {
+        name: 'Explicit Story Wins',
+        description: 'desc',
+        projectMode: 'story',
+        journeyType: 'manga_webtoon',
+        entryIntent: 'manga_quickstart',
+      },
+    })
+
+    const res = await POST(req)
+    expect(res.status).toBe(201)
+    expect(logProjectActionMock).not.toHaveBeenCalled()
+  })
 })

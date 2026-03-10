@@ -1,12 +1,26 @@
 export type WorkspaceProjectEntryMode = 'story' | 'manga'
 
-export interface ProjectCreationInput {
+export type ProductJourneyType = 'film_video' | 'manga_webtoon'
+
+export type ProductEntryIntent =
+  | 'film_story_studio'
+  | 'video_ad_short'
+  | 'cinematic_scene'
+  | 'manga_quickstart'
+  | 'manga_story_to_panels'
+
+export interface ProductIntentContract {
+  journeyType?: ProductJourneyType
+  entryIntent?: ProductEntryIntent
+}
+
+export interface ProjectCreationInput extends ProductIntentContract {
   name: string
   description: string
   entryMode: WorkspaceProjectEntryMode
 }
 
-export interface ProjectCreatePayload {
+export interface ProjectCreatePayload extends ProductIntentContract {
   name: string
   description: string
   mode: 'novel-promotion'
@@ -17,12 +31,31 @@ export interface ProjectCreatePayload {
   projectMode?: WorkspaceProjectEntryMode
 }
 
+export function mapJourneyTypeToProjectMode(journeyType: ProductJourneyType): WorkspaceProjectEntryMode {
+  return journeyType === 'manga_webtoon' ? 'manga' : 'story'
+}
+
+export function resolveProjectModeCompatibility(input: {
+  projectMode?: unknown
+  journeyType?: unknown
+}): WorkspaceProjectEntryMode {
+  if (input.projectMode === 'manga' || input.projectMode === 'story') {
+    return input.projectMode
+  }
+  if (input.journeyType === 'manga_webtoon' || input.journeyType === 'film_video') {
+    return mapJourneyTypeToProjectMode(input.journeyType)
+  }
+  return 'story'
+}
+
 export function toProjectCreatePayload(input: ProjectCreationInput): ProjectCreatePayload {
   return {
     name: input.name.trim(),
     description: input.description.trim(),
     mode: 'novel-promotion',
     projectMode: input.entryMode,
+    journeyType: input.journeyType,
+    entryIntent: input.entryIntent,
   }
 }
 

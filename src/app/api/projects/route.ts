@@ -4,6 +4,11 @@ import { requireUserAuth, isErrorResponse } from '@/lib/api-auth'
 import { apiHandler, ApiError } from '@/lib/api-errors'
 import { toMoneyNumber } from '@/lib/billing/money'
 import { logProjectAction } from '@/lib/logging/semantic'
+import {
+  resolveProjectModeCompatibility,
+  type ProductJourneyType,
+  type ProductEntryIntent,
+} from '@/lib/workspace/project-mode'
 
 // GET - 获取用户的项目（支持分页和搜索）
 export const GET = apiHandler(async (request: NextRequest) => {
@@ -164,10 +169,12 @@ export const POST = apiHandler(async (request: NextRequest) => {
   if (isErrorResponse(authResult)) return authResult
   const { session } = authResult
 
-  const { name, description, projectMode } = await request.json() as {
+  const { name, description, projectMode, journeyType, entryIntent } = await request.json() as {
     name?: string
     description?: string
     projectMode?: unknown
+    journeyType?: unknown
+    entryIntent?: unknown
   }
 
   if (!name || name.trim().length === 0) {
@@ -187,10 +194,24 @@ export const POST = apiHandler(async (request: NextRequest) => {
     where: { userId: session.user.id }
   })
 
-  const normalizedProjectMode =
-    projectMode === 'manga' || projectMode === 'story'
-      ? projectMode
-      : 'story'
+  const normalizedJourneyType: ProductJourneyType | undefined =
+    journeyType === 'film_video' || journeyType === 'manga_webtoon'
+      ? journeyType
+      : undefined
+
+  const normalizedEntryIntent: ProductEntryIntent | undefined =
+    entryIntent === 'film_story_studio'
+    || entryIntent === 'video_ad_short'
+    || entryIntent === 'cinematic_scene'
+    || entryIntent === 'manga_quickstart'
+    || entryIntent === 'manga_story_to_panels'
+      ? entryIntent
+      : undefined
+
+  const normalizedProjectMode = resolveProjectModeCompatibility({
+    projectMode,
+    journeyType: normalizedJourneyType,
+  })
 
   // 创建基础项目（mode 固定为 novel-promotion）
   const project = await prisma.project.create({
@@ -232,6 +253,8 @@ export const POST = apiHandler(async (request: NextRequest) => {
       {
         event: 'workspace_manga_conversion',
         projectMode: normalizedProjectMode,
+        journeyType: normalizedJourneyType,
+        entryIntent: normalizedEntryIntent,
         projectId: project.id,
       },
       session.user.id,
