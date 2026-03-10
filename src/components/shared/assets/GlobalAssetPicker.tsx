@@ -7,7 +7,6 @@ import TaskStatusInline from '@/components/task/TaskStatusInline'
 import { resolveTaskPresentationState } from '@/lib/task/presentation'
 import { MediaImageWithLoading } from '@/components/media/MediaImageWithLoading'
 import { AppIcon } from '@/components/ui/icons'
-import { apiFetch } from '@/lib/api-fetch'
 
 interface GlobalAssetPickerProps {
     isOpen: boolean
@@ -117,7 +116,7 @@ export default function GlobalAssetPicker({
     const charactersQuery = useQuery({
         queryKey: ['global-assets', 'characters'],
         queryFn: async () => {
-            const res = await apiFetch('/api/asset-hub/characters')
+            const res = await fetch('/api/asset-hub/characters')
             if (!res.ok) throw new Error('Failed to fetch characters')
             const data = await res.json()
             return data.characters as GlobalCharacter[]
@@ -127,7 +126,7 @@ export default function GlobalAssetPicker({
     const locationsQuery = useQuery({
         queryKey: ['global-assets', 'locations'],
         queryFn: async () => {
-            const res = await apiFetch('/api/asset-hub/locations')
+            const res = await fetch('/api/asset-hub/locations')
             if (!res.ok) throw new Error('Failed to fetch locations')
             const data = await res.json()
             return data.locations as GlobalLocation[]
@@ -137,7 +136,7 @@ export default function GlobalAssetPicker({
     const voicesQuery = useQuery({
         queryKey: ['global-assets', 'voices'],
         queryFn: async () => {
-            const res = await apiFetch('/api/asset-hub/voices')
+            const res = await fetch('/api/asset-hub/voices')
             if (!res.ok) throw new Error('Failed to fetch voices')
             const data = await res.json()
             return data.voices as GlobalVoice[]
@@ -267,8 +266,8 @@ export default function GlobalAssetPicker({
     const hasNoAssets = type === 'character' ? characters.length === 0 : type === 'location' ? locations.length === 0 : voices.length === 0
 
     return (
-        <div className="fixed inset-0 glass-overlay flex items-center justify-center z-50">
-            <div className="glass-surface-modal w-[600px] max-h-[80vh] flex flex-col">
+        <div className="fixed inset-0 glass-overlay flex items-center justify-center z-50 p-3 sm:p-4">
+            <div className="glass-surface-modal w-full max-w-[600px] max-h-[85vh] flex flex-col">
                 {/* 头部 */}
                 <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--glass-stroke-base)]">
                     <h2 className="text-lg font-semibold text-[var(--glass-text-primary)]">
@@ -316,7 +315,7 @@ export default function GlobalAssetPicker({
                             <p>{t('noSearchResults')}</p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-3 gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                             {type === 'character' ? (
                                 filteredCharacters.map((char) => {
                                     const charPreview = getCharacterPreview(char)
