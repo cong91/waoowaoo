@@ -25,6 +25,24 @@
   "projectTypeMangaTitle": "Manga Quick Start",
   "projectTypeMangaDesc": "Script 단계로 바로 이동 + Quick Manga 기본 활성화",
   "journeyCardFilmLabel": "영상 / 필름",
+  "wizard": {
+    "stepJourney": "여정",
+    "stepTemplate": "템플릿",
+    "stepSource": "소스",
+    "next": "다음",
+    "back": "뒤로",
+    "startCreating": "생성 시작",
+    "sourceTypeLabel": "스토리 소스",
+    "sourceContentLabel": "소스 내용",
+    "sourceContentPlaceholder": "스토리 텍스트 또는 스크립트 초안을 붙여넣으세요...",
+    "sourceContentHint": "소스 기반 생성에서는 최소 20자 이상 입력해 주세요.",
+    "readinessSummary": "생성 준비: {journey} · {template} · {sourceType}",
+    "sourceType": {
+      "blank": "빈 상태로 시작",
+      "story_text": "스토리 텍스트",
+      "import_script": "스크립트 가져오기"
+    }
+  },
   "creating": "만드는 중...",
   "saving": "절약...",
   "createFailed": "프로젝트를 생성하지 못했습니다.",

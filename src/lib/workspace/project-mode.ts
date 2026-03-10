@@ -35,6 +35,10 @@ export function mapJourneyTypeToProjectMode(journeyType: ProductJourneyType): Wo
   return journeyType === 'manga_webtoon' ? 'manga' : 'story'
 }
 
+export function mapJourneyTypeToEntryMode(journeyType: ProductJourneyType): WorkspaceProjectEntryMode {
+  return mapJourneyTypeToProjectMode(journeyType)
+}
+
 export function mapEntryModeToJourneyType(entryMode: WorkspaceProjectEntryMode): ProductJourneyType {
   return entryMode === 'manga' ? 'manga_webtoon' : 'film_video'
 }

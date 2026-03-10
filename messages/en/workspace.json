@@ -25,6 +25,24 @@
   "projectTypeMangaTitle": "Manga Quick Start",
   "projectTypeMangaDesc": "Jump to Script stage with Quick Manga enabled",
   "journeyCardFilmLabel": "Film / Video",
+  "wizard": {
+    "stepJourney": "Journey",
+    "stepTemplate": "Template",
+    "stepSource": "Source",
+    "next": "Next",
+    "back": "Back",
+    "startCreating": "Start creating",
+    "sourceTypeLabel": "Story source",
+    "sourceContentLabel": "Source content",
+    "sourceContentPlaceholder": "Paste your story text or script draft...",
+    "sourceContentHint": "Please provide at least 20 characters for source-based generation.",
+    "readinessSummary": "Ready to create: {journey} · {template} · {sourceType}",
+    "sourceType": {
+      "blank": "Start blank",
+      "story_text": "Story text",
+      "import_script": "Import script"
+    }
+  },
   "creating": "Creating...",
   "saving": "Saving...",
   "createFailed": "Failed to create project",

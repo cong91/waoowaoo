@@ -3,6 +3,7 @@ import {
   buildProjectEntryUrl,
   defaultEntryIntentByJourney,
   mapEntryModeToJourneyType,
+  mapJourneyTypeToEntryMode,
   mapJourneyTypeToProjectMode,
   resolveProjectModeCompatibility,
   toProjectCreatePayload,
@@ -53,6 +54,11 @@ describe('workspace project mode helpers', () => {
   it('maps journeyType to compatibility projectMode deterministically', () => {
     expect(mapJourneyTypeToProjectMode('film_video')).toBe('story')
     expect(mapJourneyTypeToProjectMode('manga_webtoon')).toBe('manga')
+  })
+
+  it('maps journeyType to entryMode for runtime adapter bridge', () => {
+    expect(mapJourneyTypeToEntryMode('film_video')).toBe('story')
+    expect(mapJourneyTypeToEntryMode('manga_webtoon')).toBe('manga')
   })
 
   it('maps entry mode to neutral journey type deterministically', () => {

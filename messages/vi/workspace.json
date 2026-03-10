@@ -25,6 +25,24 @@
   "projectTypeMangaTitle": "Manga Quick Start",
   "projectTypeMangaDesc": "Vào thẳng Script + bật Quick Manga mặc định",
   "journeyCardFilmLabel": "Video / Film",
+  "wizard": {
+    "stepJourney": "Hành trình",
+    "stepTemplate": "Template",
+    "stepSource": "Nguồn nội dung",
+    "next": "Tiếp theo",
+    "back": "Quay lại",
+    "startCreating": "Bắt đầu tạo",
+    "sourceTypeLabel": "Nguồn truyện",
+    "sourceContentLabel": "Nội dung nguồn",
+    "sourceContentPlaceholder": "Dán nội dung truyện hoặc bản nháp script...",
+    "sourceContentHint": "Vui lòng nhập tối thiểu 20 ký tự cho chế độ tạo theo nguồn.",
+    "readinessSummary": "Sẵn sàng tạo: {journey} · {template} · {sourceType}",
+    "sourceType": {
+      "blank": "Bắt đầu trống",
+      "story_text": "Văn bản truyện",
+      "import_script": "Import script"
+    }
+  },
   "creating": "Đang tạo...",
   "saving": "Đang lưu...",
   "createFailed": "Không tạo được dự án",

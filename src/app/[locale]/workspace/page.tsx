@@ -12,11 +12,15 @@ import TaskStatusInline from '@/components/task/TaskStatusInline'
 import { resolveTaskPresentationState } from '@/lib/task/presentation'
 import { AppIcon, IconGradientDefs } from '@/components/ui/icons'
 import {
-  buildProjectEntryUrl,
   mapEntryModeToJourneyType,
-  toProjectCreatePayload,
   type WorkspaceProjectEntryMode,
 } from '@/lib/workspace/project-mode'
+import {
+  buildJourneyRuntimeEntryUrl,
+  resolveJourneyEntryIntent,
+  toJourneyProjectCreatePayload,
+  type JourneySourceType,
+} from '@/lib/workspace/journey-runtime-adapter'
 import {
   trackWorkspaceJourneyEvent,
   trackWorkspaceMangaEvent,
@@ -74,6 +78,8 @@ export default function WorkspacePage() {
     description: '',
     entryMode: 'story' as WorkspaceProjectEntryMode,
     starterTemplateId: '',
+    sourceType: 'blank' as JourneySourceType,
+    sourceContent: '',
   })
   const [editingProject, setEditingProject] = useState<Project | null>(null)
   const [showEditModal, setShowEditModal] = useState(false)
@@ -112,6 +118,14 @@ export default function WorkspacePage() {
   const selectedJourneyDescription = formData.entryMode === 'manga'
     ? t('projectTypeMangaDesc')
     : t('projectTypeStoryDesc')
+
+  const [createWizardStep, setCreateWizardStep] = useState<1 | 2 | 3>(1)
+
+  const canContinueToTemplateStep = formData.name.trim().length > 0
+  const canContinueToSourceStep = Boolean(selectedStarterTemplate)
+  const requiresSourceContent = formData.sourceType !== 'blank'
+  const hasValidSourceContent = !requiresSourceContent || formData.sourceContent.trim().length >= 20
+  const canSubmitJourney = canContinueToTemplateStep && canContinueToSourceStep && hasValidSourceContent
 
   // 检查用户是否已登录
   useEffect(() => {
@@ -181,6 +195,19 @@ export default function WorkspacePage() {
     setPagination(prev => ({ ...prev, page: newPage }))
   }
 
+  const resetCreateWizard = (entryMode: WorkspaceProjectEntryMode = 'story') => {
+    const templates = getStarterTemplatesByMode(entryMode)
+    setFormData({
+      name: '',
+      description: '',
+      entryMode,
+      starterTemplateId: templates[0]?.id || '',
+      sourceType: 'blank',
+      sourceContent: '',
+    })
+    setCreateWizardStep(1)
+  }
+
   const handleOpenCreateModal = (entryMode: WorkspaceProjectEntryMode = 'story') => {
     if (!dualJourneyEnabled && entryMode === 'manga') {
       return
@@ -201,14 +228,7 @@ export default function WorkspacePage() {
       })
     }
 
-    setFormData((prev) => {
-      const templates = getStarterTemplatesByMode(entryMode)
-      return {
-        ...prev,
-        entryMode,
-        starterTemplateId: templates[0]?.id || '',
-      }
-    })
+    resetCreateWizard(entryMode)
     setShowCreateModal(true)
   }
 
@@ -219,7 +239,10 @@ export default function WorkspacePage() {
       ...prev,
       entryMode,
       starterTemplateId: templates[0]?.id || '',
+      sourceType: 'blank',
+      sourceContent: '',
     }))
+    setCreateWizardStep(1)
     trackWorkspaceJourneyEvent('workspace_journey_selected', {
       journeyType,
       lane: entryMode,
@@ -243,9 +266,11 @@ export default function WorkspacePage() {
     if (!normalizedName) return
 
     const journeyType = mapEntryModeToJourneyType(formData.entryMode)
-    const entryIntent = resolveEntryIntentFromTemplate({
+    const entryIntent = resolveJourneyEntryIntent({
+      journeyType,
       entryMode: formData.entryMode,
       templateId: selectedStarterTemplate?.id,
+      sourceType: formData.sourceType,
     })
 
     setCreateLoading(true)
@@ -259,19 +284,15 @@ export default function WorkspacePage() {
         surface: 'create_project_modal',
       })
 
-      const createInput = {
-        ...formData,
-        name: normalizedName,
-        journeyType,
-        entryIntent,
-      }
-
       const response = await fetch('/api/projects', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(toProjectCreatePayload(createInput))
+        body: JSON.stringify(toJourneyProjectCreatePayload({
+          ...formData,
+          name: normalizedName,
+        }))
       })
 
       if (response.ok) {
@@ -284,7 +305,7 @@ export default function WorkspacePage() {
         setPagination(prev => ({ ...prev, page: 1 }))
         fetchProjects(1, '')
         setShowCreateModal(false)
-        setFormData({ name: '', description: '', entryMode: 'story', starterTemplateId: '' })
+        resetCreateWizard('story')
 
         trackWorkspaceJourneyEvent('workspace_project_created', {
           journeyType,
@@ -306,7 +327,10 @@ export default function WorkspacePage() {
         })
 
         if (createdProjectId) {
-          router.push(buildProjectEntryUrl(createdProjectId, formData.entryMode))
+          router.push(buildJourneyRuntimeEntryUrl({
+            projectId: createdProjectId,
+            journeyType,
+          }))
         }
       } else {
         alert(t('createFailed'))
@@ -721,8 +745,14 @@ export default function WorkspacePage() {
             </div>
 
             <form onSubmit={handleCreateProject} className="space-y-5">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-                <section className="lg:col-span-8 space-y-4">
+              <div className="flex items-center gap-2 text-xs text-[var(--glass-text-tertiary)]">
+                <span className={`rounded-full px-2 py-1 ${createWizardStep === 1 ? 'bg-[var(--glass-primary)]/20 text-[var(--glass-text-primary)]' : 'bg-[var(--glass-bg-muted)]'}`}>1. {t('wizard.stepJourney')}</span>
+                <span className={`rounded-full px-2 py-1 ${createWizardStep === 2 ? 'bg-[var(--glass-primary)]/20 text-[var(--glass-text-primary)]' : 'bg-[var(--glass-bg-muted)]'}`}>2. {t('wizard.stepTemplate')}</span>
+                <span className={`rounded-full px-2 py-1 ${createWizardStep === 3 ? 'bg-[var(--glass-primary)]/20 text-[var(--glass-text-primary)]' : 'bg-[var(--glass-bg-muted)]'}`}>3. {t('wizard.stepSource')}</span>
+              </div>
+
+              {createWizardStep === 1 && (
+                <section className="space-y-4">
                   <div>
                     <span className="glass-field-label block mb-2">{t('projectTypeLabel')}</span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -779,66 +809,142 @@ export default function WorkspacePage() {
                     />
                   </div>
                 </section>
+              )}
 
-                <aside className="lg:col-span-4">
-                  <div className="rounded-xl border border-[var(--glass-border)]/60 bg-[var(--glass-background-secondary)]/35 p-3 sm:p-4">
-                    <span className="glass-field-label block mb-2">{t('starterTemplates.title')}</span>
-                    <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
-                      {starterTemplates.map((template) => {
-                        const isActive = selectedStarterTemplate?.id === template.id
-                        return (
-                          <button
-                            key={template.id}
-                            type="button"
-                            onClick={() => {
-                              const journeyType = mapEntryModeToJourneyType(formData.entryMode)
-                              trackWorkspaceJourneyEvent('workspace_template_selected', {
-                                journeyType,
-                                entryIntent: resolveEntryIntentFromTemplate({
-                                  entryMode: formData.entryMode,
-                                  templateId: template.id,
-                                }),
-                                projectMode: formData.entryMode,
+              {createWizardStep === 2 && (
+                <section className="space-y-3">
+                  <span className="glass-field-label block">{t('starterTemplates.title')}</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {starterTemplates.map((template) => {
+                      const isActive = selectedStarterTemplate?.id === template.id
+                      return (
+                        <button
+                          key={template.id}
+                          type="button"
+                          onClick={() => {
+                            const journeyType = mapEntryModeToJourneyType(formData.entryMode)
+                            trackWorkspaceJourneyEvent('workspace_template_selected', {
+                              journeyType,
+                              entryIntent: resolveEntryIntentFromTemplate({
+                                entryMode: formData.entryMode,
                                 templateId: template.id,
-                                locale,
-                                surface: 'create_project_modal',
-                              })
-                              setFormData((prev) => ({
-                                ...prev,
-                                starterTemplateId: template.id,
-                                name: prev.name.trim() ? prev.name : buildStarterProjectName(t(template.titleKey)),
-                              }))
-                            }}
-                            className={`w-full glass-btn-base px-3 py-2.5 text-left ${isActive ? 'glass-btn-primary ring-2 ring-[var(--glass-primary)]/30' : 'glass-btn-secondary'}`}
-                          >
-                            <div className="text-sm font-semibold text-[var(--glass-text-primary)] truncate">{t(template.titleKey)}</div>
-                          </button>
-                        )
-                      })}
+                              }),
+                              projectMode: formData.entryMode,
+                              templateId: template.id,
+                              locale,
+                              surface: 'create_project_modal',
+                            })
+                            setFormData((prev) => ({
+                              ...prev,
+                              starterTemplateId: template.id,
+                              name: prev.name.trim() ? prev.name : buildStarterProjectName(t(template.titleKey)),
+                            }))
+                          }}
+                          className={`w-full glass-btn-base px-3 py-2.5 text-left ${isActive ? 'glass-btn-primary ring-2 ring-[var(--glass-primary)]/30' : 'glass-btn-secondary'}`}
+                        >
+                          <div className="text-sm font-semibold text-[var(--glass-text-primary)] truncate">{t(template.titleKey)}</div>
+                        </button>
+                      )
+                    })}
+                  </div>
+                </section>
+              )}
+
+              {createWizardStep === 3 && (
+                <section className="space-y-4">
+                  <div>
+                    <span className="glass-field-label block mb-2">{t('wizard.sourceTypeLabel')}</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      {(['blank', 'story_text', 'import_script'] as JourneySourceType[]).map((sourceType) => (
+                        <button
+                          key={sourceType}
+                          type="button"
+                          onClick={() => setFormData((prev) => ({ ...prev, sourceType }))}
+                          className={`glass-btn-base px-3 py-2 text-left ${formData.sourceType === sourceType ? 'glass-btn-primary' : 'glass-btn-secondary'}`}
+                        >
+                          {t(`wizard.sourceType.${sourceType}`)}
+                        </button>
+                      ))}
                     </div>
                   </div>
-                </aside>
-              </div>
 
-              <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-3 pt-3 border-t border-[var(--glass-border)]/40">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowCreateModal(false)
-                    setFormData({ name: '', description: '', entryMode: 'story', starterTemplateId: '' })
-                  }}
-                  className="glass-btn-base glass-btn-secondary px-4 py-2.5"
-                  disabled={createLoading}
-                >
-                  {tc('cancel')}
-                </button>
-                <button
-                  type="submit"
-                  className="glass-btn-base glass-btn-primary px-4 py-2.5 disabled:opacity-50"
-                  disabled={createLoading || (!formData.name.trim() && !selectedStarterTemplate)}
-                >
-                  {createLoading ? t('creating') : t('createProject')}
-                </button>
+                  {formData.sourceType !== 'blank' && (
+                    <div>
+                      <label htmlFor="sourceContent" className="glass-field-label block mb-2">{t('wizard.sourceContentLabel')}</label>
+                      <textarea
+                        id="sourceContent"
+                        value={formData.sourceContent}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, sourceContent: e.target.value }))}
+                        className="glass-textarea-base w-full px-3 py-2.5"
+                        placeholder={t('wizard.sourceContentPlaceholder')}
+                        rows={5}
+                        maxLength={4000}
+                      />
+                      {!hasValidSourceContent && (
+                        <p className="mt-2 text-xs text-[var(--glass-tone-warning-fg)]">{t('wizard.sourceContentHint')}</p>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="rounded-lg border border-[var(--glass-border)]/60 bg-[var(--glass-background-secondary)]/35 px-3 py-2 text-xs text-[var(--glass-text-secondary)]">
+                    {t('wizard.readinessSummary', {
+                      journey: selectedJourneyTitle,
+                      template: selectedStarterTemplate ? t(selectedStarterTemplate.titleKey) : '-',
+                      sourceType: t(`wizard.sourceType.${formData.sourceType}`),
+                    })}
+                  </div>
+                </section>
+              )}
+
+              <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-2 sm:gap-3 pt-3 border-t border-[var(--glass-border)]/40">
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowCreateModal(false)
+                      resetCreateWizard('story')
+                    }}
+                    className="glass-btn-base glass-btn-secondary px-4 py-2.5"
+                    disabled={createLoading}
+                  >
+                    {tc('cancel')}
+                  </button>
+                  {createWizardStep > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => setCreateWizardStep((prev) => (prev === 1 ? 1 : prev === 2 ? 1 : 2))}
+                      className="glass-btn-base glass-btn-secondary px-4 py-2.5"
+                      disabled={createLoading}
+                    >
+                      {t('wizard.back')}
+                    </button>
+                  )}
+                </div>
+
+                <div>
+                  {createWizardStep < 3 ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (createWizardStep === 1 && !canContinueToTemplateStep) return
+                        if (createWizardStep === 2 && !canContinueToSourceStep) return
+                        setCreateWizardStep((prev) => (prev === 1 ? 2 : 3))
+                      }}
+                      className="glass-btn-base glass-btn-primary px-4 py-2.5 disabled:opacity-50"
+                      disabled={createLoading || (createWizardStep === 1 ? !canContinueToTemplateStep : !canContinueToSourceStep)}
+                    >
+                      {t('wizard.next')}
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      className="glass-btn-base glass-btn-primary px-4 py-2.5 disabled:opacity-50"
+                      disabled={createLoading || !canSubmitJourney}
+                    >
+                      {createLoading ? t('creating') : t('wizard.startCreating')}
+                    </button>
+                  )}
+                </div>
               </div>
             </form>
           </div>
