@@ -61,6 +61,7 @@
   "preview": {
     "title": "Smart Splitting Complete",
     "episodeCount": "Automatically split into {count} episodes",
+    "separator": ", ",
     "totalWords": "Total {count} words",
     "autoSaved": "✓ Auto-saved",
     "reanalyze": "Re-analyze",

@@ -1,0 +1,72 @@
+{
+    "title": "스크립트 보기",
+    "scriptBreakdown": "스크립트 분석",
+    "splitCount": "{count} 클립 분할",
+    "noClips": "아직 클립이 없습니다. 스토리 보기에서 생성하세요.",
+    "segment": {
+        "title": "클립 {index}",
+        "selected": "(선택된)"
+    },
+    "inSceneAssets": "장면 내 자산",
+    "currentSelected": "선택됨: 클립 {number}",
+    "assetView": {
+        "allClips": "모든 클립",
+        "viewingClip": "{number} 클립 보기"
+    },
+    "asset": {
+        "generateCharacter": "캐릭터를 생성하려면 클릭하세요 →",
+        "generateLocation": "위치를 생성하려면 클릭 →",
+        "removeCharacterConfirm": "현재 클립에서 이 문자를 제거하시겠습니까?",
+        "removeLocationConfirm": "현재 클립에서 이 위치를 제거하시겠습니까?",
+        "removeFromClip": "현재 클립에서 제거",
+        "noAudio": "오디오 없음",
+        "playing": "재생",
+        "listen": "듣다",
+        "activeCharacters": "활성 캐릭터",
+        "activeLocations": "활성 위치",
+        "selectCharacter": "추가할 캐릭터/외모 선택",
+        "selectLocation": "추가할 위치 선택",
+        "loadingAssets": "애셋 로드 중...",
+        "appearanceCount": "{count} 출연",
+        "added": "추가됨",
+        "primary": "주요한",
+        "subAppearance": "서브 등장",
+        "defaultAppearance": "기본 모양",
+        "clickToRemove": "{name}을(를) 제거하려면 클릭하세요.",
+        "clickToAdd": "{name}을(를) 추가하려면 클릭하세요.",
+        "allClipsCharacterEditHint": "\"모든 클립\" 보기입니다. 캐릭터 문구는 단일 클립 보기에서만 편집할 수 있습니다.",
+        "allClipsLocationEditHint": "\"모든 클립\" 보기입니다. 장면 문구는 단일 클립 보기에서만 편집할 수 있습니다."
+    },
+    "screenplay": {
+        "scene": "장면 {number}",
+        "location": "위치:",
+        "locationTime": "시간:",
+        "day": "낮",
+        "night": "밤",
+        "dawn": "새벽",
+        "dusk": "황혼",
+        "dialogue": "대화",
+        "action": "행동",
+        "narration": "화법",
+        "content": "원본 콘텐츠",
+        "noContent": "아직 콘텐츠가 없습니다.",
+        "clickToEdit": "수정하려면 클릭하세요.",
+        "interior": "정수",
+        "exterior": "내선",
+        "characters": "캐릭터",
+        "noCharacter": "캐릭터 정보가 없습니다.",
+        "noLocation": "활성 위치 없음",
+        "noCharacterInClip": "활성 캐릭터 없음"
+    },
+    "confirm": {
+        "removeCharacter": "현재 클립에서 이 문자를 제거하시겠습니까?",
+        "removeLocation": "현재 클립에서 이 위치를 제거하시겠습니까?"
+    },
+    "generate": {
+        "missingAssets": "{count} 자산에 이미지가 누락됨",
+        "missingAssetsTip": "모든 캐릭터와 위치에 대한 이미지를 생성하세요.",
+        "missingAssetsTipLink": "첫 번째",
+        "generating": "생성 중...",
+        "startGenerate": "확인 및 그리기 시작 →"
+    }
+}

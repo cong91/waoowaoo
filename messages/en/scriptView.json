@@ -33,7 +33,9 @@
         "subAppearance": "Sub appearance",
         "defaultAppearance": "Default appearance",
         "clickToRemove": "Click to remove {name}",
-        "clickToAdd": "Click to add {name}"
+        "clickToAdd": "Click to add {name}",
+        "allClipsCharacterEditHint": "You are viewing \"All Clips\". Character copy can only be edited in single-clip view.",
+        "allClipsLocationEditHint": "You are viewing \"All Clips\". Location copy can only be edited in single-clip view."
     },
     "screenplay": {
         "scene": "Scene {number}",

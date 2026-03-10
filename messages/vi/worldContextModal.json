@@ -1,0 +1,6 @@
+{
+    "title": "Cài đặt thế giới và nhân vật",
+    "description": "Xác định diện mạo nhân vật chung, kiểu cảnh và mô tả môi trường",
+    "placeholder": "Ví dụ:\n[Nhân vật chính] John, 25 tuổi, tóc đen ngắn, luôn mặc áo khoác denim bạc màu, đôi mắt u sầu.\n[Nữ anh hùng]Jane, 22 tuổi, tóc hai bím màu đỏ, tính cách sôi nổi, thích mặc váy kiểu lolita.\n[Cảnh] Thành phố Cyberpunk năm 2077, đèn neon nhấp nháy, mưa quanh năm...",
+    "hint": "Các cài đặt này sẽ được tất cả các tập kế thừa làm tài liệu tham khảo cho bản vẽ AI."
+}

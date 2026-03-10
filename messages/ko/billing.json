@@ -1,0 +1,15 @@
+{
+    "transactionType": "거래 유형",
+    "startDate": "시작일",
+    "endDate": "종료일",
+    "all": "모두",
+    "income": "소득",
+    "expense": "비용",
+    "reset": "초기화",
+    "filter": "필터",
+    "noRecords": "기록 없음",
+    "accountRecharge": "계정 재충전",
+    "serviceConsumption": "서비스 소비",
+    "balance": "균형",
+    "allTypes": "모든 유형"
+}

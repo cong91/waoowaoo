@@ -1,0 +1,211 @@
+{
+    "panelCard": {
+        "play": "Chơi",
+        "pause": "Tạm dừng",
+        "retry": "Thử lại",
+        "regenerate": "Tạo lại",
+        "download": "Tải xuống",
+        "edit": "Chỉnh sửa",
+        "save": "Lưu",
+        "cancel": "Hủy",
+        "generating": "Đang tạo...",
+        "failed": "Thất bại",
+        "lipSync": "Hát nhép",
+        "lipSyncVideo": "Video hát nhép",
+        "lipSyncLabel": "Hát nhép",
+        "lipSyncTitle": "Hát nhép",
+        "original": "Nguyên bản",
+        "synced": "Đã đồng bộ hóa",
+        "videoFixed": "✓ Video",
+        "imagePreview": "Xem trước hình ảnh",
+        "playVoice": "Phát giọng nói",
+        "stopVoice": "Dừng lại",
+        "noVoice": "Không có giọng nói",
+        "forceRegenerate": "Buộc tái tạo (sử dụng nếu bị kẹt)",
+        "regenerateVideo": "Tạo lại video",
+        "lipSyncStatus": "Hát nhép...",
+        "lipSyncInProgress": "Đang đồng bộ hóa môi...",
+        "lipSyncMayTakeMinutes": "Việc này có thể mất vài phút",
+        "audioEnabled": "Đã bật âm thanh",
+        "audioDisabled": "Đã tắt âm thanh",
+        "isSynced": "(Đã đồng bộ hóa)",
+        "needVideo": "(Vui lòng tạo video trước)",
+        "needAudio": "(Vui lòng tạo âm thanh trước)",
+        "generateAudio": "Tạo âm thanh",
+        "regenerateLipSync": "Tái tạo lại nhép",
+        "editPrompt": "Chỉnh sửa lời nhắc",
+        "clickToEditPrompt": "Nhấp để chỉnh sửa lời nhắc...",
+        "shot": "Đã bắn {number}",
+        "unknownShotType": "Không xác định",
+        "correspondingText": "Văn bản tương ứng",
+        "generateVideo": "Tạo Video",
+        "selectModel": "Chọn mẫu video",
+        "selectVoice": "Chọn giọng nói để sử dụng:",
+        "willAutoPad": "(sẽ tự động đệm)",
+        "autoPadding": "Phần đệm",
+        "redo": "Làm lại",
+        "generatingAudio": "Đang tạo...",
+        "error": {
+            "audioFailed": "Tạo âm thanh không thành công"
+        },
+        "batchMode": "Chế độ hàng loạt",
+        "batchModeDesc": "Suy luận ngoại tuyến, rẻ hơn 50%, hoàn thành trong vòng 24 giờ",
+        "batchModeEnabled": "Đã bật chế độ hàng loạt",
+        "batchModeDisabled": "Đã tắt chế độ hàng loạt"
+    },
+    "promptModal": {
+        "title": "Chỉnh sửa cảnh quay #{number} Lời nhắc video",
+        "shotType": "Kiểu bắn:",
+        "duration": "S",
+        "location": "Vị trí:",
+        "locationUnknown": "Không xác định",
+        "characters": "Nhân vật:",
+        "listSeparator": ", ",
+        "charactersNone": "Không",
+        "description": "Sự miêu tả:",
+        "text": "Văn bản tương ứng:",
+        "promptLabel": "Lời nhắc video",
+        "placeholder": "Nhập lời nhắc video...",
+        "tip": "Mẹo: Người mẫu video không nhận dạng được tên nhân vật, hãy sử dụng mô tả ngoại hình như \"thanh niên tóc đen mắt xanh\" thay vì \"Victor\"",
+        "save": "Lưu",
+        "cancel": "Hủy"
+    },
+    "toolbar": {
+        "title": "Tạo video",
+        "filter": "Lọc",
+        "viewAll": "Xem tất cả",
+        "showGenerated": "Đã tạo",
+        "showPending": "Chưa giải quyết",
+        "showFailed": "Thất bại",
+        "totalShots": "Tổng số {count} lần chụp",
+        "generatingShots": "{count} đang tạo",
+        "completedShots": "{count} đã hoàn thành",
+        "failedShots": "{count} không thành công",
+        "generateAll": "Tạo tất cả video",
+        "batchConfigTitle": "Cài đặt tạo hàng loạt",
+        "batchConfigDesc": "Chọn mô hình và thông số trước khi tạo tất cả video.",
+        "confirmGenerateAll": "Xác nhận và tạo tất cả",
+        "confirming": "Đang gửi...",
+        "noVideos": "Không có video để tải xuống",
+        "downloadCount": "Tải xuống {count} video",
+        "packing": "Đóng gói...",
+        "downloadAll": "Tải xuống tất cả",
+        "enterEditor": "Nhập Trình chỉnh sửa video",
+        "enterEdit": "Nhập trình chỉnh sửa",
+        "back": "Quay lại"
+    },
+    "stage": {
+        "title": "Tạo video",
+        "generateAll": "Tạo tất cả",
+        "regenerateFailed": "Thử lại không thành công",
+        "downloadAll": "Tải xuống tất cả video",
+        "enterEditor": "Nhập trình chỉnh sửa",
+        "lipSyncStatus": "Hát nhép...",
+        "hasSynced": "✓ Đã tạo",
+        "generating": "Đang tạo...",
+        "downloading": "Đang tải xuống...",
+        "downloadProgress": "Đang chuẩn bị tệp video... {current}/{total}",
+        "noVideos": "Không có video nào được tạo",
+        "scrollTo": "Nhảy để bắn",
+        "error": {
+            "saveFailed": "Không lưu được lời nhắc video",
+            "lipSyncFailed": "Hát nhép không thành công",
+            "fetchVideosFailed": "Không tìm nạp được danh sách video"
+        },
+        "downloadFailed": "Tải xuống không thành công",
+        "unknownError": "Lỗi không xác định"
+    },
+    "firstLastFrame": {
+        "title": "Cài đặt khung hình đầu tiên/cuối cùng",
+        "firstFrame": "Khung hình đầu tiên",
+        "lastFrame": "Khung hình cuối cùng",
+        "range": "Bắn {from} → Bắn {to}",
+        "link": "liên kết",
+        "unlink": "Hủy liên kết",
+        "unlinkAction": "Hủy liên kết",
+        "asLastFrameFor": "Là khung hình cuối cùng cho Cú bắn {number}",
+        "asFirstFrameFor": "Là khung hình đầu tiên cho lần chụp {number}",
+        "customPrompt": "Lời nhắc tùy chỉnh",
+        "promptPlaceholder": "Nhập lời nhắc video khung hình đầu tiên/cuối cùng...",
+        "useDefault": "Sử dụng mặc định",
+        "generate": "Tạo video khung hình đầu tiên/cuối cùng",
+        "generated": "Video khung hình đầu tiên/cuối cùng được tạo",
+        "model": "Người mẫu",
+        "withAudio": "Có âm thanh",
+        "audioOn": "TRÊN",
+        "audioOff": "Tắt",
+        "linkToNext": "Liên kết tới bảng tiếp theo (Khung hình đầu tiên/cuối cùng)",
+        "asLastFrame": "Là khung cuối cùng cho Bảng điều khiển {number}",
+        "thenTransitionTo": "sau đó chuyển sang"
+    },
+    "editor": {
+        "alert": {
+            "saveSuccess": "Đã lưu thành công",
+            "saveFailed": "Lưu không thành công",
+            "exportStarted": "Xuất khẩu đã bắt đầu. Vui lòng chờ...",
+            "exportFailed": "Xuất không thành công"
+        },
+        "toolbar": {
+            "back": "← Quay lại",
+            "saveDirty": "Cứu *",
+            "saved": "Đã lưu",
+            "export": "Xuất video"
+        },
+        "left": {
+            "title": "Thư viện phương tiện",
+            "description": "Các clip được nhập từ sân khấu video sẽ xuất hiện ở đây"
+        },
+        "right": {
+            "title": "Của cải",
+            "clipLabel": "Đoạn phim:",
+            "clipFallback": "Kẹp {index}",
+            "durationLabel": "Khoảng thời gian:",
+            "transitionLabel": "Chuyển sang Clip tiếp theo",
+            "deleteConfirm": "Xóa đoạn phim này?",
+            "deleteClip": "Xóa đoạn phim",
+            "selectClipHint": "Chọn một clip để xem thuộc tính"
+        },
+        "preview": {
+            "emptyStartEditing": "Thêm phương tiện để bắt đầu chỉnh sửa"
+        },
+        "timeline": {
+            "zoomLabel": "Phóng:",
+            "videoTrack": "Băng hình",
+            "emptyHint": "Kéo video clip từ thư viện phương tiện vào đây",
+            "audioTrack": "Tiếng nói",
+            "audioBadge": "MỘT"
+        },
+        "transition": {
+            "title": "Chuyển tiếp",
+            "duration": "Khoảng thời gian",
+            "options": {
+                "none": "Không",
+                "dissolve": "Hòa tan",
+                "fade": "Phai",
+                "slide": "Cầu trượt"
+            }
+        }
+    },
+    "errors": {
+        "unknownError": "Lỗi không xác định"
+    },
+    "capability": {
+        "generationMode": "Chế độ thế hệ",
+        "generateAudio": "Tạo âm thanh",
+        "duration": "Khoảng thời gian",
+        "fps": "Tốc độ khung hình",
+        "resolution": "Nghị quyết",
+        "aspectRatio": "tỷ lệ khung hình",
+        "reasoningEffort": "Nỗ lực lý luận",
+        "voice": "Tiếng nói",
+        "rate": "Tỷ lệ",
+        "mode": "Cách thức"
+    },
+    "unit": {
+        "second": "S",
+        "frame": "khung hình/giây"
+    },
+    "common": {
+        "generate": "Tạo"
+    }
+}

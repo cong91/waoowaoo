@@ -1,0 +1,18 @@
+{
+    "storyboard": "스토리보드",
+    "storyboard_candidate": "스토리보드 후보",
+    "character": "성격",
+    "location": "위치",
+    "video": "동영상",
+    "analyze": "분석하다",
+    "analyze_character": "캐릭터 분석",
+    "analyze_location": "위치분석",
+    "clips": "클립 분할",
+    "storyboard_text_plan": "스토리보드 기획",
+    "storyboard_text_detail": "스토리보드 세부정보",
+    "tts": "텍스트 음성 변환",
+    "regenerate": "재생성",
+    "voice-generate": "음성 생성",
+    "voice-design": "음성 디자인",
+    "lip-sync": "립싱크"
+}

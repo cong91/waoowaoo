@@ -61,6 +61,7 @@
   "preview": {
     "title": "智能分集完成",
     "episodeCount": "已为你自动分为 {count} 集",
+    "separator": "，",
     "totalWords": "总计 {count} 字",
     "autoSaved": "✓ 已自动保存",
     "reanalyze": "重新分析",

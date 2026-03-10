@@ -1,0 +1,24 @@
+{
+    "globalAssets": "글로벌 자산",
+    "createFailed": "생성 실패",
+    "deleteFailed": "삭제 실패",
+    "renameFailed": "이름 바꾸기 실패",
+    "refreshFailed": "새로고침 실패",
+    "projectNotFound": "프로젝트를 찾을 수 없습니다",
+    "backToWorkspace": "작업공간으로 돌아가기",
+    "episode": "삽화",
+    "sidebar": {
+        "dragToMove": "드래그하여 위치 이동",
+        "listTitle": "에피소드 목록",
+        "episodeCount": "{count} 에피소드",
+        "empty": "아직 에피소드가 없습니다. 아래에서 하나를 만드세요.",
+        "save": "저장",
+        "deleteConfirm": "'{name}'을 삭제하시겠습니까?",
+        "delete": "삭제",
+        "cancel": "취소",
+        "rename": "이름 바꾸기",
+        "newEpisodePlaceholder": "에피소드 이름을 입력하세요...",
+        "create": "만들다",
+        "addEpisode": "에피소드 추가"
+    }
+}

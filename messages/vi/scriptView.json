@@ -1,0 +1,72 @@
+{
+    "title": "Chế độ xem tập lệnh",
+    "scriptBreakdown": "Phân tích kịch bản",
+    "splitCount": "{count} tách clip",
+    "noClips": "Chưa có clip nào, vui lòng tạo từ chế độ xem câu chuyện",
+    "segment": {
+        "title": "Kẹp {index}",
+        "selected": "(Đã chọn)"
+    },
+    "inSceneAssets": "Nội dung trong cảnh",
+    "currentSelected": "Đã chọn: Clip {number}",
+    "assetView": {
+        "allClips": "Tất cả các clip",
+        "viewingClip": "Đang xem Clip {number}"
+    },
+    "asset": {
+        "generateCharacter": "Bấm để tạo ký tự →",
+        "generateLocation": "Bấm để tạo vị trí →",
+        "removeCharacterConfirm": "Bạn có chắc chắn muốn xóa ký tự này khỏi clip hiện tại không?",
+        "removeLocationConfirm": "Bạn có chắc chắn muốn xóa vị trí này khỏi clip hiện tại không?",
+        "removeFromClip": "Xóa khỏi clip hiện tại",
+        "noAudio": "Không có âm thanh",
+        "playing": "Đang chơi",
+        "listen": "Nghe",
+        "activeCharacters": "Nhân vật hoạt động",
+        "activeLocations": "Địa điểm đang hoạt động",
+        "selectCharacter": "Chọn nhân vật/ngoại hình để thêm",
+        "selectLocation": "Chọn vị trí để thêm",
+        "loadingAssets": "Đang tải nội dung...",
+        "appearanceCount": "{count} lần xuất hiện",
+        "added": "Đã thêm",
+        "primary": "Sơ đẳng",
+        "subAppearance": "Ngoại hình phụ",
+        "defaultAppearance": "Giao diện mặc định",
+        "clickToRemove": "Nhấp để xóa {name}",
+        "clickToAdd": "Nhấp để thêm {name}",
+        "allClipsCharacterEditHint": "Bạn đang ở chế độ \"Tất cả các clip\". Chỉ có thể chỉnh sửa nội dung nhân vật trong chế độ một clip.",
+        "allClipsLocationEditHint": "Bạn đang ở chế độ \"Tất cả các clip\". Chỉ có thể chỉnh sửa nội dung bối cảnh trong chế độ một clip."
+    },
+    "screenplay": {
+        "scene": "Cảnh {number}",
+        "location": "Vị trí:",
+        "locationTime": "Thời gian:",
+        "day": "Ngày",
+        "night": "Đêm",
+        "dawn": "Bình minh",
+        "dusk": "Chạng vạng",
+        "dialogue": "Đối thoại",
+        "action": "Hoạt động",
+        "narration": "tường thuật",
+        "content": "Nội dung gốc",
+        "noContent": "Chưa có nội dung",
+        "clickToEdit": "Bấm để chỉnh sửa",
+        "interior": "INT",
+        "exterior": "EXT",
+        "characters": "nhân vật",
+        "noCharacter": "Không có thông tin nhân vật",
+        "noLocation": "Không có vị trí hoạt động",
+        "noCharacterInClip": "Không có ký tự hoạt động"
+    },
+    "confirm": {
+        "removeCharacter": "Bạn có chắc chắn muốn xóa ký tự này khỏi clip hiện tại không?",
+        "removeLocation": "Bạn có chắc chắn muốn xóa vị trí này khỏi clip hiện tại không?"
+    },
+    "generate": {
+        "missingAssets": "{count} nội dung thiếu hình ảnh",
+        "missingAssetsTip": "Vui lòng tạo hình ảnh cho tất cả các nhân vật và vị trí trong",
+        "missingAssetsTipLink": "Đầu tiên",
+        "generating": "Đang tạo...",
+        "startGenerate": "Xác nhận và bắt đầu vẽ →"
+    }
+}

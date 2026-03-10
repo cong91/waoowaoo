@@ -60,6 +60,7 @@
     "location": "Location:",
     "locationUnknown": "Unknown",
     "characters": "Characters:",
+    "listSeparator": ", ",
     "charactersNone": "None",
     "description": "Description:",
     "text": "Corresponding Text:",

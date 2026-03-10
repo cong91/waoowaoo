@@ -1,0 +1,211 @@
+{
+    "panelCard": {
+        "play": "놀다",
+        "pause": "정지시키다",
+        "retry": "다시 해 보다",
+        "regenerate": "재생성",
+        "download": "다운로드",
+        "edit": "편집",
+        "save": "저장",
+        "cancel": "취소",
+        "generating": "생성 중...",
+        "failed": "실패한",
+        "lipSync": "립싱크",
+        "lipSyncVideo": "립싱크 비디오",
+        "lipSyncLabel": "립싱크",
+        "lipSyncTitle": "립싱크",
+        "original": "원래의",
+        "synced": "동기화됨",
+        "videoFixed": "✓ 비디오",
+        "imagePreview": "이미지 미리보기",
+        "playVoice": "음성 재생",
+        "stopVoice": "멈추다",
+        "noVoice": "사용할 수 있는 음성이 없습니다.",
+        "forceRegenerate": "강제 재생(멈춘 경우 사용)",
+        "regenerateVideo": "비디오 재생성",
+        "lipSyncStatus": "립싱크 중...",
+        "lipSyncInProgress": "립싱크 진행 중...",
+        "lipSyncMayTakeMinutes": "몇 분 정도 걸릴 수 있습니다.",
+        "audioEnabled": "오디오 활성화됨",
+        "audioDisabled": "오디오 비활성화됨",
+        "isSynced": "(동기화됨)",
+        "needVideo": "(먼저 영상을 생성해주세요)",
+        "needAudio": "(먼저 오디오를 생성해 주세요)",
+        "generateAudio": "오디오 생성",
+        "regenerateLipSync": "립싱크 재생성",
+        "editPrompt": "프롬프트 편집",
+        "clickToEditPrompt": "프롬프트를 편집하려면 클릭하세요...",
+        "shot": "촬영 {number}",
+        "unknownShotType": "알려지지 않은",
+        "correspondingText": "해당 텍스트",
+        "generateVideo": "비디오 생성",
+        "selectModel": "비디오 모델 선택",
+        "selectVoice": "사용할 음성 선택:",
+        "willAutoPad": "(자동으로 채워집니다)",
+        "autoPadding": "심",
+        "redo": "다시 하다",
+        "generatingAudio": "생성 중...",
+        "error": {
+            "audioFailed": "오디오 생성 실패"
+        },
+        "batchMode": "배치 모드",
+        "batchModeDesc": "오프라인 추론, 50% 저렴, 24시간 이내에 완료",
+        "batchModeEnabled": "배치 모드 활성화됨",
+        "batchModeDisabled": "배치 모드가 비활성화되었습니다."
+    },
+    "promptModal": {
+        "title": "편집 샷 #{number} 비디오 프롬프트",
+        "shotType": "샷 유형:",
+        "duration": "에스",
+        "location": "위치:",
+        "locationUnknown": "알려지지 않은",
+        "characters": "캐릭터:",
+        "listSeparator": ", ",
+        "charactersNone": "없음",
+        "description": "설명:",
+        "text": "해당 텍스트:",
+        "promptLabel": "비디오 프롬프트",
+        "placeholder": "영상 메시지 입력...",
+        "tip": "팁: 비디오 모델은 캐릭터 이름을 인식하지 못합니다. '빅터' 대신 '검은 머리와 파란 눈을 가진 청년'과 같은 외모 설명을 사용하세요.",
+        "save": "저장",
+        "cancel": "취소"
+    },
+    "toolbar": {
+        "title": "비디오 생성",
+        "filter": "필터",
+        "viewAll": "모두 보기",
+        "showGenerated": "생성됨",
+        "showPending": "보류 중",
+        "showFailed": "실패한",
+        "totalShots": "총 {count} 샷",
+        "generatingShots": "{count} 생성 중",
+        "completedShots": "{count} 완료됨",
+        "failedShots": "{count} 실패",
+        "generateAll": "모든 비디오 생성",
+        "batchConfigTitle": "일괄 생성 설정",
+        "batchConfigDesc": "모든 비디오를 생성하기 전에 모델과 매개변수를 선택하십시오.",
+        "confirmGenerateAll": "모두 확인 및 생성",
+        "confirming": "제출 중...",
+        "noVideos": "다운로드할 동영상이 없습니다.",
+        "downloadCount": "{count} 동영상 다운로드",
+        "packing": "포장...",
+        "downloadAll": "모두 다운로드",
+        "enterEditor": "비디오 편집기 입력",
+        "enterEdit": "편집자 입력",
+        "back": "뒤로"
+    },
+    "stage": {
+        "title": "비디오 생성",
+        "generateAll": "모두 생성",
+        "regenerateFailed": "재시도 실패",
+        "downloadAll": "모든 비디오 다운로드",
+        "enterEditor": "편집자 입력",
+        "lipSyncStatus": "립싱크 중...",
+        "hasSynced": "✓ 생성됨",
+        "generating": "생성 중...",
+        "downloading": "다운로드 중...",
+        "downloadProgress": "비디오 파일 준비 중... {current}/{total}",
+        "noVideos": "생성된 동영상 없음",
+        "scrollTo": "샷으로 점프",
+        "error": {
+            "saveFailed": "영상 메시지를 저장하지 못했습니다.",
+            "lipSyncFailed": "립싱크 실패",
+            "fetchVideosFailed": "동영상 목록을 가져오지 못했습니다."
+        },
+        "downloadFailed": "다운로드 실패",
+        "unknownError": "알 수 없는 오류"
+    },
+    "firstLastFrame": {
+        "title": "첫 번째/마지막 프레임 설정",
+        "firstFrame": "첫 번째 프레임",
+        "lastFrame": "마지막 프레임",
+        "range": "샷 {from} → 샷 {to}",
+        "link": "링크",
+        "unlink": "풀리다",
+        "unlinkAction": "풀리다",
+        "asLastFrameFor": "샷의 마지막 프레임으로 {number}",
+        "asFirstFrameFor": "샷의 첫 번째 프레임으로 {number}",
+        "customPrompt": "사용자 정의 프롬프트",
+        "promptPlaceholder": "첫 번째/마지막 프레임 비디오 프롬프트를 입력하세요...",
+        "useDefault": "기본값 사용",
+        "generate": "첫 번째/마지막 프레임 비디오 생성",
+        "generated": "첫 번째/마지막 프레임 비디오 생성됨",
+        "model": "모델",
+        "withAudio": "오디오 포함",
+        "audioOn": "~에",
+        "audioOff": "끄다",
+        "linkToNext": "다음 패널에 대한 링크(첫 번째/마지막 프레임)",
+        "asLastFrame": "패널 {number}의 마지막 프레임으로",
+        "thenTransitionTo": "다음으로 전환"
+    },
+    "editor": {
+        "alert": {
+            "saveSuccess": "성공적으로 저장되었습니다",
+            "saveFailed": "저장 실패",
+            "exportStarted": "내보내기가 시작되었습니다. 기다리세요...",
+            "exportFailed": "내보내기 실패"
+        },
+        "toolbar": {
+            "back": "← 뒤로",
+            "saveDirty": "구하다 *",
+            "saved": "저장됨",
+            "export": "비디오 내보내기"
+        },
+        "left": {
+            "title": "미디어 라이브러리",
+            "description": "비디오 스테이지에서 가져온 클립이 여기에 표시됩니다."
+        },
+        "right": {
+            "title": "속성",
+            "clipLabel": "클립:",
+            "clipFallback": "클립 {index}",
+            "durationLabel": "지속:",
+            "transitionLabel": "다음 클립으로 전환",
+            "deleteConfirm": "이 클립을 삭제하시겠습니까?",
+            "deleteClip": "클립 삭제",
+            "selectClipHint": "속성을 보려면 클립을 선택하세요."
+        },
+        "preview": {
+            "emptyStartEditing": "편집을 시작하려면 미디어를 추가하세요."
+        },
+        "timeline": {
+            "zoomLabel": "줌:",
+            "videoTrack": "동영상",
+            "emptyHint": "미디어 라이브러리의 비디오 클립을 여기로 드래그하세요.",
+            "audioTrack": "목소리",
+            "audioBadge": "에이"
+        },
+        "transition": {
+            "title": "이행",
+            "duration": "지속",
+            "options": {
+                "none": "없음",
+                "dissolve": "디졸브",
+                "fade": "바래다",
+                "slide": "슬라이드"
+            }
+        }
+    },
+    "errors": {
+        "unknownError": "알 수 없는 오류"
+    },
+    "capability": {
+        "generationMode": "생성 모드",
+        "generateAudio": "오디오 생성",
+        "duration": "지속",
+        "fps": "프레임 속도",
+        "resolution": "해결",
+        "aspectRatio": "종횡비",
+        "reasoningEffort": "추론 노력",
+        "voice": "목소리",
+        "rate": "비율",
+        "mode": "방법"
+    },
+    "unit": {
+        "second": "에스",
+        "frame": "fps"
+    },
+    "common": {
+        "generate": "생성"
+    }
+}
