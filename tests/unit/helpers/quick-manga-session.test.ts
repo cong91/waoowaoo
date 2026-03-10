@@ -43,4 +43,16 @@ describe('quick manga session preference helpers', () => {
     clearQuickMangaSessionPreference()
     expect(readQuickMangaSessionPreference()).toBeNull()
   })
+
+  it('fails safe when sessionStorage is unavailable (throws)', () => {
+    ;(globalThis as unknown as { window?: unknown }).window = {
+      get sessionStorage() {
+        throw new Error('sessionStorage blocked')
+      },
+    }
+
+    expect(readQuickMangaSessionPreference()).toBeNull()
+    expect(() => writeQuickMangaSessionPreference(true)).not.toThrow()
+    expect(() => clearQuickMangaSessionPreference()).not.toThrow()
+  })
 })
