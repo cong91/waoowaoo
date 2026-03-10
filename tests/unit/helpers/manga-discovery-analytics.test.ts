@@ -86,4 +86,30 @@ describe('manga discovery analytics helper', () => {
       }),
     }))
   })
+
+  it('keeps telemetry dimensions intact for journey template selection assertions', () => {
+    trackWorkspaceJourneyEvent('workspace_template_selected', {
+      journeyType: 'manga_webtoon',
+      entryIntent: 'manga_quickstart',
+      templateId: 'starter-action-battle',
+      locale: 'vi',
+      projectId: 'project-telemetry-1',
+      sourceScreen: 'workspace_create_modal',
+    })
+
+    expect(logEvent).toHaveBeenCalledWith(expect.objectContaining({
+      level: 'INFO',
+      module: 'workspace',
+      action: 'WORKSPACE_JOURNEY_FUNNEL',
+      message: 'workspace_template_selected',
+      details: expect.objectContaining({
+        event: 'workspace_template_selected',
+        journeyType: 'manga_webtoon',
+        entryIntent: 'manga_quickstart',
+        templateId: 'starter-action-battle',
+        locale: 'vi',
+        projectId: 'project-telemetry-1',
+      }),
+    }))
+  })
 })
