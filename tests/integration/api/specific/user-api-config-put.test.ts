@@ -29,6 +29,7 @@ type SavedProvider = {
   baseUrl?: string
   apiKey?: string
   hidden?: boolean
+  extraHeaders?: Record<string, string>
   apiMode?: 'gemini-sdk' | 'openai-official'
   gatewayRoute?: 'official' | 'openai-compat'
 }
