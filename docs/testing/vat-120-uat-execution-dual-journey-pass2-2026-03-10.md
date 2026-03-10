@@ -109,7 +109,29 @@ Manual UAT verified the UI affordances and path transitions for:
 - project create
 - legacy manga deep-link landing
 
-## 5) Result summary
+## 5) Focused automated evidence rerun (closure pass2)
+
+Để chốt closure VAT-120 (không mở rộng scope), đã rerun focused contract + helper tests đúng 4 mảng bắt buộc:
+
+```bash
+npx vitest run \
+  tests/integration/api/contract/projects-route.dual-journey-post.test.ts \
+  tests/integration/api/contract/projects-route.test.ts \
+  tests/unit/helpers/manga-discovery-analytics.test.ts \
+  tests/unit/helpers/onboarding-context.test.ts
+```
+
+Observed result:
+- Test Files: `4 passed (4)`
+- Tests: `16 passed (16)`
+- Duration: `~1.03s`
+
+Coverage of required closure evidence:
+- Persist `sourceType/sourceContent`: `onboarding-context.test.ts` + `projects-route.dual-journey-post.test.ts`
+- POST `/api/projects` integration/API contract: `projects-route*.test.ts`
+- Deep wizard telemetry events: `manga-discovery-analytics.test.ts`
+
+## 6) Result summary
 
 UAT outcome: **PASS**
 
@@ -119,4 +141,5 @@ Passed checkpoints:
 - [x] Step back path available and exercised
 - [x] Project creation lands on compatibility URL with `quickManga=1`
 - [x] Backend returns persisted onboarding context via project data API
+- [x] Focused automated verify pass (16/16)
 - [x] No production deploy performed
