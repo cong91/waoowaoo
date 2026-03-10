@@ -22,6 +22,7 @@ import {
   trackWorkspaceJourneyEvent,
   trackWorkspaceMangaEvent,
 } from '@/lib/workspace/manga-discovery-analytics'
+import { isWorkspaceDualJourneyEnabled } from '@/lib/workspace/feature-flags'
 import {
   buildStarterProjectName,
   getStarterTemplatesByMode,
@@ -92,6 +93,7 @@ export default function WorkspacePage() {
   const t = useTranslations('workspace')
   const tc = useTranslations('common')
   const locale = useLocale()
+  const dualJourneyEnabled = isWorkspaceDualJourneyEnabled()
 
   const starterTemplates = useMemo(
     () => getStarterTemplatesByMode(formData.entryMode),
@@ -119,11 +121,14 @@ export default function WorkspacePage() {
       journeyType: 'film_video',
       lane: 'story',
     })
-    trackWorkspaceMangaEvent('workspace_manga_cta_view', {
-      surface: 'workspace_card',
-      locale,
-    })
-  }, [locale])
+
+    if (dualJourneyEnabled) {
+      trackWorkspaceMangaEvent('workspace_manga_cta_view', {
+        surface: 'workspace_card',
+        locale,
+      })
+    }
+  }, [dualJourneyEnabled, locale])
 
   // 获取项目列表
   const fetchProjects = useCallback(async (page: number = 1, search: string = '') => {
@@ -169,6 +174,10 @@ export default function WorkspacePage() {
   }
 
   const handleOpenCreateModal = (entryMode: WorkspaceProjectEntryMode = 'story') => {
+    if (!dualJourneyEnabled && entryMode === 'manga') {
+      return
+    }
+
     const journeyType = mapEntryModeToJourneyType(entryMode)
     trackWorkspaceJourneyEvent('workspace_journey_selected', {
       surface: 'workspace_card',
@@ -458,28 +467,30 @@ export default function WorkspacePage() {
           </div>
 
           {/* Manga CTA Card */}
-          <div
-            onClick={() => handleOpenCreateModal('manga')}
-            className="glass-surface p-6 cursor-pointer group relative overflow-hidden bg-gradient-to-br from-fuchsia-500/10 via-pink-500/10 to-orange-400/10 hover:from-fuchsia-500/15 hover:via-pink-500/15 hover:to-orange-400/15 transition-all duration-300"
-          >
-            <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.14),transparent_45%)]" />
-            <div className="relative z-10 flex h-full flex-col justify-between gap-4">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--glass-tone-info-fg)]">Manga</div>
-                  <h3 className="mt-2 text-lg font-bold text-[var(--glass-text-primary)]">{t('projectTypeMangaTitle')}</h3>
-                  <p className="mt-2 text-sm text-[var(--glass-text-secondary)] leading-relaxed">{t('projectTypeMangaDesc')}</p>
+          {dualJourneyEnabled && (
+            <div
+              onClick={() => handleOpenCreateModal('manga')}
+              className="glass-surface p-6 cursor-pointer group relative overflow-hidden bg-gradient-to-br from-fuchsia-500/10 via-pink-500/10 to-orange-400/10 hover:from-fuchsia-500/15 hover:via-pink-500/15 hover:to-orange-400/15 transition-all duration-300"
+            >
+              <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.14),transparent_45%)]" />
+              <div className="relative z-10 flex h-full flex-col justify-between gap-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--glass-tone-info-fg)]">Manga</div>
+                    <h3 className="mt-2 text-lg font-bold text-[var(--glass-text-primary)]">{t('projectTypeMangaTitle')}</h3>
+                    <p className="mt-2 text-sm text-[var(--glass-text-secondary)] leading-relaxed">{t('projectTypeMangaDesc')}</p>
+                  </div>
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-fuchsia-500 to-orange-400 flex items-center justify-center shadow-lg shadow-fuchsia-500/20 group-hover:scale-110 transition-transform duration-300">
+                    <AppIcon name="sparkles" className="w-6 h-6 text-white" />
+                  </div>
                 </div>
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-fuchsia-500 to-orange-400 flex items-center justify-center shadow-lg shadow-fuchsia-500/20 group-hover:scale-110 transition-transform duration-300">
-                  <AppIcon name="sparkles" className="w-6 h-6 text-white" />
+                <div className="inline-flex items-center gap-2 text-sm font-medium text-[var(--glass-tone-info-fg)]">
+                  <span>{t('createProject')}</span>
+                  <AppIcon name="arrowRight" className="w-4 h-4" />
                 </div>
-              </div>
-              <div className="inline-flex items-center gap-2 text-sm font-medium text-[var(--glass-tone-info-fg)]">
-                <span>{t('createProject')}</span>
-                <AppIcon name="arrowRight" className="w-4 h-4" />
               </div>
             </div>
-          </div>
+          )}
 
           {/* Project Cards */}
           {loading ? (
@@ -696,14 +707,16 @@ export default function WorkspacePage() {
                         <div className="text-sm font-semibold">{t('projectTypeStoryTitle')}</div>
                         <div className="text-xs opacity-75 mt-1">{t('projectTypeStoryDesc')}</div>
                       </button>
-                      <button
-                        type="button"
-                        onClick={() => handleEntryModeChange('manga')}
-                        className={`glass-btn-base px-4 py-3 text-left ${formData.entryMode === 'manga' ? 'glass-btn-primary ring-2 ring-[var(--glass-primary)]/35' : 'glass-btn-secondary'}`}
-                      >
-                        <div className="text-sm font-semibold">{t('projectTypeMangaTitle')}</div>
-                        <div className="text-xs opacity-75 mt-1">{t('projectTypeMangaDesc')}</div>
-                      </button>
+                      {dualJourneyEnabled && (
+                        <button
+                          type="button"
+                          onClick={() => handleEntryModeChange('manga')}
+                          className={`glass-btn-base px-4 py-3 text-left ${formData.entryMode === 'manga' ? 'glass-btn-primary ring-2 ring-[var(--glass-primary)]/35' : 'glass-btn-secondary'}`}
+                        >
+                          <div className="text-sm font-semibold">{t('projectTypeMangaTitle')}</div>
+                          <div className="text-xs opacity-75 mt-1">{t('projectTypeMangaDesc')}</div>
+                        </button>
+                      )}
                     </div>
                   </div>
 
