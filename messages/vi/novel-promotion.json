@@ -143,7 +143,7 @@
         "label": "Bố cục khung",
         "options": {
           "auto": "Tự động",
-          "cinematic": "Khung điện ảnh",
+          "cinematic": "Nhịp khung động",
           "fourKoma": "Nhịp 4-koma",
           "verticalScroll": "Cuộn dọc",
           "splashFocus": "Tập trung splash"

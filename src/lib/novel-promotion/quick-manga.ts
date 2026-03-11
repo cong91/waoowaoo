@@ -25,7 +25,7 @@ const PRESET_DIRECTIVE_LABEL: Record<QuickMangaPreset, string> = {
 }
 
 const LAYOUT_DIRECTIVE_LABEL: Record<Exclude<QuickMangaLayout, 'auto'>, string> = {
-  cinematic: 'Cinematic Panels',
+  cinematic: 'Dynamic Panel Flow',
   'four-koma': '4-koma Rhythm',
   'vertical-scroll': 'Vertical Scroll',
   'splash-focus': 'Splash Focus',
@@ -72,8 +72,8 @@ function buildQuickMangaDirective(params: {
   })
 
   const phaseGuideline = params.phase === 'storyboard-refine'
-    ? 'Guideline: enforce panel rhythm and shot clarity while preserving narrative continuity.'
-    : 'Guideline: keep plot intact, optimize for panel-ready beats and concise scene transitions.'
+    ? 'Guideline: enforce panel rhythm and panel readability while preserving narrative continuity.'
+    : 'Guideline: keep plot intact, optimize for panel-ready beats and concise story transitions.'
 
   return [
     '[QUICK_MANGA_ENTRY]',

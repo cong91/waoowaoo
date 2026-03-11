@@ -143,7 +143,7 @@
         "label": "Panel Layout",
         "options": {
           "auto": "Auto",
-          "cinematic": "Cinematic Panels",
+          "cinematic": "Dynamic Panel Flow",
           "fourKoma": "4-koma Rhythm",
           "verticalScroll": "Vertical Scroll",
           "splashFocus": "Splash Focus"
