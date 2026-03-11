@@ -199,7 +199,9 @@ export default function NovelInputStage({
 }: NovelInputStageProps) {
   const t = useTranslations('novelPromotion')
   const tStoryboard = useTranslations('storyboard')
-  const hasContent = novelText.trim().length > 0
+  const normalizedNovelText = novelText.replace(/\s+/g, ' ').trim()
+  const hasContent = normalizedNovelText.length > 0
+  const isNovelTextTooLong = novelText.length > 30000
   const isMangaJourney = journeyType === 'manga_webtoon'
   const quickMangaPresetOptions = [
     { value: 'auto', label: t('storyInput.manga.preset.options.auto') },
@@ -332,6 +334,8 @@ export default function NovelInputStage({
     id: string
     name: string
     outcome: string
+    cta: string
+    compareHint: string
     artStyle: string
     character: CharacterStrategyId
     environment: EnvironmentPresetId
@@ -340,6 +344,8 @@ export default function NovelInputStage({
       id: 'launch-teaser',
       name: 'Launch Teaser',
       outcome: 'Ra teaser nhanh cho social ads với nhịp cảnh mạnh.',
+      cta: 'Áp bundle teaser',
+      compareHint: 'Ưu tiên nhịp nhanh, cảnh mở đầu bắt mắt.',
       artStyle: 'realistic',
       character: 'dynamic-action',
       environment: 'city-night-neon',
@@ -348,6 +354,8 @@ export default function NovelInputStage({
       id: 'brand-story',
       name: 'Brand Story',
       outcome: 'Kể câu chuyện thương hiệu với cảm xúc rõ ràng.',
+      cta: 'Áp bundle brand story',
+      compareHint: 'Ưu tiên cảm xúc và tính gần gũi của nhân vật.',
       artStyle: 'american-comic',
       character: 'emotion-first',
       environment: 'interior-cinematic',
@@ -356,6 +364,8 @@ export default function NovelInputStage({
       id: 'product-explainer',
       name: 'Product Explainer',
       outcome: 'Giữ hình ảnh nhân vật ổn định cho video giới thiệu sản phẩm.',
+      cta: 'Áp bundle explainer',
+      compareHint: 'Ưu tiên nhất quán để dễ dựng chuỗi cảnh giải thích.',
       artStyle: 'japanese-anime',
       character: 'consistency-first',
       environment: 'forest-mist-dawn',
@@ -372,6 +382,55 @@ export default function NovelInputStage({
   }, [artStyle, demoBundles, selectedCharacterStrategy, selectedEnvironmentId])
 
   const [sampleAssetSummary, setSampleAssetSummary] = useState<string>('')
+  const [sampleAssetError, setSampleAssetError] = useState<string>('')
+
+  const providerRouteLabel = providerFirstModels.openaiCompat.length > 0
+    ? 'OpenAI-compatible'
+    : providerFirstModels.geminiCompat.length > 0
+      ? 'Gemini-compatible'
+      : 'Mặc định'
+
+  const providerHintLabel = (hint: string) => {
+    if (hint === 'openai-compatible') return 'OpenAI-compatible ưu tiên'
+    if (hint === 'gemini-compatible') return 'Gemini-compatible ưu tiên'
+    return 'Theo cấu hình hiện tại'
+  }
+
+  const activeBundle = useMemo(
+    () => demoBundles.find((bundle) => bundle.id === activeBundleId) ?? null,
+    [activeBundleId, demoBundles],
+  )
+
+  const recommendationBundle = useMemo(
+    () => demoBundles.find((bundle) => bundle.id !== activeBundleId) ?? demoBundles[0] ?? null,
+    [activeBundleId, demoBundles],
+  )
+
+  const handleApplyDemoBundle = (bundle: (typeof demoBundles)[number]) => {
+    onArtStyleChange?.(bundle.artStyle)
+    onCharacterStrategyChange?.(bundle.character)
+    onEnvironmentChange?.(bundle.environment)
+  }
+
+  const handleGenerateSampleAssets = async () => {
+    if (!onGenerateDemoSampleAssets) return
+
+    setSampleAssetError('')
+    try {
+      const result = await onGenerateDemoSampleAssets()
+      if (result.mode === 'real') {
+        setSampleAssetSummary(`Sample assets: tạo thật ${result.realTriggered}, fallback ${result.fallbackApplied}`)
+      } else if (result.mode === 'mixed') {
+        setSampleAssetSummary(`Sample assets: mixed thật ${result.realTriggered}, fallback ${result.fallbackApplied}`)
+      } else {
+        setSampleAssetSummary(`Sample assets: fallback ${result.fallbackApplied}`)
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Không thể tạo sample assets lúc này'
+      setSampleAssetError(message)
+      setSampleAssetSummary('')
+    }
+  }
 
   return (
     <div className="max-w-5xl mx-auto space-y-5">
@@ -401,9 +460,27 @@ export default function NovelInputStage({
             value={novelText}
             onChange={(e) => onNovelTextChange(e.target.value)}
             placeholder={tStoryboard('fixes.novelInputPlaceHolder')}
-            className="glass-textarea-base custom-scrollbar h-80 px-4 py-3 text-base resize-none placeholder:text-[var(--glass-text-tertiary)]"
+            className={`glass-textarea-base custom-scrollbar h-80 px-4 py-3 text-base resize-none placeholder:text-[var(--glass-text-tertiary)] transition-all ${isNovelTextTooLong ? 'border-rose-400/70 ring-1 ring-rose-400/40' : hasContent ? 'border-[var(--glass-accent-from)]/45 ring-1 ring-[var(--glass-accent-from)]/20' : ''}`}
             disabled={isSubmittingTask || isSwitchingStage}
           />
+
+          {isNovelTextTooLong && (
+            <div className="mt-2 rounded-lg border border-rose-400/35 bg-rose-500/10 px-3 py-2 text-xs text-rose-100">
+              Nội dung đang vượt 30.000 ký tự. Nên rút gọn để tránh lỗi khi chạy demo.
+            </div>
+          )}
+
+          {!isNovelTextTooLong && hasContent && normalizedNovelText.length < 30 && (
+            <div className="mt-2 rounded-lg border border-amber-400/35 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+              Nội dung đang khá ngắn cho demo. Nên thêm bối cảnh/hành động để script rõ hơn.
+            </div>
+          )}
+
+          {!isNovelTextTooLong && hasContent && normalizedNovelText.length >= 30 && (
+            <div className="mt-2 rounded-lg border border-emerald-400/35 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-100">
+              Nội dung hợp lệ cho demo. Có thể bấm tạo script ngay.
+            </div>
+          )}
 
           {/* 资产库引导提示 */}
           <div className="mt-5 p-4 glass-surface-soft">
@@ -595,53 +672,52 @@ export default function NovelInputStage({
           <p className="text-xs text-[var(--glass-text-tertiary)]">Chọn outcome kinh doanh trước, sau đó chốt style + nhân vật + bối cảnh để ra script demo mạch hơn.</p>
         </div>
 
-        <div className="rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/15 p-4">
+        <div className="rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/15 p-4 space-y-3">
           <div className="flex items-center justify-between gap-3 flex-wrap">
-            <p className="text-xs text-[var(--glass-text-secondary)]">
-              Model route: {providerFirstModels.openaiCompat.length > 0 ? 'OpenAI-compatible' : providerFirstModels.geminiCompat.length > 0 ? 'Gemini-compatible' : 'Default'}
-            </p>
+            <p className="text-xs text-[var(--glass-text-secondary)]">Model route: {providerRouteLabel}</p>
             <div className="flex items-center gap-2 flex-wrap justify-end">
               <p className="text-xs text-[var(--glass-text-tertiary)]">Image models khả dụng: {providerFirstModels.total}</p>
               {onGenerateDemoSampleAssets && (
                 <button
                   type="button"
                   disabled={demoSampleAssetsPending}
-                  onClick={async () => {
-                    const result = await onGenerateDemoSampleAssets()
-                    if (result.mode === 'real') {
-                      setSampleAssetSummary(`Sample assets: real ${result.realTriggered}, fallback ${result.fallbackApplied}`)
-                    } else if (result.mode === 'mixed') {
-                      setSampleAssetSummary(`Sample assets: mixed real ${result.realTriggered}, fallback ${result.fallbackApplied}`)
-                    } else {
-                      setSampleAssetSummary(`Sample assets: fallback ${result.fallbackApplied}`)
-                    }
-                  }}
-                  className="glass-btn-base px-3 py-1.5 text-xs"
+                  onClick={handleGenerateSampleAssets}
+                  className="glass-btn-base px-3 py-1.5 text-xs disabled:opacity-60"
                 >
                   {demoSampleAssetsPending ? 'Đang tạo sample assets...' : 'Tạo sample assets'}
                 </button>
               )}
             </div>
           </div>
-          {sampleAssetSummary && (
-            <div className="mt-3 rounded-lg border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/20 px-3 py-2 text-xs text-[var(--glass-text-secondary)]">
+
+          {providerFirstModels.total === 0 && (
+            <div className="rounded-lg border border-amber-400/35 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+              Chưa có image model khả dụng. Vẫn có thể chọn bundle để demo luồng, nhưng nên cấu hình model trước khi generate thật.
+            </div>
+          )}
+
+          {sampleAssetError && (
+            <div className="rounded-lg border border-rose-400/35 bg-rose-500/10 px-3 py-2 text-xs text-rose-100">
+              {sampleAssetError}
+            </div>
+          )}
+
+          {sampleAssetSummary && !sampleAssetError && (
+            <div className="rounded-lg border border-emerald-400/35 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-100">
               {sampleAssetSummary}
             </div>
           )}
-          <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {demoBundles.map((bundle) => {
               const active = activeBundleId === bundle.id
               return (
                 <button
                   key={bundle.id}
                   type="button"
-                  onClick={() => {
-                    onArtStyleChange?.(bundle.artStyle)
-                    onCharacterStrategyChange?.(bundle.character)
-                    onEnvironmentChange?.(bundle.environment)
-                  }}
+                  onClick={() => handleApplyDemoBundle(bundle)}
                   className={`rounded-xl border p-3 text-left transition-all ${active
-                    ? 'border-[var(--glass-accent-from)] bg-[var(--glass-tone-info-bg)]/25'
+                    ? 'border-[var(--glass-accent-from)] bg-[var(--glass-tone-info-bg)]/25 shadow-[0_0_0_1px_rgba(79,128,255,0.22)]'
                     : 'border-[var(--glass-stroke-soft)] hover:bg-[var(--glass-bg-muted)]/30'
                     }`}
                 >
@@ -650,6 +726,7 @@ export default function NovelInputStage({
                     {active && <AppIcon name="check" className="w-4 h-4 text-[var(--glass-tone-info-fg)]" />}
                   </div>
                   <p className="mt-1 text-xs text-[var(--glass-text-tertiary)]">{bundle.outcome}</p>
+                  <p className="mt-1 text-[11px] font-medium text-[var(--glass-text-secondary)]">{bundle.cta}</p>
                 </button>
               )
             })}
@@ -686,7 +763,9 @@ export default function NovelInputStage({
                       {selected && <AppIcon name="check" className="w-4 h-4 text-[var(--glass-tone-info-fg)]" />}
                     </div>
                     <div className="mt-2 text-sm font-semibold text-[var(--glass-text-primary)]">{style.label}</div>
-                    <div className="mt-1 text-[11px] text-[var(--glass-text-tertiary)]">{selected ? 'Đang áp cho script demo' : style.providerHint}</div>
+                    <div className="mt-1 text-[11px] text-[var(--glass-text-tertiary)]">
+                      {selected ? 'Đang áp cho script demo' : providerHintLabel(style.providerHint)}
+                    </div>
                   </button>
                 )
               })}
@@ -709,7 +788,7 @@ export default function NovelInputStage({
                     type="button"
                     onClick={() => onCharacterStrategyChange?.(strategy.id)}
                     className={`rounded-xl border p-3 text-left transition-all ${active
-                      ? 'border-[var(--glass-accent-from)] bg-[var(--glass-tone-info-bg)]/25'
+                      ? 'border-[var(--glass-accent-from)] bg-[var(--glass-tone-info-bg)]/25 shadow-[0_0_0_1px_rgba(79,128,255,0.22)]'
                       : 'border-[var(--glass-stroke-soft)] hover:bg-[var(--glass-bg-muted)]/25'
                       }`}
                   >
@@ -770,6 +849,21 @@ export default function NovelInputStage({
           </div>
         </div>
 
+        {(activeBundle || recommendationBundle) && (
+          <div className="rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/10 px-3 py-3 space-y-2">
+            {activeBundle && (
+              <p className="text-xs text-[var(--glass-text-secondary)]">
+                Bundle đang dùng: <span className="font-medium">{activeBundle.name}</span> — {activeBundle.compareHint}
+              </p>
+            )}
+            {recommendationBundle && recommendationBundle.id !== activeBundle?.id && (
+              <p className="text-xs text-[var(--glass-text-tertiary)]">
+                Gợi ý so sánh nhanh: thử thêm <span className="font-medium">{recommendationBundle.name}</span> — {recommendationBundle.compareHint}
+              </p>
+            )}
+          </div>
+        )}
+
         {isMangaJourney && (
           <div className="rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/10 px-3 py-2 text-xs text-[var(--glass-text-tertiary)]">
             Tip: Manga/Webtoon lane đã có thêm Quick Manga controls phía trên để tối ưu continuity theo chapter.
@@ -807,7 +901,7 @@ export default function NovelInputStage({
         {/* 开始创作按钮 */}
         <button
           onClick={onNext}
-          disabled={!hasContent || isSubmittingTask || isSwitchingStage}
+          disabled={!hasContent || isNovelTextTooLong || isSubmittingTask || isSwitchingStage}
           className="glass-btn-base glass-btn-primary w-full py-4 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
         >
           {isSwitchingStage ? (
@@ -820,7 +914,7 @@ export default function NovelInputStage({
           )}
         </button>
         <p className="text-center text-xs text-[var(--glass-text-tertiary)] mt-3">
-          {hasContent ? t("storyInput.ready") : t("storyInput.pleaseInput")}
+          {isNovelTextTooLong ? 'Nội dung quá dài, hãy rút gọn trước khi chạy bước tiếp theo.' : hasContent ? t("storyInput.ready") : t("storyInput.pleaseInput")}
         </p>
       </div>
     </div>
