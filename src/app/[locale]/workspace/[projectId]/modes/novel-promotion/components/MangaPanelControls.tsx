@@ -33,6 +33,36 @@ interface MangaPanelControlsProps {
 
 const PANEL_TEMPLATES = MANGA_PANEL_TEMPLATE_SPECS
 
+const TEMPLATE_LAYOUT_BOXES: Record<string, Array<{ left: string; top: string; width: string; height: string }>> = {
+  'webtoon-vertical': [
+    { left: '8%', top: '8%', width: '84%', height: '20%' },
+    { left: '8%', top: '32%', width: '84%', height: '20%' },
+    { left: '8%', top: '56%', width: '84%', height: '16%' },
+    { left: '8%', top: '75%', width: '84%', height: '16%' },
+  ],
+  'manga-page-classic': [
+    { left: '8%', top: '8%', width: '84%', height: '84%' },
+  ],
+  'yonkoma-strip': [
+    { left: '8%', top: '8%', width: '84%', height: '20%' },
+    { left: '8%', top: '31%', width: '84%', height: '20%' },
+    { left: '8%', top: '54%', width: '84%', height: '20%' },
+    { left: '8%', top: '77%', width: '84%', height: '15%' },
+  ],
+}
+
+const STORY_KIT_THUMBNAILS: Record<string, string> = {
+  setup: '/demo/novel-input/forest-dawn.svg',
+  continuity: '/demo/novel-input/interior-cinematic.svg',
+  action: '/demo/novel-input/neon-city.svg',
+  dialogue: '/demo/novel-input/interior-cinematic.svg',
+  transition: '/demo/novel-input/forest-dawn.svg',
+  opening: '/demo/novel-input/neon-city.svg',
+  conflict: '/demo/novel-input/neon-city.svg',
+  payoff: '/demo/novel-input/forest-dawn.svg',
+  cliffhanger: '/demo/novel-input/interior-cinematic.svg',
+}
+
 const STORY_KITS: Array<{
   id: string
   label: string
@@ -223,6 +253,19 @@ export default function MangaPanelControls({
     applyValues(kit.values)
   }
 
+  const isTemplateActive = (template: (typeof PANEL_TEMPLATES)[number]) => {
+    return preset === template.values.preset
+      && layout === template.values.layout
+      && colorMode === template.values.colorMode
+  }
+
+  const isStoryKitActive = (kit: (typeof STORY_KITS)[number]) => {
+    return preset === kit.values.preset
+      && layout === kit.values.layout
+      && colorMode === kit.values.colorMode
+      && conflictPolicy === kit.values.conflictPolicy
+  }
+
   return (
     <section className={`glass-surface ${compact ? 'p-4' : 'p-6'} space-y-4`}>
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -244,40 +287,90 @@ export default function MangaPanelControls({
       <div className="space-y-2">
         <p className="text-xs font-semibold text-[var(--glass-text-secondary)] uppercase tracking-wide">Panel template</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {PANEL_TEMPLATES.map((template) => (
-            <button
-              key={template.id}
-              type="button"
-              onClick={() => applyTemplate(template)}
-              className="rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/15 hover:bg-[var(--glass-bg-muted)]/30 transition-colors p-3 text-left"
-            >
-              <div className="text-sm font-semibold text-[var(--glass-text-primary)]">{template.title}</div>
-              <p className="text-xs text-[var(--glass-text-tertiary)] mt-1">{template.description}</p>
-              <p className="text-[11px] text-[var(--glass-text-secondary)] mt-2">
-                {template.values.layout} · {template.values.colorMode}
-              </p>
-            </button>
-          ))}
+          {PANEL_TEMPLATES.map((template) => {
+            const active = isTemplateActive(template)
+            const boxes = TEMPLATE_LAYOUT_BOXES[template.id] ?? TEMPLATE_LAYOUT_BOXES['webtoon-vertical']
+
+            return (
+              <button
+                key={template.id}
+                type="button"
+                onClick={() => applyTemplate(template)}
+                className={`rounded-xl border p-3 text-left transition-all ${active
+                  ? 'border-[var(--glass-accent-from)] bg-[var(--glass-tone-info-bg)] shadow-[0_0_0_1px_var(--glass-accent-from)]'
+                  : 'border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/15 hover:bg-[var(--glass-bg-muted)]/30'
+                  }`}
+              >
+                <div className="relative h-20 rounded-lg overflow-hidden border border-[var(--glass-stroke-soft)] bg-gradient-to-br from-[#111827] via-[#1f2937] to-[#0f172a]">
+                  {boxes.map((box, index) => (
+                    <div
+                      key={`${template.id}-${index}`}
+                      className="absolute rounded-md border border-white/35 bg-white/15"
+                      style={{
+                        left: box.left,
+                        top: box.top,
+                        width: box.width,
+                        height: box.height,
+                      }}
+                    />
+                  ))}
+                  <div className="absolute inset-x-0 bottom-0 px-2 py-1 text-[10px] text-white/90 bg-black/45">
+                    {template.sourceLayoutId}
+                  </div>
+                </div>
+
+                <div className="mt-2.5 text-sm font-semibold text-[var(--glass-text-primary)]">{template.title}</div>
+                <p className="text-xs text-[var(--glass-text-tertiary)] mt-1">{template.description}</p>
+                <p className="text-[11px] text-[var(--glass-text-secondary)] mt-2">
+                  {template.values.layout} · {template.values.colorMode}
+                </p>
+                {active && (
+                  <p className="mt-1 text-[11px] font-medium text-[var(--glass-tone-info-fg)]">Đang active</p>
+                )}
+              </button>
+            )
+          })}
         </div>
       </div>
 
       <div className="space-y-2">
         <p className="text-xs font-semibold text-[var(--glass-text-secondary)] uppercase tracking-wide">Storytelling prompt kit</p>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-          {STORY_KITS.map((kit) => (
-            <button
-              key={kit.id}
-              type="button"
-              onClick={() => applyStoryKit(kit)}
-              className="rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/10 hover:bg-[var(--glass-bg-muted)]/30 transition-colors p-3 text-left"
-            >
-              <div className="text-sm font-semibold text-[var(--glass-text-primary)]">{kit.label}</div>
-              <p className="text-xs text-[var(--glass-text-tertiary)] mt-1">{kit.helper}</p>
-              <p className="text-[11px] text-[var(--glass-text-secondary)] mt-2">
-                {kit.values.preset} · {kit.values.layout} · {kit.values.colorMode}
-              </p>
-            </button>
-          ))}
+          {STORY_KITS.map((kit) => {
+            const active = isStoryKitActive(kit)
+
+            return (
+              <button
+                key={kit.id}
+                type="button"
+                onClick={() => applyStoryKit(kit)}
+                className={`rounded-xl border p-3 text-left transition-all ${active
+                  ? 'border-[var(--glass-accent-from)] bg-[var(--glass-tone-info-bg)] shadow-[0_0_0_1px_var(--glass-accent-from)]'
+                  : 'border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/10 hover:bg-[var(--glass-bg-muted)]/30'
+                  }`}
+              >
+                <div
+                  className="relative h-20 rounded-lg overflow-hidden border border-[var(--glass-stroke-soft)] bg-cover bg-center"
+                  style={{ backgroundImage: `url(${STORY_KIT_THUMBNAILS[kit.id] ?? '/demo/novel-input/interior-cinematic.svg'})` }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
+                  <div className="absolute bottom-1.5 left-2 right-2 flex items-center justify-between text-[10px] text-white">
+                    <span className="px-1.5 py-0.5 rounded bg-black/35">{kit.values.layout}</span>
+                    <span className="px-1.5 py-0.5 rounded bg-black/35">{kit.values.colorMode}</span>
+                  </div>
+                </div>
+
+                <div className="mt-2.5 text-sm font-semibold text-[var(--glass-text-primary)]">{kit.label}</div>
+                <p className="text-xs text-[var(--glass-text-tertiary)] mt-1">{kit.helper}</p>
+                <p className="text-[11px] text-[var(--glass-text-secondary)] mt-2">
+                  {kit.values.preset} · {kit.values.layout} · {kit.values.colorMode}
+                </p>
+                {active && (
+                  <p className="mt-1 text-[11px] font-medium text-[var(--glass-tone-info-fg)]">Đang active</p>
+                )}
+              </button>
+            )
+          })}
         </div>
       </div>
 
