@@ -14,6 +14,11 @@ import type {
   QuickMangaStyleLockProfile,
 } from '@/lib/novel-promotion/quick-manga-contract'
 
+interface Vat121VisualDirectionFields {
+  selectedCharacterStrategy?: 'consistency-first' | 'emotion-first' | 'dynamic-action'
+  selectedEnvironmentId?: 'city-night-neon' | 'forest-mist-dawn' | 'interior-cinematic'
+}
+
 function parseCapabilitySelections(raw: unknown): CapabilitySelections {
   if (!raw) return {}
   if (typeof raw === 'object' && !Array.isArray(raw)) {
@@ -36,6 +41,7 @@ export function useWorkspaceProjectSnapshot({
 }: Pick<NovelPromotionWorkspaceProps, 'project' | 'episode' | 'urlStage'>) {
   return useMemo(() => {
     const projectData = project.novelPromotionData
+    const visualDirectionData = (projectData || {}) as typeof projectData & Vat121VisualDirectionFields
     const capabilityOverrides = parseCapabilitySelections(projectData?.capabilityOverrides)
     const journeyType: 'film_video' | 'manga_webtoon' =
       projectData?.onboardingContext?.journeyType === 'manga_webtoon'
@@ -66,6 +72,12 @@ export function useWorkspaceProjectSnapshot({
       capabilityOverrides,
       ttsRate: projectData?.ttsRate,
       artStyle: projectData?.artStyle,
+      selectedCharacterStrategy: visualDirectionData.selectedCharacterStrategy === 'emotion-first' || visualDirectionData.selectedCharacterStrategy === 'dynamic-action'
+        ? visualDirectionData.selectedCharacterStrategy
+        : 'consistency-first',
+      selectedEnvironmentId: visualDirectionData.selectedEnvironmentId === 'forest-mist-dawn' || visualDirectionData.selectedEnvironmentId === 'interior-cinematic'
+        ? visualDirectionData.selectedEnvironmentId
+        : 'city-night-neon',
       quickMangaEnabled: false,
       quickMangaPreset: 'auto' as QuickMangaPreset,
       quickMangaLayout: 'auto' as QuickMangaLayout,

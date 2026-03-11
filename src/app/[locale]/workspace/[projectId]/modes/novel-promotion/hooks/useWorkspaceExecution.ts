@@ -33,6 +33,8 @@ interface UseWorkspaceExecutionParams {
   entryIntent?: ProductEntryIntent
   sourceType?: OnboardingSourceType
   artStyle?: string | null
+  selectedCharacterStrategy?: 'consistency-first' | 'emotion-first' | 'dynamic-action'
+  selectedEnvironmentId?: 'city-night-neon' | 'forest-mist-dawn' | 'interior-cinematic'
   t: (key: string) => string
   onRefresh: (options?: { scope?: string; mode?: string }) => Promise<void>
   onUpdateConfig: (key: string, value: unknown) => Promise<void>
@@ -51,6 +53,32 @@ function getErrorMessage(err: unknown): string {
   return String(err)
 }
 
+function buildVisualDirectionHint({
+  artStyle,
+  selectedCharacterStrategy,
+  selectedEnvironmentId,
+}: {
+  artStyle?: string | null
+  selectedCharacterStrategy: 'consistency-first' | 'emotion-first' | 'dynamic-action'
+  selectedEnvironmentId: 'city-night-neon' | 'forest-mist-dawn' | 'interior-cinematic'
+}) {
+  const strategyLabel = selectedCharacterStrategy === 'emotion-first'
+    ? 'ưu tiên biểu cảm mạnh ở shot mở đầu'
+    : selectedCharacterStrategy === 'dynamic-action'
+      ? 'ưu tiên pose động và camera giàu năng lượng'
+      : 'giữ nhận diện nhân vật ổn định giữa các cảnh'
+
+  const environmentLabel = selectedEnvironmentId === 'forest-mist-dawn'
+    ? 'bối cảnh rừng sương sớm với ánh sáng dịu'
+    : selectedEnvironmentId === 'interior-cinematic'
+      ? 'bối cảnh nội thất điện ảnh, ánh sáng ấm và bóng đổ sâu'
+      : 'bối cảnh thành phố neon ban đêm với tương phản cao'
+
+  const styleLabel = artStyle ? `visual style ${artStyle}` : 'visual style hiện tại'
+
+  return `\n\n[Visual direction]\n- ${styleLabel}\n- ${strategyLabel}\n- ${environmentLabel}`
+}
+
 export function useWorkspaceExecution({
   projectId,
   episodeId,
@@ -61,6 +89,8 @@ export function useWorkspaceExecution({
   entryIntent,
   sourceType,
   artStyle,
+  selectedCharacterStrategy = 'consistency-first',
+  selectedEnvironmentId = 'city-night-neon',
   t,
   onRefresh,
   onUpdateConfig,
@@ -137,7 +167,11 @@ export function useWorkspaceExecution({
     })
 
     const mergedStoryContent = buildQuickMangaStoryInput({
-      storyContent,
+      storyContent: `${storyContent}${buildVisualDirectionHint({
+        artStyle,
+        selectedCharacterStrategy,
+        selectedEnvironmentId,
+      })}`,
       options: stageConfig.quickManga,
       artStyle,
     })
@@ -183,7 +217,7 @@ export function useWorkspaceExecution({
       setIsTransitioning(false)
       setTransitionProgress({ message: '', step: '' })
     }
-  }, [analysisModel, artStyle, entryIntent, episodeId, journeyType, novelText, onOpenAssetLibrary, onRefresh, onStageChange, onUpdateConfig, quickManga, sourceType, storyToScriptStream, t])
+  }, [analysisModel, artStyle, entryIntent, episodeId, journeyType, novelText, onOpenAssetLibrary, onRefresh, onStageChange, onUpdateConfig, quickManga, selectedCharacterStrategy, selectedEnvironmentId, sourceType, storyToScriptStream, t])
 
   const runScriptToStoryboardFlow = useCallback(async () => {
     if (!episodeId) {

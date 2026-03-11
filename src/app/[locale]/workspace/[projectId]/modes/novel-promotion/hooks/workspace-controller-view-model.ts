@@ -30,6 +30,8 @@ interface ProjectSnapshotInput {
   capabilityOverrides: CapabilitySelections
   ttsRate: string | number | undefined
   artStyle: string | undefined
+  selectedCharacterStrategy: 'consistency-first' | 'emotion-first' | 'dynamic-action'
+  selectedEnvironmentId: 'city-night-neon' | 'forest-mist-dawn' | 'interior-cinematic'
   quickMangaEnabled: boolean
   quickMangaPreset: 'auto' | 'action-battle' | 'romance-drama' | 'slice-of-life' | 'comedy-4koma'
   quickMangaLayout: 'auto' | 'cinematic' | 'four-koma' | 'vertical-scroll' | 'splash-focus'

@@ -35,6 +35,11 @@ import {
   writeQuickMangaSessionPreference,
 } from '@/lib/workspace/quick-manga-session'
 
+const VAT121_VISUAL_DIRECTION_STORAGE_KEY = 'vat121.visual-direction.v1'
+
+type CharacterStrategyId = 'consistency-first' | 'emotion-first' | 'dynamic-action'
+type EnvironmentPresetId = 'city-night-neon' | 'forest-mist-dawn' | 'interior-cinematic'
+
 export function useNovelPromotionWorkspaceController({
   project,
   projectId,
@@ -73,6 +78,16 @@ export function useNovelPromotionWorkspaceController({
     },
   }), [])
   const [quickManga, setQuickManga] = useState(quickMangaDefaults)
+  const initialCharacterStrategy: CharacterStrategyId =
+    projectSnapshot.selectedCharacterStrategy === 'emotion-first' || projectSnapshot.selectedCharacterStrategy === 'dynamic-action'
+      ? projectSnapshot.selectedCharacterStrategy
+      : 'consistency-first'
+  const initialEnvironmentId: EnvironmentPresetId =
+    projectSnapshot.selectedEnvironmentId === 'forest-mist-dawn' || projectSnapshot.selectedEnvironmentId === 'interior-cinematic'
+      ? projectSnapshot.selectedEnvironmentId
+      : 'city-night-neon'
+  const [selectedCharacterStrategy, setSelectedCharacterStrategy] = useState<CharacterStrategyId>(initialCharacterStrategy)
+  const [selectedEnvironmentId, setSelectedEnvironmentId] = useState<EnvironmentPresetId>(initialEnvironmentId)
 
   useEffect(() => {
     const enabledFromEntry = shouldEnableQuickMangaFromSearchParams(searchParams)
@@ -90,6 +105,34 @@ export function useNovelPromotionWorkspaceController({
       return { ...prev, enabled: nextEnabled }
     })
   }, [projectSnapshot.journeyType, searchParams])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    try {
+      const raw = window.localStorage.getItem(VAT121_VISUAL_DIRECTION_STORAGE_KEY)
+      if (!raw) return
+      const parsed = JSON.parse(raw) as Partial<{
+        selectedCharacterStrategy: CharacterStrategyId
+        selectedEnvironmentId: EnvironmentPresetId
+      }>
+      if (parsed.selectedCharacterStrategy === 'emotion-first' || parsed.selectedCharacterStrategy === 'dynamic-action' || parsed.selectedCharacterStrategy === 'consistency-first') {
+        setSelectedCharacterStrategy(parsed.selectedCharacterStrategy)
+      }
+      if (parsed.selectedEnvironmentId === 'forest-mist-dawn' || parsed.selectedEnvironmentId === 'interior-cinematic' || parsed.selectedEnvironmentId === 'city-night-neon') {
+        setSelectedEnvironmentId(parsed.selectedEnvironmentId)
+      }
+    } catch {
+      // ignore malformed local cache
+    }
+  }, [])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    window.localStorage.setItem(VAT121_VISUAL_DIRECTION_STORAGE_KEY, JSON.stringify({
+      selectedCharacterStrategy,
+      selectedEnvironmentId,
+    }))
+  }, [selectedCharacterStrategy, selectedEnvironmentId])
 
   const handleQuickMangaEnabledChange = useCallback(async (enabled: boolean) => {
     writeQuickMangaSessionPreference(enabled)
@@ -231,6 +274,16 @@ export function useNovelPromotionWorkspaceController({
     onStageChange,
   })
 
+  const handleCharacterStrategyChange = useCallback(async (value: CharacterStrategyId) => {
+    setSelectedCharacterStrategy(value)
+    await configActions.handleUpdateConfig('selectedCharacterStrategy', value)
+  }, [configActions])
+
+  const handleEnvironmentChange = useCallback(async (value: EnvironmentPresetId) => {
+    setSelectedEnvironmentId(value)
+    await configActions.handleUpdateConfig('selectedEnvironmentId', value)
+  }, [configActions])
+
   const rebuildState = useRebuildConfirm({
     episodeId,
     episodeStoryboards: episode?.storyboards,
@@ -250,6 +303,8 @@ export function useNovelPromotionWorkspaceController({
     entryIntent: projectSnapshot.entryIntent,
     sourceType: projectSnapshot.sourceType,
     artStyle: projectSnapshot.artStyle,
+    selectedCharacterStrategy,
+    selectedEnvironmentId,
     t,
     onRefresh,
     onUpdateConfig: configActions.handleUpdateConfig,
@@ -296,6 +351,8 @@ export function useNovelPromotionWorkspaceController({
     quickMangaChapterContinuityMode: quickManga.controls.chapterContinuity.mode,
     quickMangaChapterId: quickManga.controls.chapterContinuity.chapterId,
     quickMangaConflictPolicy: quickManga.controls.chapterContinuity.conflictPolicy,
+    selectedCharacterStrategy,
+    selectedEnvironmentId,
     videoModel: projectSnapshot.videoModel,
     journeyType: projectSnapshot.journeyType,
     projectName: projectSnapshot.projectName,
@@ -313,6 +370,8 @@ export function useNovelPromotionWorkspaceController({
     onQuickMangaChapterContinuityModeChange: handleQuickMangaChapterContinuityModeChange,
     onQuickMangaChapterIdChange: handleQuickMangaChapterIdChange,
     onQuickMangaConflictPolicyChange: handleQuickMangaConflictPolicyChange,
+    onCharacterStrategyChange: handleCharacterStrategyChange,
+    onEnvironmentChange: handleEnvironmentChange,
     runWithRebuildConfirm: rebuildState.runWithRebuildConfirm,
     runStoryToScriptFlow: execution.runStoryToScriptFlow,
     runScriptToStoryboardFlow: execution.runScriptToStoryboardFlow,
@@ -387,7 +446,11 @@ export function useNovelPromotionWorkspaceController({
     t,
     tc,
     te,
-    projectSnapshot: projectSection,
+    projectSnapshot: {
+      ...projectSection,
+      selectedCharacterStrategy,
+      selectedEnvironmentId,
+    },
     uiState,
     stageNavState,
     rebuildState,

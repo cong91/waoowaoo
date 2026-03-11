@@ -42,6 +42,10 @@ export default function ConfigStage() {
         artStyle={runtime.artStyle ?? undefined}
         onVideoRatioChange={runtime.onVideoRatioChange}
         onArtStyleChange={runtime.onArtStyleChange}
+        selectedCharacterStrategy={runtime.selectedCharacterStrategy}
+        onCharacterStrategyChange={runtime.onCharacterStrategyChange}
+        selectedEnvironmentId={runtime.selectedEnvironmentId}
+        onEnvironmentChange={runtime.onEnvironmentChange}
         onNext={runtime.onRunStoryToScript}
       />
       {runtime.journeyType === 'manga_webtoon' && (

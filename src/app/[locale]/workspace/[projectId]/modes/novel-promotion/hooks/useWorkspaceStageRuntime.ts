@@ -33,6 +33,8 @@ interface UseWorkspaceStageRuntimeParams {
   quickMangaChapterContinuityMode: QuickMangaContinuityMode
   quickMangaChapterId: string | null
   quickMangaConflictPolicy: QuickMangaContinuityConflictPolicy
+  selectedCharacterStrategy: 'consistency-first' | 'emotion-first' | 'dynamic-action'
+  selectedEnvironmentId: 'city-night-neon' | 'forest-mist-dawn' | 'interior-cinematic'
   videoModel: string | undefined
   journeyType: 'film_video' | 'manga_webtoon'
   projectName: string
@@ -57,6 +59,8 @@ interface UseWorkspaceStageRuntimeParams {
   onQuickMangaChapterContinuityModeChange: (value: QuickMangaContinuityMode) => Promise<void>
   onQuickMangaChapterIdChange: (value: string | null) => Promise<void>
   onQuickMangaConflictPolicyChange: (value: QuickMangaContinuityConflictPolicy) => Promise<void>
+  onCharacterStrategyChange: (value: 'consistency-first' | 'emotion-first' | 'dynamic-action') => Promise<void>
+  onEnvironmentChange: (value: 'city-night-neon' | 'forest-mist-dawn' | 'interior-cinematic') => Promise<void>
   runWithRebuildConfirm: (action: 'storyToScript' | 'scriptToStoryboard', operation: () => Promise<void>) => Promise<void>
   runStoryToScriptFlow: () => Promise<void>
   runScriptToStoryboardFlow: () => Promise<void>
@@ -103,6 +107,8 @@ export function useWorkspaceStageRuntime({
   quickMangaChapterContinuityMode,
   quickMangaChapterId,
   quickMangaConflictPolicy,
+  selectedCharacterStrategy,
+  selectedEnvironmentId,
   videoModel,
   journeyType,
   projectName,
@@ -120,6 +126,8 @@ export function useWorkspaceStageRuntime({
   onQuickMangaChapterContinuityModeChange,
   onQuickMangaChapterIdChange,
   onQuickMangaConflictPolicyChange,
+  onCharacterStrategyChange,
+  onEnvironmentChange,
   runWithRebuildConfirm,
   runStoryToScriptFlow,
   runScriptToStoryboardFlow,
@@ -169,8 +177,12 @@ export function useWorkspaceStageRuntime({
     onQuickMangaChapterContinuityModeChange,
     onQuickMangaChapterIdChange,
     onQuickMangaConflictPolicyChange,
+    selectedCharacterStrategy,
+    selectedEnvironmentId,
     onVideoRatioChange: (value) => handleUpdateConfig('videoRatio', value),
     onArtStyleChange: (value) => handleUpdateConfig('artStyle', value),
+    onCharacterStrategyChange,
+    onEnvironmentChange,
     onRunStoryToScript: () => runWithRebuildConfirm('storyToScript', runStoryToScriptFlow),
     onClipUpdate: (clipId, data) => {
       if (!data || typeof data !== 'object' || Array.isArray(data)) {
@@ -206,6 +218,8 @@ export function useWorkspaceStageRuntime({
     onQuickMangaColorModeChange,
     onQuickMangaConflictPolicyChange,
     onQuickMangaEnabledChange,
+    onCharacterStrategyChange,
+    onEnvironmentChange,
     onQuickMangaLayoutChange,
     onQuickMangaPresetChange,
     onQuickMangaStyleLockEnabledChange,
@@ -220,6 +234,8 @@ export function useWorkspaceStageRuntime({
     quickMangaConflictPolicy,
     quickMangaEnabled,
     quickMangaLayout,
+    selectedCharacterStrategy,
+    selectedEnvironmentId,
     quickMangaPreset,
     quickMangaStyleLockEnabled,
     quickMangaStyleLockProfile,

@@ -6,6 +6,7 @@
  */
 
 import { useTranslations } from 'next-intl'
+import Image from 'next/image'
 import { useState, useRef, useEffect, useMemo } from 'react'
 import '@/styles/animations.css'
 import { ART_STYLES, VIDEO_RATIOS } from '@/lib/constants'
@@ -173,6 +174,9 @@ function StyleSelector({
   )
 }
 
+type CharacterStrategyId = 'consistency-first' | 'emotion-first' | 'dynamic-action'
+type EnvironmentPresetId = 'city-night-neon' | 'forest-mist-dawn' | 'interior-cinematic'
+
 interface NovelInputStageProps {
   // 核心数据
   novelText: string
@@ -214,6 +218,10 @@ interface NovelInputStageProps {
   artStyle?: string
   onVideoRatioChange?: (value: string) => void
   onArtStyleChange?: (value: string) => void
+  selectedCharacterStrategy?: CharacterStrategyId
+  onCharacterStrategyChange?: (value: CharacterStrategyId) => void
+  selectedEnvironmentId?: EnvironmentPresetId
+  onEnvironmentChange?: (value: EnvironmentPresetId) => void
 }
 
 export default function NovelInputStage({
@@ -249,7 +257,11 @@ export default function NovelInputStage({
   videoRatio = '9:16',
   artStyle = 'american-comic',
   onVideoRatioChange,
-  onArtStyleChange
+  onArtStyleChange,
+  selectedCharacterStrategy = 'consistency-first',
+  onCharacterStrategyChange,
+  selectedEnvironmentId = 'city-night-neon',
+  onEnvironmentChange,
 }: NovelInputStageProps) {
   const t = useTranslations('novelPromotion')
   const tStoryboard = useTranslations('storyboard')
@@ -318,51 +330,69 @@ export default function NovelInputStage({
     }))
   }, [providerFirstModels.geminiCompat.length, providerFirstModels.openaiCompat.length])
 
-  const characterStrategies = [
+  const characterStrategies: Array<{
+    id: CharacterStrategyId
+    title: string
+    description: string
+    badge: string
+    icon: string
+  }> = [
     {
       id: 'consistency-first',
-      title: 'Consistency First',
-      description: 'Giữ nhận diện nhân vật ổn định giữa các panel/shot.',
-      badge: 'Demo ready',
+      title: 'Nhất quán nhân vật',
+      description: 'Giữ gương mặt, tóc và trang phục ổn định để xem liền mạch.',
+      badge: 'An toàn',
+      icon: '🧬',
     },
     {
       id: 'emotion-first',
-      title: 'Emotion First',
-      description: 'Ưu tiên biểu cảm mạnh để tạo hook thị giác cho demo.',
-      badge: 'Visual impact',
+      title: 'Ưu tiên cảm xúc',
+      description: 'Đẩy mạnh biểu cảm để thumbnail và cảnh mở đầu hút mắt hơn.',
+      badge: 'Nổi bật',
+      icon: '🎭',
     },
     {
       id: 'dynamic-action',
-      title: 'Dynamic Action',
-      description: 'Tăng chuyển động pose/camera cho trailer ngắn.',
-      badge: 'Trailer mode',
+      title: 'Hành động động',
+      description: 'Tăng cảm giác chuyển động, hợp teaser/trailer ngắn.',
+      badge: 'Sôi động',
+      icon: '⚡',
     },
-  ] as const
+  ]
 
-  const [selectedCharacterStrategy, setSelectedCharacterStrategy] = useState<(typeof characterStrategies)[number]['id']>('consistency-first')
-
-  const environmentGallery = [
+  const environmentGallery: Array<{
+    id: EnvironmentPresetId
+    title: string
+    tone: string
+    colors: string
+    cover: string
+    cue: string
+  }> = [
     {
       id: 'city-night-neon',
       title: 'Neon City',
-      tone: 'Cyber, high contrast',
+      tone: 'Đêm đô thị, tương phản cao',
       colors: 'from-cyan-500/20 via-blue-500/10 to-purple-500/20',
+      cover: '/demo/novel-input/neon-city.svg',
+      cue: 'Cyber · EDM · tốc độ',
     },
     {
       id: 'forest-mist-dawn',
       title: 'Forest Dawn',
-      tone: 'Soft mist, calm light',
+      tone: 'Sương sớm nhẹ, ánh sáng dịu',
       colors: 'from-emerald-500/20 via-lime-500/10 to-cyan-500/20',
+      cover: '/demo/novel-input/forest-dawn.svg',
+      cue: 'Fantasy · chữa lành · mơ màng',
     },
     {
       id: 'interior-cinematic',
       title: 'Cinematic Interior',
-      tone: 'Warm keylight + deep shadow',
+      tone: 'Nội thất ấm, bóng đổ điện ảnh',
       colors: 'from-amber-500/20 via-orange-500/10 to-rose-500/20',
+      cover: '/demo/novel-input/interior-cinematic.svg',
+      cue: 'Drama · hội thoại · gần gũi',
     },
-  ] as const
-
-  const [selectedEnvironmentId, setSelectedEnvironmentId] = useState<(typeof environmentGallery)[number]['id']>('city-night-neon')
+  ]
 
   return (
     <div className="max-w-5xl mx-auto space-y-5">
@@ -614,91 +644,122 @@ export default function NovelInputStage({
         </p>
       </div>
 
-      {/* VAT-121 batch 1: visual-first preset gallery */}
-      <div className="glass-surface p-6 space-y-4">
+      {/* VAT-121 batch 2: demo-facing visual direction */}
+      <div className="glass-surface p-6 space-y-5">
         <div className="flex flex-col gap-1">
-          <h3 className="text-sm font-semibold text-[var(--glass-text-muted)] tracking-[0.01em]">Style Gallery (Demo)</h3>
+          <h3 className="text-sm font-semibold text-[var(--glass-text-muted)] tracking-[0.01em]">Visual Direction (Demo Ready)</h3>
           <p className="text-xs text-[var(--glass-text-tertiary)]">
-            Ưu tiên model route: {providerFirstModels.openaiCompat.length > 0 ? 'OpenAI-compatible' : providerFirstModels.geminiCompat.length > 0 ? 'Gemini-compatible' : 'Default'}
-            {' · '}image models available: {providerFirstModels.total}
+            Chọn nhanh 3 thành phần: <span className="font-medium">Style</span> + <span className="font-medium">Character mood</span> + <span className="font-medium">Environment</span>.
+            {' '}Thiết lập được giữ lại để tránh mất context khi reload.
           </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {styleGalleryCards.map((style) => {
-            const selected = style.value === artStyle
-            return (
-              <button
-                key={style.value}
-                type="button"
-                onClick={() => onArtStyleChange?.(style.value)}
-                className={`rounded-xl border p-3 text-left transition-all ${selected
-                  ? 'border-[var(--glass-accent-from)] bg-[var(--glass-tone-info-bg)]/30'
-                  : 'border-[var(--glass-stroke-soft)] hover:bg-[var(--glass-bg-muted)]/30'
-                  }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-lg">{style.preview}</span>
-                  {selected && <AppIcon name="check" className="w-4 h-4 text-[var(--glass-tone-info-fg)]" />}
-                </div>
-                <div className="mt-2 text-sm font-semibold text-[var(--glass-text-primary)]">{style.label}</div>
-                <div className="mt-1 text-[11px] text-[var(--glass-text-tertiary)]">{style.providerHint}</div>
-              </button>
-            )
-          })}
-        </div>
-      </div>
 
-      {/* VAT-122 batch 1: character strategy selector */}
-      <div className="glass-surface p-6 space-y-3">
-        <h3 className="text-sm font-semibold text-[var(--glass-text-muted)] tracking-[0.01em]">Character Strategy Selector</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {characterStrategies.map((strategy) => {
-            const active = strategy.id === selectedCharacterStrategy
-            return (
-              <button
-                key={strategy.id}
-                type="button"
-                onClick={() => setSelectedCharacterStrategy(strategy.id)}
-                className={`rounded-xl border p-3 text-left transition-all ${active
-                  ? 'border-[var(--glass-accent-from)] bg-[var(--glass-tone-info-bg)]/25'
-                  : 'border-[var(--glass-stroke-soft)] hover:bg-[var(--glass-bg-muted)]/25'
-                  }`}
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-sm font-semibold text-[var(--glass-text-primary)]">{strategy.title}</span>
-                  <span className="text-[10px] px-2 py-1 rounded-full bg-[var(--glass-bg-muted)] text-[var(--glass-text-secondary)]">{strategy.badge}</span>
-                </div>
-                <p className="mt-2 text-xs text-[var(--glass-text-tertiary)]">{strategy.description}</p>
-              </button>
-            )
-          })}
+        <div className="rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/15 p-4">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <p className="text-xs text-[var(--glass-text-secondary)]">
+              Route model: {providerFirstModels.openaiCompat.length > 0 ? 'OpenAI-compatible' : providerFirstModels.geminiCompat.length > 0 ? 'Gemini-compatible' : 'Default'}
+            </p>
+            <p className="text-xs text-[var(--glass-text-tertiary)]">Image models: {providerFirstModels.total}</p>
+          </div>
+          <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {styleGalleryCards.map((style) => {
+              const selected = style.value === artStyle
+              return (
+                <button
+                  key={style.value}
+                  type="button"
+                  onClick={() => onArtStyleChange?.(style.value)}
+                  className={`rounded-xl border p-3 text-left transition-all ${selected
+                    ? 'border-[var(--glass-accent-from)] bg-[var(--glass-tone-info-bg)]/30 shadow-[0_8px_24px_rgba(79,128,255,0.15)]'
+                    : 'border-[var(--glass-stroke-soft)] hover:bg-[var(--glass-bg-muted)]/30'
+                    }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-lg">{style.preview}</span>
+                    {selected && <AppIcon name="check" className="w-4 h-4 text-[var(--glass-tone-info-fg)]" />}
+                  </div>
+                  <div className="mt-2 text-sm font-semibold text-[var(--glass-text-primary)]">{style.label}</div>
+                  <div className="mt-1 text-[11px] text-[var(--glass-text-tertiary)]">{selected ? 'Đang dùng cho cảnh mới' : style.providerHint}</div>
+                </button>
+              )
+            })}
+          </div>
         </div>
-      </div>
 
-      {/* VAT-123 batch 1: environment gallery picker */}
-      <div className="glass-surface p-6 space-y-3">
-        <h3 className="text-sm font-semibold text-[var(--glass-text-muted)] tracking-[0.01em]">Environment Gallery</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {environmentGallery.map((environment) => {
-            const active = environment.id === selectedEnvironmentId
-            return (
-              <button
-                key={environment.id}
-                type="button"
-                onClick={() => setSelectedEnvironmentId(environment.id)}
-                className={`rounded-xl border p-0 text-left overflow-hidden transition-all ${active
-                  ? 'border-[var(--glass-accent-from)] shadow-[0_0_0_1px_rgba(79,128,255,0.2)]'
-                  : 'border-[var(--glass-stroke-soft)] hover:border-[var(--glass-stroke-strong)]'
-                  }`}
-              >
-                <div className={`h-20 bg-gradient-to-br ${environment.colors}`} />
-                <div className="p-3">
-                  <div className="text-sm font-semibold text-[var(--glass-text-primary)]">{environment.title}</div>
-                  <div className="text-xs text-[var(--glass-text-tertiary)] mt-1">{environment.tone}</div>
-                </div>
-              </button>
-            )
-          })}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+          <div className="rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/15 p-4 space-y-3">
+            <div>
+              <h4 className="text-sm font-semibold text-[var(--glass-text-primary)]">Character mood</h4>
+              <p className="text-xs text-[var(--glass-text-tertiary)] mt-1">Giúp model hiểu cảm giác nhân vật ở các shot đầu.</p>
+            </div>
+            <div className="grid grid-cols-1 gap-2">
+              {characterStrategies.map((strategy) => {
+                const active = strategy.id === selectedCharacterStrategy
+                return (
+                  <button
+                    key={strategy.id}
+                    type="button"
+                    onClick={() => onCharacterStrategyChange?.(strategy.id)}
+                    className={`rounded-xl border p-3 text-left transition-all ${active
+                      ? 'border-[var(--glass-accent-from)] bg-[var(--glass-tone-info-bg)]/25'
+                      : 'border-[var(--glass-stroke-soft)] hover:bg-[var(--glass-bg-muted)]/25'
+                      }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-sm font-semibold text-[var(--glass-text-primary)] flex items-center gap-2">
+                        <span>{strategy.icon}</span>
+                        <span>{strategy.title}</span>
+                      </span>
+                      <span className="text-[10px] px-2 py-1 rounded-full bg-[var(--glass-bg-muted)] text-[var(--glass-text-secondary)]">{strategy.badge}</span>
+                    </div>
+                    <p className="mt-2 text-xs text-[var(--glass-text-tertiary)]">{strategy.description}</p>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/15 p-4 space-y-3">
+            <div>
+              <h4 className="text-sm font-semibold text-[var(--glass-text-primary)]">Environment preset</h4>
+              <p className="text-xs text-[var(--glass-text-tertiary)] mt-1">Chọn background tone để storyboard nhìn thuyết phục hơn khi demo.</p>
+            </div>
+            <div className="grid grid-cols-1 gap-2">
+              {environmentGallery.map((environment) => {
+                const active = environment.id === selectedEnvironmentId
+                return (
+                  <button
+                    key={environment.id}
+                    type="button"
+                    onClick={() => onEnvironmentChange?.(environment.id)}
+                    className={`rounded-xl border p-0 text-left overflow-hidden transition-all ${active
+                      ? 'border-[var(--glass-accent-from)] shadow-[0_0_0_1px_rgba(79,128,255,0.2)]'
+                      : 'border-[var(--glass-stroke-soft)] hover:border-[var(--glass-stroke-strong)]'
+                      }`}
+                  >
+                    <div className="h-24 relative overflow-hidden">
+                      <Image
+                        src={environment.cover}
+                        alt={environment.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="object-cover"
+                      />
+                      <div className={`absolute inset-0 bg-gradient-to-br ${environment.colors}`} />
+                    </div>
+                    <div className="p-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="text-sm font-semibold text-[var(--glass-text-primary)]">{environment.title}</div>
+                        {active && <AppIcon name="check" className="w-4 h-4 text-[var(--glass-tone-info-fg)]" />}
+                      </div>
+                      <div className="text-xs text-[var(--glass-text-tertiary)] mt-1">{environment.tone}</div>
+                      <div className="text-[11px] text-[var(--glass-text-secondary)] mt-1">{environment.cue}</div>
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
         </div>
       </div>
 
