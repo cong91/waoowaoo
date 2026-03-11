@@ -1,0 +1,150 @@
+meta:
+  artifact: VAT-136 Acceptance Matrix
+  date: 2026-03-11
+  lane: materialization
+  deploy: false
+  provider_change: false
+  references:
+    - docs/ux/vat-manga-webtoon-ux-flow-analysis-2026-03-11-web-validated.md
+    - docs/ux/vat-132-vat-133-manga-webtoon-settings-schema-draft-2026-03-11.md
+    - docs/ux/layout_map.json
+    - docs/testing/vat-117-spec-mapping-matrix-2026-03-10.md
+    - docs/testing/vat-118-ia-screen-flow-create-manga-webtoon-2026-03-10.md
+    - docs/testing/vat-120-uat-execution-dual-journey-pass2-2026-03-10.md
+
+requirements:
+  - id: VAT136-RQ-001
+    title: Journey identity phải persist từ entry đến workspace runtime
+    priority: P0
+    owner: FE + Product
+    rationale: >-
+      Audit web-validated cho thấy vào workspace detail vẫn shared shell, user khó nhận biết lane Manga/Webtoon.
+    source_evidence:
+      - docs/ux/vat-manga-webtoon-ux-flow-analysis-2026-03-11-web-validated.md#22-sau-create-cả-2-lane-hội-tụ-về-cùng-workspace-shell
+      - docs/testing/vat-117-spec-mapping-matrix-2026-03-10.md (M1)
+    acceptance_criteria:
+      - Có badge/label lane cố định ở header project detail (Manga/Webtoon hoặc Film/Video).
+      - Lane identity xuất hiện nhất quán ở project list + project detail.
+      - Không phụ thuộc query flag để hiển thị identity.
+    test_signals:
+      - QA screenshot checklist mobile/desktop PASS.
+      - UAT case open project detail từ list vẫn thấy lane identity PASS.
+
+  - id: VAT136-RQ-002
+    title: Create Manga/Webtoon phải dùng semantic contract rõ (không chỉ quickManga flag)
+    priority: P0
+    owner: FE + BE
+    rationale: >-
+      quickManga=1 chỉ nên là compatibility bridge, không phải semantic source-of-truth.
+    source_evidence:
+      - docs/testing/vat-118-ia-screen-flow-create-manga-webtoon-2026-03-10.md#42-intent-contract-ui-semantic-layer
+      - docs/testing/vat-117-spec-mapping-matrix-2026-03-10.md (M3, M4)
+    acceptance_criteria:
+      - Payload create project chứa journeyType=manga_webtoon và entryIntent rõ ràng.
+      - onboardingContext lưu/đọc được journeyType + entryIntent từ project data API.
+      - Legacy quickManga deep-link vẫn hoạt động qua adapter bridge.
+    test_signals:
+      - Integration test POST /api/projects assert fields journeyType/entryIntent PASS.
+      - GET project data trả onboardingContext đúng schema PASS.
+      - Manual deep-link regression quickManga=1 PASS.
+
+  - id: VAT136-RQ-003
+    title: Onboarding Manga/Webtoon phải có flow 3 bước implementation-ready
+    priority: P0
+    owner: FE
+    rationale: >-
+      Flow 3 bước đã được định nghĩa rõ ở VAT-118, cần khóa thành acceptance để team thi công đồng bộ.
+    source_evidence:
+      - docs/testing/vat-118-ia-screen-flow-create-manga-webtoon-2026-03-10.md#5-screen-flow-chi-tiết-entrycreateonboarding
+      - docs/testing/vat-120-uat-execution-dual-journey-pass2-2026-03-10.md
+    acceptance_criteria:
+      - Wizard có 3 bước: Hành trình -> Template -> Nguồn nội dung.
+      - Có điều hướng Next/Back, giữ state khi quay lại.
+      - Completion dẫn vào runtime entry đúng context manga.
+    test_signals:
+      - Manual UAT wizard path (view/next/back/create) PASS.
+      - Analytics unit test cho step_view/step_next/step_back PASS.
+
+  - id: VAT136-RQ-004
+    title: Manga settings phải map được từ Anifun evidence thành schema dùng được
+    priority: P1
+    owner: FE + Design
+    rationale: >-
+      Đã có 13 layout + 6 preset từ Anifun, cần chuyển thành schema và seed có kiểm soát confidence.
+    source_evidence:
+      - docs/ux/vat-132-vat-133-manga-webtoon-settings-schema-draft-2026-03-11.md
+      - docs/ux/layout_map.json
+      - src/lib/workspace/manga-webtoon-layout-map.ts
+    acceptance_criteria:
+      - Catalog layout anifun_t01..anifun_t13 truy cập được từ config mapping.
+      - Mỗi layout có layoutFamily/panelSlotCount/colorMode/suggestedStylePresets.
+      - Template t01..t03 đánh dấu low confidence; t04..t13 high confidence.
+    test_signals:
+      - Unit validator parse layout_map.json PASS.
+      - UI render selector từ mapping (không hardcode card) PASS.
+
+  - id: VAT136-RQ-005
+    title: Giảm video-first bleed ở lane Manga/Webtoon
+    priority: P1
+    owner: Product + FE
+    rationale: >-
+      Audit web thật cho thấy vocabulary video còn lấn vào lane Manga, gây nhiễu mental model.
+    source_evidence:
+      - docs/ux/vat-manga-webtoon-ux-flow-analysis-2026-03-11-web-validated.md#24-video-first-bleed-còn-rõ-trong-màn-manga
+    acceptance_criteria:
+      - Trong lane manga, UI ưu tiên label/layout theo manga/webtoon trước khái niệm video.
+      - Copy không mô tả manga như feature phụ/shortcut.
+      - Manga history/continuity controls ở nhóm primary controls.
+    test_signals:
+      - Content QA checklist PASS (vi/en/ko/zh nếu có i18n scope).
+      - UX review sign-off từ Product + Design PASS.
+
+  - id: VAT136-RQ-006
+    title: Telemetry dual-journey phải đủ dimension để so sánh funnel
+    priority: P1
+    owner: FE + Data
+    rationale: >-
+      VAT-117 yêu cầu taxonomy chuẩn để so sánh hai lane và an toàn khi deprecate event cũ.
+    source_evidence:
+      - docs/testing/vat-117-spec-mapping-matrix-2026-03-10.md (M6, M10)
+      - docs/testing/vat-114-manga-webtoon-journey-rebuild-phase-d-execution-2026-03-10.md
+    acceptance_criteria:
+      - Event tối thiểu chứa: journeyType, entryIntent, templateId, locale, projectId.
+      - Trong transition, log có cả field mới và bridge field cũ để đối soát.
+      - Có bảng đối chiếu old/new dimensions trong doc telemetry.
+    test_signals:
+      - Telemetry schema validation PASS.
+      - Sample event audit log đủ fields PASS.
+
+  - id: VAT136-RQ-007
+    title: Compatibility bridge không được làm gãy legacy link/history
+    priority: P0
+    owner: FE + QA
+    rationale: >-
+      Giữ continuity trong phase chuyển đổi là bắt buộc theo chain VAT-114/119/120.
+    source_evidence:
+      - docs/testing/vat-119-compatibility-adapter-contract-checklist-2026-03-10.md
+      - docs/testing/vat-120-uat-execution-dual-journey-pass2-2026-03-10.md
+    acceptance_criteria:
+      - Deep-link quickManga=1 mở vào manga context đúng.
+      - API quick-manga/history hiện hữu không đổi schema đột ngột.
+      - Không regression bookmark cũ của user.
+    test_signals:
+      - Contract tests quick-manga/history PASS.
+      - Manual regression with legacy URL PASS.
+
+  - id: VAT136-RQ-008
+    title: Materialized docs phải đủ cho handoff FE/QA ngay
+    priority: P0
+    owner: Product + QA
+    rationale: >-
+      VAT-136 lane yêu cầu output usable ngay, tránh docs chung chung.
+    source_evidence:
+      - docs/ux/vat-136-research-pack/README.md
+    acceptance_criteria:
+      - Có đủ 4 artifacts: summary, acceptance matrix, benchmark list, evidence mapping.
+      - Mỗi requirement có owner, priority, test signal.
+      - Traceability evidence -> requirement không đứt.
+    test_signals:
+      - Grooming review checklist PASS.
+      - QA onboarding checklist PASS.
