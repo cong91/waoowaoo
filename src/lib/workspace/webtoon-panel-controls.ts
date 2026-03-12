@@ -13,6 +13,35 @@ export interface WebtoonScrollPreviewItem {
   emphasis: 'anchor' | 'support' | 'transition'
 }
 
+export interface WebtoonQuickActionPanelLite {
+  id: string
+  storyboardId: string
+  panelIndex: number
+  panelNumber?: number | null
+  shotType?: string | null
+  cameraMove?: string | null
+  description?: string | null
+  location?: string | null
+  characters?: string | null
+  srtStart?: number | null
+  srtEnd?: number | null
+  duration?: number | null
+  videoPrompt?: string | null
+}
+
+export interface WebtoonQuickActionCreatePayload {
+  storyboardId: string
+  shotType: string
+  cameraMove: string
+  description: string
+  location: string | null
+  characters: string
+  srtStart: number | null
+  srtEnd: number | null
+  duration: number | null
+  videoPrompt: string
+}
+
 export const WEBTOON_PANEL_QUICK_ACTIONS: WebtoonQuickActionMeta[] = [
   { id: 'add', label: 'Add', helper: 'Thêm panel mới ở nhịp hiện tại.' },
   { id: 'duplicate', label: 'Duplicate', helper: 'Nhân bản panel để giữ continuity.' },
@@ -20,6 +49,163 @@ export const WEBTOON_PANEL_QUICK_ACTIONS: WebtoonQuickActionMeta[] = [
   { id: 'merge', label: 'Merge', helper: 'Gộp panel ngắn để giảm nhiễu nhịp đọc.' },
   { id: 'reorder', label: 'Reorder', helper: 'Đổi thứ tự beat để tối ưu flow dọc.' },
 ]
+
+function safeNumber(value: number | null | undefined): number | null {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return null
+  return value
+}
+
+function parseCharacters(raw: string | null | undefined): Array<{ name: string; appearance?: string }> {
+  if (!raw) return []
+  try {
+    const parsed = JSON.parse(raw)
+    if (!Array.isArray(parsed)) return []
+    return parsed.filter((item) => item && typeof item === 'object' && typeof (item as { name?: unknown }).name === 'string')
+      .map((item) => ({
+        name: String((item as { name: string }).name),
+        appearance: typeof (item as { appearance?: unknown }).appearance === 'string'
+          ? String((item as { appearance?: string }).appearance)
+          : undefined,
+      }))
+  } catch {
+    return []
+  }
+}
+
+function stringifyCharacters(items: Array<{ name: string; appearance?: string }>): string {
+  return JSON.stringify(items.map((item) => ({
+    name: item.name,
+    ...(item.appearance ? { appearance: item.appearance } : {}),
+  })))
+}
+
+export function createAddPayload(params: {
+  anchor: WebtoonQuickActionPanelLite
+  fallbackShotType?: string
+  fallbackCameraMove?: string
+}): WebtoonQuickActionCreatePayload {
+  const anchor = params.anchor
+  return {
+    storyboardId: anchor.storyboardId,
+    shotType: anchor.shotType || params.fallbackShotType || 'Medium shot',
+    cameraMove: anchor.cameraMove || params.fallbackCameraMove || 'Static',
+    description: anchor.description || 'New panel beat',
+    location: anchor.location ?? null,
+    characters: anchor.characters || '[]',
+    srtStart: safeNumber(anchor.srtStart),
+    srtEnd: safeNumber(anchor.srtEnd),
+    duration: safeNumber(anchor.duration),
+    videoPrompt: anchor.videoPrompt || '',
+  }
+}
+
+export function createDuplicatePayload(panel: WebtoonQuickActionPanelLite): WebtoonQuickActionCreatePayload {
+  return {
+    storyboardId: panel.storyboardId,
+    shotType: panel.shotType || 'Medium shot',
+    cameraMove: panel.cameraMove || 'Static',
+    description: panel.description || 'Duplicated panel',
+    location: panel.location ?? null,
+    characters: panel.characters || '[]',
+    srtStart: safeNumber(panel.srtStart),
+    srtEnd: safeNumber(panel.srtEnd),
+    duration: safeNumber(panel.duration),
+    videoPrompt: panel.videoPrompt || '',
+  }
+}
+
+export function createSplitPayloads(panel: WebtoonQuickActionPanelLite): [WebtoonQuickActionCreatePayload, WebtoonQuickActionCreatePayload] {
+  const rawDuration = safeNumber(panel.duration)
+  const durationA = rawDuration !== null ? Number((rawDuration / 2).toFixed(3)) : null
+  const durationB = rawDuration !== null ? Number((rawDuration - durationA!).toFixed(3)) : null
+
+  const left: WebtoonQuickActionCreatePayload = {
+    storyboardId: panel.storyboardId,
+    shotType: panel.shotType || 'Medium shot',
+    cameraMove: panel.cameraMove || 'Static',
+    description: panel.description ? `${panel.description} (Part 1)` : 'Split beat (Part 1)',
+    location: panel.location ?? null,
+    characters: panel.characters || '[]',
+    srtStart: safeNumber(panel.srtStart),
+    srtEnd: safeNumber(panel.srtEnd),
+    duration: durationA,
+    videoPrompt: panel.videoPrompt || '',
+  }
+
+  const right: WebtoonQuickActionCreatePayload = {
+    storyboardId: panel.storyboardId,
+    shotType: panel.shotType || 'Medium shot',
+    cameraMove: panel.cameraMove || 'Static',
+    description: panel.description ? `${panel.description} (Part 2)` : 'Split beat (Part 2)',
+    location: panel.location ?? null,
+    characters: panel.characters || '[]',
+    srtStart: safeNumber(panel.srtStart),
+    srtEnd: safeNumber(panel.srtEnd),
+    duration: durationB,
+    videoPrompt: panel.videoPrompt || '',
+  }
+
+  return [left, right]
+}
+
+export function createMergePayload(params: {
+  left: WebtoonQuickActionPanelLite
+  right: WebtoonQuickActionPanelLite
+}): WebtoonQuickActionCreatePayload {
+  const { left, right } = params
+  const leftChars = parseCharacters(left.characters)
+  const rightChars = parseCharacters(right.characters)
+  const mergedCharsMap = new Map<string, { name: string; appearance?: string }>()
+
+  for (const char of [...leftChars, ...rightChars]) {
+    const key = `${char.name}::${char.appearance || ''}`
+    if (!mergedCharsMap.has(key)) {
+      mergedCharsMap.set(key, char)
+    }
+  }
+
+  const mergedDuration = (() => {
+    const a = safeNumber(left.duration)
+    const b = safeNumber(right.duration)
+    if (a !== null && b !== null) return Number((a + b).toFixed(3))
+    if (a !== null) return a
+    if (b !== null) return b
+    return null
+  })()
+
+  const mergedDescription = [left.description, right.description]
+    .map((text) => (typeof text === 'string' ? text.trim() : ''))
+    .filter(Boolean)
+    .join(' → ')
+
+  return {
+    storyboardId: left.storyboardId,
+    shotType: left.shotType || right.shotType || 'Medium shot',
+    cameraMove: left.cameraMove || right.cameraMove || 'Static',
+    description: mergedDescription || 'Merged panel beat',
+    location: left.location ?? right.location ?? null,
+    characters: stringifyCharacters(Array.from(mergedCharsMap.values())),
+    srtStart: safeNumber(left.srtStart) ?? safeNumber(right.srtStart),
+    srtEnd: safeNumber(right.srtEnd) ?? safeNumber(left.srtEnd),
+    duration: mergedDuration,
+    videoPrompt: left.videoPrompt || right.videoPrompt || '',
+  }
+}
+
+export function createReorderPayload(panel: WebtoonQuickActionPanelLite): WebtoonQuickActionCreatePayload {
+  return {
+    storyboardId: panel.storyboardId,
+    shotType: panel.shotType || 'Medium shot',
+    cameraMove: panel.cameraMove || 'Static',
+    description: panel.description || 'Reordered panel beat',
+    location: panel.location ?? null,
+    characters: panel.characters || '[]',
+    srtStart: safeNumber(panel.srtStart),
+    srtEnd: safeNumber(panel.srtEnd),
+    duration: safeNumber(panel.duration),
+    videoPrompt: panel.videoPrompt || '',
+  }
+}
 
 function normalize(weights: number[]): number[] {
   const safe = weights.map((n) => (Number.isFinite(n) && n > 0 ? n : 1))

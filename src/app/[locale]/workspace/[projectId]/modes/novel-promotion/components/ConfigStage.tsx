@@ -4,11 +4,13 @@ import NovelInputStage from './NovelInputStage'
 import QuickMangaHistoryPanel from './QuickMangaHistoryPanel'
 import MangaPanelControls from './MangaPanelControls'
 import { useWorkspaceStageRuntime } from '../WorkspaceStageRuntimeContext'
+import { useWorkspaceProvider } from '../WorkspaceProvider'
 import { useWorkspaceEpisodeStageData } from '../hooks/useWorkspaceEpisodeStageData'
 
 export default function ConfigStage() {
   const runtime = useWorkspaceStageRuntime()
-  const { episodeName, novelText } = useWorkspaceEpisodeStageData()
+  const { projectId, onRefresh } = useWorkspaceProvider()
+  const { episodeName, novelText, storyboards } = useWorkspaceEpisodeStageData()
 
   return (
     <div className="space-y-5">
@@ -54,6 +56,9 @@ export default function ConfigStage() {
       {runtime.journeyType === 'manga_webtoon' && (
         <>
           <MangaPanelControls
+            projectId={projectId}
+            storyboards={storyboards}
+            onRefresh={() => onRefresh({ scope: 'all' })}
             enabled={runtime.quickMangaEnabled}
             preset={runtime.quickMangaPreset}
             layout={runtime.quickMangaLayout}

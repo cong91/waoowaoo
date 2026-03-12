@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import type {
   QuickMangaColorMode,
   QuickMangaLayout,
@@ -10,13 +10,26 @@ import type {
   QuickMangaContinuityConflictPolicy,
   QuickMangaStyleLockProfile,
 } from '@/lib/novel-promotion/quick-manga-contract'
+import type { NovelPromotionPanel, NovelPromotionStoryboard } from '@/types/project'
+import {
+  useCreateProjectPanel,
+  useDeleteProjectPanel,
+} from '@/lib/query/hooks'
 import { MANGA_PANEL_TEMPLATE_SPECS } from '@/lib/workspace/manga-webtoon-layout-map'
 import {
   buildWebtoonScrollNarrativePreview,
+  createAddPayload,
+  createDuplicatePayload,
+  createMergePayload,
+  createReorderPayload,
+  createSplitPayloads,
   WEBTOON_PANEL_QUICK_ACTIONS,
 } from '@/lib/workspace/webtoon-panel-controls'
 
 interface MangaPanelControlsProps {
+  projectId: string
+  storyboards?: NovelPromotionStoryboard[]
+  onRefresh?: () => Promise<void> | void
   enabled: boolean
   preset: QuickMangaPreset
   layout: QuickMangaLayout
@@ -195,6 +208,9 @@ const STORY_KITS: Array<{
 ]
 
 export default function MangaPanelControls({
+  projectId,
+  storyboards = [],
+  onRefresh,
   enabled,
   preset,
   layout,
@@ -215,6 +231,62 @@ export default function MangaPanelControls({
   onConflictPolicyChange,
   compact = false,
 }: MangaPanelControlsProps) {
+  const createPanelMutation = useCreateProjectPanel(projectId)
+  const deletePanelMutation = useDeleteProjectPanel(projectId)
+  const [quickActionBusy, setQuickActionBusy] = useState<string | null>(null)
+  const [quickActionMessage, setQuickActionMessage] = useState<string | null>(null)
+
+  const activeStoryboard = useMemo(() => {
+    if (!storyboards.length) return null
+    return [...storyboards].sort((a, b) => {
+      const aPanels = (a.panels || []).length
+      const bPanels = (b.panels || []).length
+      return bPanels - aPanels
+    })[0] || null
+  }, [storyboards])
+
+  const activePanels = useMemo(() => {
+    const panels = [...(activeStoryboard?.panels || [])]
+    return panels.sort((a, b) => a.panelIndex - b.panelIndex)
+  }, [activeStoryboard])
+
+  const selectedPanelForActions = useMemo(() => {
+    if (!activePanels.length) return null
+    return activePanels[activePanels.length - 1] || null
+  }, [activePanels])
+
+  const runQuickAction = async (label: string, operation: () => Promise<void>) => {
+    if (quickActionBusy) return
+    setQuickActionBusy(label)
+    setQuickActionMessage(null)
+    try {
+      await operation()
+      await onRefresh?.()
+      setQuickActionMessage(`${label} applied`)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : `${label} failed`
+      setQuickActionMessage(message)
+    } finally {
+      setQuickActionBusy(null)
+    }
+  }
+
+  const buildCreatePayloadFromPanel = (panel: NovelPromotionPanel) => ({
+    id: panel.id,
+    storyboardId: panel.storyboardId,
+    panelIndex: panel.panelIndex,
+    panelNumber: panel.panelNumber,
+    shotType: panel.shotType,
+    cameraMove: panel.cameraMove,
+    description: panel.description,
+    location: panel.location,
+    characters: panel.characters,
+    srtStart: panel.srtStart,
+    srtEnd: panel.srtEnd,
+    duration: panel.duration,
+    videoPrompt: panel.videoPrompt,
+  })
+
   const recommendedTemplateId = useMemo(() => {
     let best: { id: string; score: number } | null = null
 
@@ -407,13 +479,79 @@ export default function MangaPanelControls({
       </div>
 
       <div className="space-y-2">
-        <p className="text-xs font-semibold text-[var(--glass-text-secondary)] uppercase tracking-wide">Webtoon panel quick actions (P0)</p>
+        <p className="text-xs font-semibold text-[var(--glass-text-secondary)] uppercase tracking-wide">Webtoon panel quick actions (P1)</p>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
           {WEBTOON_PANEL_QUICK_ACTIONS.map((action) => (
             <button
               key={action.id}
               type="button"
-              className="rounded-lg border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/15 px-3 py-2 text-left hover:bg-[var(--glass-bg-muted)]/30 transition-colors"
+              disabled={!activeStoryboard || !selectedPanelForActions || !!quickActionBusy}
+              onClick={() => {
+                if (!activeStoryboard || !selectedPanelForActions) return
+
+                if (action.id === 'add') {
+                  void runQuickAction('add', async () => {
+                    const payload = createAddPayload({
+                      anchor: buildCreatePayloadFromPanel(selectedPanelForActions),
+                    })
+                    await createPanelMutation.mutateAsync(payload)
+                  })
+                  return
+                }
+
+                if (action.id === 'duplicate') {
+                  void runQuickAction('duplicate', async () => {
+                    const payload = createDuplicatePayload(buildCreatePayloadFromPanel(selectedPanelForActions))
+                    await createPanelMutation.mutateAsync(payload)
+                  })
+                  return
+                }
+
+                if (action.id === 'split') {
+                  void runQuickAction('split', async () => {
+                    const current = buildCreatePayloadFromPanel(selectedPanelForActions)
+                    const [left, right] = createSplitPayloads(current)
+                    await deletePanelMutation.mutateAsync({ panelId: selectedPanelForActions.id })
+                    await createPanelMutation.mutateAsync(left)
+                    await createPanelMutation.mutateAsync(right)
+                  })
+                  return
+                }
+
+                if (action.id === 'merge') {
+                  void runQuickAction('merge', async () => {
+                    const currentIndex = activePanels.findIndex((panel) => panel.id === selectedPanelForActions.id)
+                    if (currentIndex <= 0) {
+                      throw new Error('Need at least 2 adjacent panels to merge')
+                    }
+                    const previous = activePanels[currentIndex - 1]
+                    if (!previous) throw new Error('Need previous adjacent panel to merge')
+
+                    const payload = createMergePayload({
+                      left: buildCreatePayloadFromPanel(previous),
+                      right: buildCreatePayloadFromPanel(selectedPanelForActions),
+                    })
+                    await deletePanelMutation.mutateAsync({ panelId: selectedPanelForActions.id })
+                    await deletePanelMutation.mutateAsync({ panelId: previous.id })
+                    await createPanelMutation.mutateAsync(payload)
+                  })
+                  return
+                }
+
+                if (action.id === 'reorder') {
+                  void runQuickAction('reorder', async () => {
+                    if (activePanels.length < 2) {
+                      throw new Error('Need at least 2 panels to reorder')
+                    }
+                    const head = activePanels[0]
+                    if (!head) throw new Error('No source panel to reorder')
+                    const payload = createReorderPayload(buildCreatePayloadFromPanel(head))
+                    await deletePanelMutation.mutateAsync({ panelId: head.id })
+                    await createPanelMutation.mutateAsync(payload)
+                  })
+                }
+              }}
+              className="rounded-lg border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/15 px-3 py-2 text-left hover:bg-[var(--glass-bg-muted)]/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label={`quick-action-${action.id}`}
             >
               <div className="text-xs font-semibold text-[var(--glass-text-primary)]">{action.label}</div>
@@ -421,6 +559,14 @@ export default function MangaPanelControls({
             </button>
           ))}
         </div>
+        <div className="text-[11px] text-[var(--glass-text-tertiary)]">
+          {activeStoryboard
+            ? `Target storyboard: ${activeStoryboard.id} · panels=${activePanels.length} · anchor=#${(selectedPanelForActions?.panelIndex ?? 0) + 1}`
+            : 'Chưa có storyboard/panel để thao tác quick actions.'}
+        </div>
+        {quickActionMessage ? (
+          <div className="text-[11px] text-[var(--glass-tone-info-fg)]">{quickActionMessage}</div>
+        ) : null}
       </div>
 
       <div className="space-y-2">

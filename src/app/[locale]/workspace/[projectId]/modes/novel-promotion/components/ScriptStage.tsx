@@ -8,13 +8,16 @@ import { useWorkspaceProvider } from '../WorkspaceProvider'
 
 export default function ScriptStage() {
   const runtime = useWorkspaceStageRuntime()
-  const { projectId, episodeId } = useWorkspaceProvider()
+  const { projectId, episodeId, onRefresh } = useWorkspaceProvider()
   const { clips, storyboards } = useWorkspaceEpisodeStageData()
 
   return (
     <div className="space-y-4">
       {runtime.journeyType === 'manga_webtoon' && (
         <MangaPanelControls
+          projectId={projectId}
+          storyboards={storyboards}
+          onRefresh={() => onRefresh({ scope: 'all' })}
           enabled={runtime.quickMangaEnabled}
           preset={runtime.quickMangaPreset}
           layout={runtime.quickMangaLayout}
