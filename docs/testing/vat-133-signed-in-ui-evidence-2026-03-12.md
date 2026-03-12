@@ -65,3 +65,39 @@ Result: **PASS 17/17** (see `vitest-quick-actions.log`).
 - However, if AC is interpreted as mandatory direct screenshot/video of **quick-action buttons clicked** (`add/duplicate/split/merge/reorder`) in signed-in session, this pass is still **not fully sufficient** due to the UI-state blocker above.
 
 **Current verdict:** keep VAT-133 at **In Progress** (close to Done; pending one final signed-in capture where quick-action buttons are visible+clickable in target pane).
+
+---
+
+## 7) 2026-03-12 follow-up fix (post-blocker analysis)
+
+Root-cause found in quick-action guard logic:
+
+- `add` action was incorrectly coupled to `selectedPanelForActions` availability.
+- In signed-in episode states where storyboard group exists but currently has zero panels, `selectedPanelForActions` is `null`.
+- Result: all quick-action buttons became disabled/not-clickable in that pane, including `add` (which should be allowed to bootstrap first panel).
+
+Fix applied on branch `work/vat-manga-webtoon-lane-20260312`:
+
+- `src/app/[locale]/workspace/[projectId]/modes/novel-promotion/components/MangaPanelControls.tsx`
+  - add `canRunQuickAction` guard
+  - allow `add` when storyboard exists even if no selected panel
+  - pass `fallbackStoryboardId` into planner
+- `src/lib/workspace/webtoon-panel-controls.ts`
+  - `planWebtoonQuickActionMutation` supports zero-panel + `add` path
+  - returns deterministic create payload for empty storyboard bootstrap
+- `tests/unit/workspace/webtoon-panel-controls.test.ts`
+  - add regression tests for zero-panel add path + missing fallback guard
+
+Validation:
+
+- `npx vitest run tests/unit/workspace/webtoon-panel-controls.test.ts tests/unit/workspace/stage-alias.test.ts tests/unit/workspace/stage-navigation-lane.test.ts`
+- Result: **PASS 19/19**
+
+Fix commit:
+
+- `4a89484` — `fix(vat-133): allow quick-action add when storyboard has no panels`
+
+Remaining blocker for strict Done:
+
+- This pass did not re-capture final signed-in direct-click screenshots/video for all `add/duplicate/split/merge/reorder` actions on the exact target pane.
+- Therefore ticket should remain **In Progress** until direct-click artifact set is refreshed after runtime picks the new commit path.
