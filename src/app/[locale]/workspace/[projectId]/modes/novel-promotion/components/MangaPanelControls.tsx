@@ -18,11 +18,7 @@ import {
 import { MANGA_PANEL_TEMPLATE_SPECS } from '@/lib/workspace/manga-webtoon-layout-map'
 import {
   buildWebtoonScrollNarrativePreview,
-  createAddPayload,
-  createDuplicatePayload,
-  createMergePayload,
-  createReorderPayload,
-  createSplitPayloads,
+  planWebtoonQuickActionMutation,
   WEBTOON_PANEL_QUICK_ACTIONS,
 } from '@/lib/workspace/webtoon-panel-controls'
 
@@ -271,7 +267,7 @@ export default function MangaPanelControls({
     }
   }
 
-  const buildCreatePayloadFromPanel = (panel: NovelPromotionPanel) => ({
+  const buildPanelLite = (panel: NovelPromotionPanel) => ({
     id: panel.id,
     storyboardId: panel.storyboardId,
     panelIndex: panel.panelIndex,
@@ -489,65 +485,31 @@ export default function MangaPanelControls({
               onClick={() => {
                 if (!activeStoryboard || !selectedPanelForActions) return
 
-                if (action.id === 'add') {
-                  void runQuickAction('add', async () => {
-                    const payload = createAddPayload({
-                      anchor: buildCreatePayloadFromPanel(selectedPanelForActions),
+                if (action.id === 'add' || action.id === 'duplicate' || action.id === 'split' || action.id === 'merge' || action.id === 'reorder') {
+                  void runQuickAction(action.id, async () => {
+                    const plan = planWebtoonQuickActionMutation({
+                      action: action.id,
+                      panels: activePanels.map(buildPanelLite),
+                      selectedPanelId: selectedPanelForActions.id,
                     })
-                    await createPanelMutation.mutateAsync(payload)
-                  })
-                  return
-                }
 
-                if (action.id === 'duplicate') {
-                  void runQuickAction('duplicate', async () => {
-                    const payload = createDuplicatePayload(buildCreatePayloadFromPanel(selectedPanelForActions))
-                    await createPanelMutation.mutateAsync(payload)
-                  })
-                  return
-                }
-
-                if (action.id === 'split') {
-                  void runQuickAction('split', async () => {
-                    const current = buildCreatePayloadFromPanel(selectedPanelForActions)
-                    const [left, right] = createSplitPayloads(current)
-                    await deletePanelMutation.mutateAsync({ panelId: selectedPanelForActions.id })
-                    await createPanelMutation.mutateAsync(left)
-                    await createPanelMutation.mutateAsync(right)
-                  })
-                  return
-                }
-
-                if (action.id === 'merge') {
-                  void runQuickAction('merge', async () => {
-                    const currentIndex = activePanels.findIndex((panel) => panel.id === selectedPanelForActions.id)
-                    if (currentIndex <= 0) {
-                      throw new Error('Need at least 2 adjacent panels to merge')
+                    for (const panelId of plan.deletePanelIds) {
+                      await deletePanelMutation.mutateAsync({ panelId })
                     }
-                    const previous = activePanels[currentIndex - 1]
-                    if (!previous) throw new Error('Need previous adjacent panel to merge')
 
-                    const payload = createMergePayload({
-                      left: buildCreatePayloadFromPanel(previous),
-                      right: buildCreatePayloadFromPanel(selectedPanelForActions),
-                    })
-                    await deletePanelMutation.mutateAsync({ panelId: selectedPanelForActions.id })
-                    await deletePanelMutation.mutateAsync({ panelId: previous.id })
-                    await createPanelMutation.mutateAsync(payload)
-                  })
-                  return
-                }
-
-                if (action.id === 'reorder') {
-                  void runQuickAction('reorder', async () => {
-                    if (activePanels.length < 2) {
-                      throw new Error('Need at least 2 panels to reorder')
+                    for (const payload of plan.createPayloads) {
+                      await createPanelMutation.mutateAsync(payload)
                     }
-                    const head = activePanels[0]
-                    if (!head) throw new Error('No source panel to reorder')
-                    const payload = createReorderPayload(buildCreatePayloadFromPanel(head))
-                    await deletePanelMutation.mutateAsync({ panelId: head.id })
-                    await createPanelMutation.mutateAsync(payload)
+
+                    if (typeof window !== 'undefined') {
+                      console.info('[VAT-133][quick-action-plan]', {
+                        action: plan.action,
+                        beforeOrder: plan.beforeOrder,
+                        expectedAfterOrder: plan.expectedAfterOrder,
+                        deletePanelIds: plan.deletePanelIds,
+                        createCount: plan.createPayloads.length,
+                      })
+                    }
                   })
                 }
               }}

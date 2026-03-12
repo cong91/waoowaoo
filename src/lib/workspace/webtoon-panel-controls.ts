@@ -207,6 +207,129 @@ export function createReorderPayload(panel: WebtoonQuickActionPanelLite): Webtoo
   }
 }
 
+export interface WebtoonQuickActionMutationPlan {
+  action: WebtoonPanelQuickAction
+  selectedPanelId: string
+  deletePanelIds: string[]
+  createPayloads: WebtoonQuickActionCreatePayload[]
+  beforeOrder: string[]
+  expectedAfterOrder: string[]
+}
+
+export function planWebtoonQuickActionMutation(input: {
+  action: WebtoonPanelQuickAction
+  panels: WebtoonQuickActionPanelLite[]
+  selectedPanelId?: string | null
+}): WebtoonQuickActionMutationPlan {
+  const orderedPanels = [...input.panels].sort((a, b) => a.panelIndex - b.panelIndex)
+  if (orderedPanels.length === 0) {
+    throw new Error('Chưa có storyboard/panel để thao tác quick actions.')
+  }
+
+  const selected = input.selectedPanelId
+    ? orderedPanels.find((panel) => panel.id === input.selectedPanelId) || null
+    : orderedPanels[orderedPanels.length - 1] || null
+
+  if (!selected) {
+    throw new Error('No source panel to reorder')
+  }
+
+  const beforeOrder = orderedPanels.map((panel) => panel.id)
+
+  if (input.action === 'add') {
+    return {
+      action: input.action,
+      selectedPanelId: selected.id,
+      deletePanelIds: [],
+      createPayloads: [createAddPayload({ anchor: selected })],
+      beforeOrder,
+      expectedAfterOrder: [...beforeOrder, '__new_add__'],
+    }
+  }
+
+  if (input.action === 'duplicate') {
+    return {
+      action: input.action,
+      selectedPanelId: selected.id,
+      deletePanelIds: [],
+      createPayloads: [createDuplicatePayload(selected)],
+      beforeOrder,
+      expectedAfterOrder: [...beforeOrder, `__new_duplicate_of_${selected.id}__`],
+    }
+  }
+
+  if (input.action === 'split') {
+    const [left, right] = createSplitPayloads(selected)
+    return {
+      action: input.action,
+      selectedPanelId: selected.id,
+      deletePanelIds: [selected.id],
+      createPayloads: [left, right],
+      beforeOrder,
+      expectedAfterOrder: beforeOrder.flatMap((id) => (
+        id === selected.id
+          ? [`__new_split_left_of_${selected.id}__`, `__new_split_right_of_${selected.id}__`]
+          : [id]
+      )),
+    }
+  }
+
+  if (input.action === 'merge') {
+    const selectedIndex = orderedPanels.findIndex((panel) => panel.id === selected.id)
+    if (selectedIndex <= 0) {
+      throw new Error('Need at least 2 adjacent panels to merge')
+    }
+
+    const previous = orderedPanels[selectedIndex - 1]
+    if (!previous) {
+      throw new Error('Need previous adjacent panel to merge')
+    }
+
+    return {
+      action: input.action,
+      selectedPanelId: selected.id,
+      deletePanelIds: [selected.id, previous.id],
+      createPayloads: [createMergePayload({ left: previous, right: selected })],
+      beforeOrder,
+      expectedAfterOrder: beforeOrder.flatMap((id) => (
+        id === previous.id
+          ? [`__new_merge_${previous.id}_${selected.id}__`]
+          : id === selected.id
+            ? []
+            : [id]
+      )),
+    }
+  }
+
+  if (input.action === 'reorder') {
+    if (orderedPanels.length < 2) {
+      throw new Error('Need at least 2 panels to reorder')
+    }
+    const head = orderedPanels[0]
+    if (!head) {
+      throw new Error('No source panel to reorder')
+    }
+
+    return {
+      action: input.action,
+      selectedPanelId: selected.id,
+      deletePanelIds: [head.id],
+      createPayloads: [createReorderPayload(head)],
+      beforeOrder,
+      expectedAfterOrder: [...beforeOrder.slice(1), head.id],
+    }
+  }
+
+  return {
+    action: input.action,
+    selectedPanelId: selected.id,
+    deletePanelIds: [],
+    createPayloads: [],
+    beforeOrder,
+    expectedAfterOrder: beforeOrder,
+  }
+}
+
 function normalize(weights: number[]): number[] {
   const safe = weights.map((n) => (Number.isFinite(n) && n > 0 ? n : 1))
   const total = safe.reduce((sum, n) => sum + n, 0)

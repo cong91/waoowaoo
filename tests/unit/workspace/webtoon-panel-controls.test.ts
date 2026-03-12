@@ -6,6 +6,7 @@ import {
   createMergePayload,
   createReorderPayload,
   createSplitPayloads,
+  planWebtoonQuickActionMutation,
   WEBTOON_PANEL_QUICK_ACTIONS,
 } from '@/lib/workspace/webtoon-panel-controls'
 
@@ -131,5 +132,76 @@ describe('webtoon panel controls helpers (VAT-133 P0)', () => {
     expect(reorder.storyboardId).toBe('sb9')
     expect(duplicate.description).toContain('Beat keep')
     expect(reorder.description).toContain('Beat keep')
+  })
+
+  it('plans split mutation as delete+create pair with stable expected order markers', () => {
+    const plan = planWebtoonQuickActionMutation({
+      action: 'split',
+      panels: [
+        { id: 'p1', storyboardId: 'sb1', panelIndex: 0, description: 'A', characters: '[]' },
+        { id: 'p2', storyboardId: 'sb1', panelIndex: 1, description: 'B', characters: '[]', duration: 4 },
+        { id: 'p3', storyboardId: 'sb1', panelIndex: 2, description: 'C', characters: '[]' },
+      ],
+      selectedPanelId: 'p2',
+    })
+
+    expect(plan.deletePanelIds).toEqual(['p2'])
+    expect(plan.createPayloads).toHaveLength(2)
+    expect(plan.expectedAfterOrder).toEqual([
+      'p1',
+      '__new_split_left_of_p2__',
+      '__new_split_right_of_p2__',
+      'p3',
+    ])
+  })
+
+  it('plans merge mutation with adjacency guard and deterministic replacement marker', () => {
+    const plan = planWebtoonQuickActionMutation({
+      action: 'merge',
+      panels: [
+        { id: 'p1', storyboardId: 'sb1', panelIndex: 0, description: 'A', characters: '[]' },
+        { id: 'p2', storyboardId: 'sb1', panelIndex: 1, description: 'B', characters: '[]' },
+        { id: 'p3', storyboardId: 'sb1', panelIndex: 2, description: 'C', characters: '[]' },
+      ],
+      selectedPanelId: 'p2',
+    })
+
+    expect(plan.deletePanelIds).toEqual(['p2', 'p1'])
+    expect(plan.createPayloads).toHaveLength(1)
+    expect(plan.expectedAfterOrder).toEqual(['__new_merge_p1_p2__', 'p3'])
+  })
+
+  it('plans reorder mutation by moving head panel to tail order', () => {
+    const plan = planWebtoonQuickActionMutation({
+      action: 'reorder',
+      panels: [
+        { id: 'p1', storyboardId: 'sb1', panelIndex: 0, description: 'A', characters: '[]' },
+        { id: 'p2', storyboardId: 'sb1', panelIndex: 1, description: 'B', characters: '[]' },
+        { id: 'p3', storyboardId: 'sb1', panelIndex: 2, description: 'C', characters: '[]' },
+      ],
+      selectedPanelId: 'p3',
+    })
+
+    expect(plan.deletePanelIds).toEqual(['p1'])
+    expect(plan.createPayloads).toHaveLength(1)
+    expect(plan.expectedAfterOrder).toEqual(['p2', 'p3', 'p1'])
+  })
+
+  it('guards merge/reorder edge cases with explicit errors', () => {
+    expect(() => planWebtoonQuickActionMutation({
+      action: 'merge',
+      panels: [
+        { id: 'p1', storyboardId: 'sb1', panelIndex: 0, description: 'A', characters: '[]' },
+      ],
+      selectedPanelId: 'p1',
+    })).toThrow('Need at least 2 adjacent panels to merge')
+
+    expect(() => planWebtoonQuickActionMutation({
+      action: 'reorder',
+      panels: [
+        { id: 'p1', storyboardId: 'sb1', panelIndex: 0, description: 'A', characters: '[]' },
+      ],
+      selectedPanelId: 'p1',
+    })).toThrow('Need at least 2 panels to reorder')
   })
 })
