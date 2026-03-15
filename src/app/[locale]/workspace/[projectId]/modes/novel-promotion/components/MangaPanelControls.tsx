@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import type {
   QuickMangaColorMode,
   QuickMangaLayout,
@@ -228,6 +229,7 @@ export default function MangaPanelControls({
   onConflictPolicyChange,
   compact = false,
 }: MangaPanelControlsProps) {
+  const t = useTranslations('novelPromotion')
   const createPanelMutation = useCreateProjectPanel(projectId)
   const deletePanelMutation = useDeleteProjectPanel(projectId)
   const [quickActionBusy, setQuickActionBusy] = useState<string | null>(null)
@@ -375,9 +377,9 @@ export default function MangaPanelControls({
     <section className={`glass-surface ${compact ? 'p-4' : 'p-6'} space-y-4`}>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h3 className="text-sm font-semibold text-[var(--glass-text-primary)]">Manga Storytelling Controls</h3>
+          <h3 className="text-sm font-semibold text-[var(--glass-text-primary)]">{t('storyInput.manga.ui.title')}</h3>
           <p className="text-xs text-[var(--glass-text-tertiary)] mt-1">
-            Panel-first controls cho lane Manga/Webtoon (P1) — ưu tiên ngôn ngữ kể chuyện theo panel, không dùng semantics video-like.
+            {t('storyInput.manga.ui.description')}
           </p>
         </div>
         <button
@@ -385,12 +387,12 @@ export default function MangaPanelControls({
           onClick={() => void onEnabledChange(!enabled)}
           className={`glass-btn-base px-3 py-1.5 text-xs font-medium ${enabled ? 'glass-btn-tone-info' : 'glass-btn-secondary'}`}
         >
-          {enabled ? 'Manga lane: ON' : 'Bật Manga lane'}
+          {enabled ? t('storyInput.manga.ui.toggleOn') : t('storyInput.manga.ui.toggleOff')}
         </button>
       </div>
 
       <div className="space-y-2">
-        <p className="text-xs font-semibold text-[var(--glass-text-secondary)] uppercase tracking-wide">Panel template</p>
+        <p className="text-xs font-semibold text-[var(--glass-text-secondary)] uppercase tracking-wide">{t('storyInput.manga.ui.panelTemplate')}</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {PANEL_TEMPLATES.map((template) => {
             const active = isTemplateActive(template)
@@ -428,7 +430,7 @@ export default function MangaPanelControls({
                   {template.values.layout} · {template.values.colorMode}
                 </p>
                 {active && (
-                  <p className="mt-1 text-[11px] font-medium text-[var(--glass-tone-info-fg)]">Đang active</p>
+                  <p className="mt-1 text-[11px] font-medium text-[var(--glass-tone-info-fg)]">{t('storyInput.manga.ui.active')}</p>
                 )}
               </button>
             )
@@ -437,7 +439,7 @@ export default function MangaPanelControls({
       </div>
 
       <div className="space-y-2">
-        <p className="text-xs font-semibold text-[var(--glass-text-secondary)] uppercase tracking-wide">Storytelling prompt kit</p>
+        <p className="text-xs font-semibold text-[var(--glass-text-secondary)] uppercase tracking-wide">{t('storyInput.manga.ui.storytellingPromptKit')}</p>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
           {orderStorytellingPromptKits(STORY_KITS).map((kit) => {
             const active = isStoryKitActive(kit)
@@ -476,7 +478,7 @@ export default function MangaPanelControls({
                   {kit.values.preset} · {kit.values.layout} · {kit.values.colorMode}
                 </p>
                 {active && (
-                  <p className="mt-1 text-[11px] font-medium text-[var(--glass-tone-info-fg)]">Đang active</p>
+                  <p className="mt-1 text-[11px] font-medium text-[var(--glass-tone-info-fg)]">{t('storyInput.manga.ui.active')}</p>
                 )}
               </button>
             )
@@ -536,8 +538,8 @@ export default function MangaPanelControls({
           </div>
           <div className="text-[11px] text-[var(--glass-text-tertiary)]">
             {activeStoryboard
-              ? `Target storyboard: ${activeStoryboard.id} · panels=${activePanels.length} · anchor=#${(selectedPanelForActions?.panelIndex ?? 0) + 1}`
-              : 'Chưa có storyboard/panel để thao tác quick actions.'}
+              ? `${t('storyInput.manga.regenerate.quickActions.targetStoryboard')}: ${activeStoryboard.id} · panels=${activePanels.length} · anchor=#${(selectedPanelForActions?.panelIndex ?? 0) + 1}`
+              : t('storyInput.manga.ui.quickActionsEmpty')}
           </div>
           {quickActionMessage ? (
             <div className="text-[11px] text-[var(--glass-tone-info-fg)]">{quickActionMessage}</div>
@@ -554,8 +556,8 @@ export default function MangaPanelControls({
         <div className="rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/10 p-3 space-y-2">
           <div className="text-[11px] text-[var(--glass-text-tertiary)]">
             {activeTemplate
-              ? `Template ${activeTemplate.sourceLayoutId} · ${activeTemplate.metadata.layoutFamily} · ${activeTemplate.metadata.panelSlotCount} panel slots`
-              : 'Chọn template để preview vertical flow theo panel rhythm.'}
+              ? `${t('storyInput.manga.ui.templateLabel')} ${activeTemplate.sourceLayoutId} · ${activeTemplate.metadata.layoutFamily} · ${activeTemplate.metadata.panelSlotCount} panel slots`
+              : t('storyInput.manga.ui.scrollPreviewEmpty')}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {scrollPreview.map((item) => (
@@ -578,18 +580,18 @@ export default function MangaPanelControls({
 
       <div className="rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/10 p-3 space-y-3">
         <div className="text-xs text-[var(--glass-text-tertiary)]">
-          Active: <span className="text-[var(--glass-text-primary)] font-medium">{preset}</span> ·{' '}
+          {t('storyInput.manga.ui.activeLabel')}: <span className="text-[var(--glass-text-primary)] font-medium">{preset}</span> ·{' '}
           <span className="text-[var(--glass-text-primary)] font-medium">{layout}</span> ·{' '}
           <span className="text-[var(--glass-text-primary)] font-medium">{colorMode}</span>
           {panelTemplateId ? (
             <>
-              {' '}· template: <span className="text-[var(--glass-text-primary)] font-medium">{panelTemplateId}</span>
+              {' '}· {t('storyInput.manga.ui.templateLabel')}: <span className="text-[var(--glass-text-primary)] font-medium">{panelTemplateId}</span>
             </>
           ) : null}
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-[var(--glass-text-tertiary)]">Style lock:</span>
+          <span className="text-xs text-[var(--glass-text-tertiary)]">{t('storyInput.manga.ui.styleLock')}:</span>
           <button
             type="button"
             onClick={() => void onStyleLockEnabledChange(!styleLockEnabled)}
@@ -618,7 +620,7 @@ export default function MangaPanelControls({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-[var(--glass-text-tertiary)]">Conflict policy:</span>
+          <span className="text-xs text-[var(--glass-text-tertiary)]">{t('storyInput.manga.ui.conflictPolicy')}:</span>
           {(['balanced', 'prefer-style-lock', 'prefer-chapter-context'] as const).map((policy) => (
             <button
               key={policy}

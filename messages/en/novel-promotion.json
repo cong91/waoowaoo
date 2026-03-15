@@ -236,6 +236,21 @@
         },
         "conflictHelp": "Choose policy to resolve style lock vs chapter continuity conflicts during regenerate."
       },
+      "ui": {
+        "title": "Manga storytelling controls",
+        "description": "Panel-first controls for the Manga/Webtoon lane (P1) — prioritize panel storytelling language instead of video-like semantics.",
+        "toggleOn": "Manga lane: ON",
+        "toggleOff": "Enable Manga lane",
+        "panelTemplate": "Panel template",
+        "storytellingPromptKit": "Storytelling prompt kit",
+        "active": "Active",
+        "quickActionsEmpty": "No storyboard/panel is available yet for quick actions.",
+        "scrollPreviewEmpty": "Choose a template to preview vertical flow by panel rhythm.",
+        "activeLabel": "Active",
+        "templateLabel": "template",
+        "styleLock": "Style lock",
+        "conflictPolicy": "Conflict policy"
+      },
       "regenerate": {
         "invalidSource": "Selected history item is not a valid Manga source",
         "missingContent": "Cannot regenerate because source content is missing",
