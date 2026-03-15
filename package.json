@@ -87,6 +87,10 @@
     "backup:archive-legacy-media": "tsx scripts/media-archive-legacy-refs.ts",
     "backup:unreferenced-media-index": "tsx scripts/media-build-unreferenced-index.ts",
     "lint": "eslint",
+    "lint:all": "npm run lint -- .",
+    "typecheck": "tsc --noEmit",
+    "verify:commit": "npm run lint:all && npm run typecheck && npm run test:behavior:full",
+    "verify:push": "npm run lint:all && npm run typecheck && npm run test:regression && npm run build",
     "clean": "rimraf .next"
   },
   "dependencies": {

@@ -1,15 +1,62 @@
 import { describe, expect, it } from 'vitest'
+import type { NovelPromotionPanel } from '@/types/project'
 import { useWorkspaceStageNavigation } from '@/app/[locale]/workspace/[projectId]/modes/novel-promotion/hooks/useWorkspaceStageNavigation'
 
 describe('useWorkspaceStageNavigation lane identity (VAT-132)', () => {
   const t = (key: string) => key
+
+  const makePanel = (overrides: Partial<NovelPromotionPanel> = {}): NovelPromotionPanel => ({
+    id: 'p1',
+    storyboardId: 'sb1',
+    panelIndex: 0,
+    panelNumber: 1,
+    shotType: null,
+    cameraMove: null,
+    description: null,
+    location: null,
+    characters: null,
+    srtSegment: null,
+    srtStart: null,
+    srtEnd: null,
+    duration: null,
+    imagePrompt: null,
+    imageUrl: null,
+    imageMediaId: null,
+    imageHistory: null,
+    videoPrompt: null,
+    firstLastFramePrompt: null,
+    videoUrl: null,
+    videoGenerationMode: null,
+    videoMediaId: null,
+    createdAt: '',
+    updatedAt: '',
+    sceneType: null,
+    candidateImages: null,
+    linkedToNextPanel: false,
+    lipSyncTaskId: null,
+    lipSyncVideoUrl: null,
+    lipSyncVideoMediaId: null,
+    sketchImageUrl: null,
+    sketchImageMediaId: null,
+    photographyRules: null,
+    actingNotes: null,
+    previousImageUrl: null,
+    previousImageMediaId: null,
+    media: null,
+    imageMedia: null,
+    videoMedia: null,
+    lipSyncVideoMedia: null,
+    sketchImageMedia: null,
+    previousImageMedia: null,
+    ...overrides,
+  })
 
   it('keeps manga/webtoon lane wording and panels stage id', () => {
     const items = useWorkspaceStageNavigation({
       isAnyOperationRunning: false,
       episode: { novelText: 'story draft', voiceLines: [] },
       projectCharacterCount: 1,
-      episodeStoryboards: [{ panels: [{ id: 'p1', videoUrl: 'https://example.com/video.mp4' } as any] }],
+      episodeStoryboards: [{ panels: [makePanel({ videoUrl: 'https://example.com/video.mp4' })] }],
       journeyType: 'manga_webtoon',
       t,
     })
@@ -25,7 +72,7 @@ describe('useWorkspaceStageNavigation lane identity (VAT-132)', () => {
       isAnyOperationRunning: false,
       episode: { novelText: 'story draft', voiceLines: [] },
       projectCharacterCount: 1,
-      episodeStoryboards: [{ panels: [{ id: 'p1' } as any] }],
+      episodeStoryboards: [{ panels: [makePanel()] }],
       journeyType: 'film_video',
       t,
     })
