@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import NovelInputStage from './NovelInputStage'
 import QuickMangaHistoryPanel from './QuickMangaHistoryPanel'
 import MangaPanelControls from './MangaPanelControls'
@@ -10,6 +11,7 @@ import { useWorkspaceEpisodeStageData } from '../hooks/useWorkspaceEpisodeStageD
 
 export default function ConfigStage() {
   const runtime = useWorkspaceStageRuntime()
+  const t = useTranslations('novelPromotion')
   const { projectId, onRefresh } = useWorkspaceProvider()
   const { episodeName, novelText, storyboards } = useWorkspaceEpisodeStageData()
   const [showAdvancedControls, setShowAdvancedControls] = useState(false)
@@ -59,15 +61,15 @@ export default function ConfigStage() {
         <div className="space-y-4">
           <div className="glass-surface-soft rounded-xl p-4 flex items-center justify-between gap-3">
             <div>
-              <div className="text-sm font-semibold text-[var(--glass-text-primary)]">Advanced manga controls</div>
-              <div className="text-xs text-[var(--glass-text-tertiary)] mt-1">Open panel controls, quick actions, and run history only when you need deeper control.</div>
+              <div className="text-sm font-semibold text-[var(--glass-text-primary)]">{t('storyInput.manga.ui.advancedControlsTitle')}</div>
+              <div className="text-xs text-[var(--glass-text-tertiary)] mt-1">{t('storyInput.manga.ui.advancedControlsDescription')}</div>
             </div>
             <button
               type="button"
               onClick={() => setShowAdvancedControls((value) => !value)}
               className="glass-btn-base glass-btn-secondary px-3 py-2 text-sm"
             >
-              {showAdvancedControls ? 'Hide advanced controls' : 'Show advanced controls'}
+              {showAdvancedControls ? t('storyInput.manga.ui.hideAdvancedControls') : t('storyInput.manga.ui.showAdvancedControls')}
             </button>
           </div>
 

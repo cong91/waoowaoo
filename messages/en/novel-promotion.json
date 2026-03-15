@@ -306,7 +306,11 @@
         "activeLabel": "Active",
         "templateLabel": "template",
         "styleLock": "Style lock",
-        "conflictPolicy": "Conflict policy"
+        "conflictPolicy": "Conflict policy",
+        "advancedControlsTitle": "Advanced manga controls",
+        "advancedControlsDescription": "Open panel controls, quick actions, and run history only when you need deeper control.",
+        "showAdvancedControls": "Show advanced controls",
+        "hideAdvancedControls": "Hide advanced controls"
       },
       "regenerate": {
         "invalidSource": "Selected history item is not a valid Manga source",
