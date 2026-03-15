@@ -135,6 +135,10 @@
         "unavailable": "No image model is currently available. You can still choose a bundle to preview the flow, but configure a model before real generation."
       },
       "providerRoute": "Model route",
+      "providerDefault": "Default",
+      "providerOpenAI": "OpenAI-compatible preferred",
+      "providerGemini": "Gemini-compatible preferred",
+      "providerCurrent": "Based on current configuration",
       "availableImageModels": "Available image models: {count}",
       "recommendationPrefix": "Quick comparison hint: try",
       "activeBundle": "Current bundle",
@@ -143,7 +147,60 @@
       "characterDirectionTitle": "Character direction",
       "characterDirectionDescription": "Optimize emotion and recognizability so opening beats communicate the concept clearly.",
       "environmentTitle": "Presentation environment",
-      "environmentDescription": "Match the visual mood to the message so the demo feels more convincing."
+      "environmentDescription": "Match the visual mood to the message so the demo feels more convincing.",
+      "tooLong": "The content exceeds 30,000 characters. Shorten it before running the next step.",
+      "tooShort": "The content is still quite short for a demo. Add more setting/action details so the script becomes clearer.",
+      "validContent": "The content is valid for a demo. You can generate the script now.",
+      "generateManga": "Generate Manga Demo Script",
+      "generateFilm": "Generate Film Demo Script",
+      "characterStrategies": {
+        "consistencyFirst": {
+          "title": "Character consistency",
+          "description": "Keep face, hair, and outfit stable for smooth reading continuity.",
+          "badge": "Safe"
+        },
+        "emotionFirst": {
+          "title": "Emotion first",
+          "description": "Push expressions harder so thumbnails and opening beats feel more eye-catching.",
+          "badge": "Bold"
+        },
+        "dynamicAction": {
+          "title": "Dynamic action",
+          "description": "Increase the feeling of movement, especially for teaser/trailer-like pacing.",
+          "badge": "Energetic"
+        }
+      },
+      "environments": {
+        "cityNightNeon": {
+          "tone": "Urban night, high contrast",
+          "cue": "Cyber · EDM · speed"
+        },
+        "forestMistDawn": {
+          "tone": "Soft dawn mist, gentle light",
+          "cue": "Fantasy · healing · dreamy"
+        },
+        "interiorCinematic": {
+          "tone": "Warm interior, cinematic shadows",
+          "cue": "Drama · dialogue · intimate"
+        }
+      },
+      "bundles": {
+        "launchTeaser": {
+          "outcome": "Produce a fast teaser with strong scene rhythm for social ads.",
+          "cta": "Apply teaser bundle",
+          "compareHint": "Prioritize fast pacing and eye-catching opening beats."
+        },
+        "brandStory": {
+          "outcome": "Tell a brand story with clearer emotional direction.",
+          "cta": "Apply brand story bundle",
+          "compareHint": "Prioritize emotion and character closeness."
+        },
+        "productExplainer": {
+          "outcome": "Keep character visuals stable for product explainer videos.",
+          "cta": "Apply explainer bundle",
+          "compareHint": "Prioritize consistency for explanatory scene sequences."
+        }
+      }
     },
     "manga": {
       "title": "Manga / Webtoon",

@@ -275,23 +275,23 @@ export default function NovelInputStage({
   }> = [
     {
       id: 'consistency-first',
-      title: 'Nhất quán nhân vật',
-      description: 'Giữ gương mặt, tóc và trang phục ổn định để xem liền mạch.',
-      badge: 'An toàn',
+      title: t('storyInput.demoFlow.characterStrategies.consistencyFirst.title'),
+      description: t('storyInput.demoFlow.characterStrategies.consistencyFirst.description'),
+      badge: t('storyInput.demoFlow.characterStrategies.consistencyFirst.badge'),
       icon: '🧬',
     },
     {
       id: 'emotion-first',
-      title: 'Ưu tiên cảm xúc',
-      description: 'Đẩy mạnh biểu cảm để thumbnail và cảnh mở đầu hút mắt hơn.',
-      badge: 'Nổi bật',
+      title: t('storyInput.demoFlow.characterStrategies.emotionFirst.title'),
+      description: t('storyInput.demoFlow.characterStrategies.emotionFirst.description'),
+      badge: t('storyInput.demoFlow.characterStrategies.emotionFirst.badge'),
       icon: '🎭',
     },
     {
       id: 'dynamic-action',
-      title: 'Hành động động',
-      description: 'Tăng cảm giác chuyển động, hợp teaser/trailer ngắn.',
-      badge: 'Sôi động',
+      title: t('storyInput.demoFlow.characterStrategies.dynamicAction.title'),
+      description: t('storyInput.demoFlow.characterStrategies.dynamicAction.description'),
+      badge: t('storyInput.demoFlow.characterStrategies.dynamicAction.badge'),
       icon: '⚡',
     },
   ]
@@ -307,26 +307,26 @@ export default function NovelInputStage({
     {
       id: 'city-night-neon',
       title: 'Neon City',
-      tone: 'Đêm đô thị, tương phản cao',
+      tone: t('storyInput.demoFlow.environments.cityNightNeon.tone'),
       colors: 'from-cyan-500/20 via-blue-500/10 to-purple-500/20',
       cover: '/demo/novel-input/neon-city.svg',
-      cue: 'Cyber · EDM · tốc độ',
+      cue: t('storyInput.demoFlow.environments.cityNightNeon.cue'),
     },
     {
       id: 'forest-mist-dawn',
       title: 'Forest Dawn',
-      tone: 'Sương sớm nhẹ, ánh sáng dịu',
+      tone: t('storyInput.demoFlow.environments.forestMistDawn.tone'),
       colors: 'from-emerald-500/20 via-lime-500/10 to-cyan-500/20',
       cover: '/demo/novel-input/forest-dawn.svg',
-      cue: 'Fantasy · chữa lành · mơ màng',
+      cue: t('storyInput.demoFlow.environments.forestMistDawn.cue'),
     },
     {
       id: 'interior-cinematic',
       title: 'Cinematic Interior',
-      tone: 'Nội thất ấm, bóng đổ điện ảnh',
+      tone: t('storyInput.demoFlow.environments.interiorCinematic.tone'),
       colors: 'from-amber-500/20 via-orange-500/10 to-rose-500/20',
       cover: '/demo/novel-input/interior-cinematic.svg',
-      cue: 'Drama · hội thoại · gần gũi',
+      cue: t('storyInput.demoFlow.environments.interiorCinematic.cue'),
     },
   ]
 
@@ -343,9 +343,9 @@ export default function NovelInputStage({
     {
       id: 'launch-teaser',
       name: 'Launch Teaser',
-      outcome: 'Ra teaser nhanh cho social ads với nhịp cảnh mạnh.',
-      cta: 'Áp bundle teaser',
-      compareHint: 'Ưu tiên nhịp nhanh, cảnh mở đầu bắt mắt.',
+      outcome: t('storyInput.demoFlow.bundles.launchTeaser.outcome'),
+      cta: t('storyInput.demoFlow.bundles.launchTeaser.cta'),
+      compareHint: t('storyInput.demoFlow.bundles.launchTeaser.compareHint'),
       artStyle: 'realistic',
       character: 'dynamic-action',
       environment: 'city-night-neon',
@@ -353,9 +353,9 @@ export default function NovelInputStage({
     {
       id: 'brand-story',
       name: 'Brand Story',
-      outcome: 'Kể câu chuyện thương hiệu với cảm xúc rõ ràng.',
-      cta: 'Áp bundle brand story',
-      compareHint: 'Ưu tiên cảm xúc và tính gần gũi của nhân vật.',
+      outcome: t('storyInput.demoFlow.bundles.brandStory.outcome'),
+      cta: t('storyInput.demoFlow.bundles.brandStory.cta'),
+      compareHint: t('storyInput.demoFlow.bundles.brandStory.compareHint'),
       artStyle: 'american-comic',
       character: 'emotion-first',
       environment: 'interior-cinematic',
@@ -363,9 +363,9 @@ export default function NovelInputStage({
     {
       id: 'product-explainer',
       name: 'Product Explainer',
-      outcome: 'Giữ hình ảnh nhân vật ổn định cho video giới thiệu sản phẩm.',
-      cta: 'Áp bundle explainer',
-      compareHint: 'Ưu tiên nhất quán để dễ dựng chuỗi cảnh giải thích.',
+      outcome: t('storyInput.demoFlow.bundles.productExplainer.outcome'),
+      cta: t('storyInput.demoFlow.bundles.productExplainer.cta'),
+      compareHint: t('storyInput.demoFlow.bundles.productExplainer.compareHint'),
       artStyle: 'japanese-anime',
       character: 'consistency-first',
       environment: 'forest-mist-dawn',
@@ -388,12 +388,12 @@ export default function NovelInputStage({
     ? 'OpenAI-compatible'
     : providerFirstModels.geminiCompat.length > 0
       ? 'Gemini-compatible'
-      : 'Mặc định'
+      : t('storyInput.demoFlow.providerDefault')
 
   const providerHintLabel = (hint: string) => {
-    if (hint === 'openai-compatible') return 'OpenAI-compatible ưu tiên'
-    if (hint === 'gemini-compatible') return 'Gemini-compatible ưu tiên'
-    return 'Theo cấu hình hiện tại'
+    if (hint === 'openai-compatible') return t('storyInput.demoFlow.providerOpenAI')
+    if (hint === 'gemini-compatible') return t('storyInput.demoFlow.providerGemini')
+    return t('storyInput.demoFlow.providerCurrent')
   }
 
   const activeBundle = useMemo(
@@ -419,14 +419,14 @@ export default function NovelInputStage({
     try {
       const result = await onGenerateDemoSampleAssets()
       if (result.mode === 'real') {
-        setSampleAssetSummary(`Sample assets: tạo thật ${result.realTriggered}, fallback ${result.fallbackApplied}`)
+        setSampleAssetSummary(`Sample assets: real ${result.realTriggered}, fallback ${result.fallbackApplied}`)
       } else if (result.mode === 'mixed') {
-        setSampleAssetSummary(`Sample assets: mixed thật ${result.realTriggered}, fallback ${result.fallbackApplied}`)
+        setSampleAssetSummary(`Sample assets: mixed real ${result.realTriggered}, fallback ${result.fallbackApplied}`)
       } else {
         setSampleAssetSummary(`Sample assets: fallback ${result.fallbackApplied}`)
       }
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Không thể tạo sample assets lúc này'
+      const message = error instanceof Error ? error.message : 'Unable to generate sample assets right now'
       setSampleAssetError(message)
       setSampleAssetSummary('')
     }
@@ -466,19 +466,19 @@ export default function NovelInputStage({
 
           {isNovelTextTooLong && (
             <div className="mt-2 rounded-lg border border-rose-400/35 bg-rose-500/10 px-3 py-2 text-xs text-rose-100">
-              Nội dung đang vượt 30.000 ký tự. Nên rút gọn để tránh lỗi khi chạy demo.
+              {t('storyInput.demoFlow.tooLong')}
             </div>
           )}
 
           {!isNovelTextTooLong && hasContent && normalizedNovelText.length < 30 && (
             <div className="mt-2 rounded-lg border border-amber-400/35 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
-              Nội dung đang khá ngắn cho demo. Nên thêm bối cảnh/hành động để script rõ hơn.
+              {t('storyInput.demoFlow.tooShort')}
             </div>
           )}
 
           {!isNovelTextTooLong && hasContent && normalizedNovelText.length >= 30 && (
             <div className="mt-2 rounded-lg border border-emerald-400/35 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-100">
-              Nội dung hợp lệ cho demo. Có thể bấm tạo script ngay.
+              {t('storyInput.demoFlow.validContent')}
             </div>
           )}
 
@@ -735,7 +735,7 @@ export default function NovelInputStage({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
-            <h4 className="text-sm font-semibold text-[var(--glass-text-primary)]">Tỉ lệ khung hình</h4>
+            <h4 className="text-sm font-semibold text-[var(--glass-text-primary)]">{t('storyInput.videoRatio')}</h4>
             <RatioSelector
               value={videoRatio}
               onChange={(value) => onVideoRatioChange?.(value)}
@@ -908,13 +908,13 @@ export default function NovelInputStage({
             <TaskStatusInline state={stageSwitchingState} className="text-white [&>span]:text-white [&_svg]:text-white" />
           ) : (
             <>
-              <span>{isMangaJourney ? 'Generate Manga Demo Script' : 'Generate Film Demo Script'}</span>
+              <span>{isMangaJourney ? t('storyInput.demoFlow.generateManga') : t('storyInput.demoFlow.generateFilm')}</span>
               <AppIcon name="arrowRight" className="w-5 h-5" />
             </>
           )}
         </button>
         <p className="text-center text-xs text-[var(--glass-text-tertiary)] mt-3">
-          {isNovelTextTooLong ? 'Nội dung quá dài, hãy rút gọn trước khi chạy bước tiếp theo.' : hasContent ? t("storyInput.ready") : t("storyInput.pleaseInput")}
+          {isNovelTextTooLong ? t('storyInput.demoFlow.tooLong') : hasContent ? t("storyInput.ready") : t("storyInput.pleaseInput")}
         </p>
       </div>
     </div>
