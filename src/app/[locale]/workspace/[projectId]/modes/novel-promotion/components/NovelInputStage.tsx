@@ -383,6 +383,7 @@ export default function NovelInputStage({
 
   const [sampleAssetSummary, setSampleAssetSummary] = useState<string>('')
   const [sampleAssetError, setSampleAssetError] = useState<string>('')
+  const [showDemoFlowSetup, setShowDemoFlowSetup] = useState(false)
 
   const providerRouteLabel = providerFirstModels.openaiCompat.length > 0
     ? 'OpenAI-compatible'
@@ -667,11 +668,22 @@ export default function NovelInputStage({
 
       {/* VAT-121: demo-focused flow */}
       <div className="glass-surface p-6 space-y-5">
-        <div className="flex flex-col gap-1">
-          <h3 className="text-sm font-semibold text-[var(--glass-text-muted)] tracking-[0.01em]">{t('storyInput.demoFlow.title')}</h3>
-          <p className="text-xs text-[var(--glass-text-tertiary)]">{t('storyInput.demoFlow.description')}</p>
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex flex-col gap-1">
+            <h3 className="text-sm font-semibold text-[var(--glass-text-muted)] tracking-[0.01em]">{t('storyInput.demoFlow.title')}</h3>
+            <p className="text-xs text-[var(--glass-text-tertiary)]">{t('storyInput.demoFlow.description')}</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowDemoFlowSetup((value) => !value)}
+            className="glass-btn-base glass-btn-secondary px-3 py-2 text-sm"
+          >
+            {showDemoFlowSetup ? t('storyInput.demoFlow.hide') : t('storyInput.demoFlow.show')}
+          </button>
         </div>
 
+        {showDemoFlowSetup && (
+        <>
         <div className="rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/15 p-4 space-y-3">
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <p className="text-xs text-[var(--glass-text-secondary)]">{t('storyInput.demoFlow.providerRoute')}: {providerRouteLabel}</p>
@@ -868,6 +880,8 @@ export default function NovelInputStage({
           <div className="rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/10 px-3 py-2 text-xs text-[var(--glass-text-tertiary)]">
             {t('storyInput.demoFlow.tip')}
           </div>
+        )}
+        </>
         )}
       </div>
 

@@ -129,6 +129,8 @@
     "demoFlow": {
       "title": "Demo flow setup",
       "description": "Pick a business outcome first, then lock style + characters + environment to produce a more coherent demo script.",
+      "show": "Show demo flow setup",
+      "hide": "Hide demo flow setup",
       "sampleAssets": {
         "idle": "Generate sample assets",
         "pending": "Generating sample assets...",
