@@ -370,7 +370,7 @@ export default function NovelInputStage({
       character: 'consistency-first',
       environment: 'forest-mist-dawn',
     },
-  ], [])
+  ], [t])
 
   const activeBundleId = useMemo(() => {
     const matched = demoBundles.find((bundle) =>
