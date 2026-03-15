@@ -126,6 +126,18 @@
     "creating": "AI Creating...",
     "ready": "✓ Configuration complete, ready for next step",
     "pleaseInput": "Please enter script content first",
+    "demoFlow": {
+      "title": "Demo flow setup",
+      "description": "Pick a business outcome first, then lock style + characters + environment to produce a more coherent demo script.",
+      "sampleAssets": {
+        "idle": "Generate sample assets",
+        "pending": "Generating sample assets..."
+      },
+      "providerRoute": "Model route",
+      "availableImageModels": "Available image models: {count}",
+      "recommendationPrefix": "Quick comparison hint: try",
+      "tip": "Tip: Manga/Webtoon lane includes extra Quick Manga controls above for chapter continuity and panel flow optimization."
+    },
     "manga": {
       "title": "Manga / Webtoon",
       "description": "Use manga/webtoon-focused controls in this runtime lane for paneling and chapter continuity",

@@ -668,15 +668,15 @@ export default function NovelInputStage({
       {/* VAT-121: demo-focused flow */}
       <div className="glass-surface p-6 space-y-5">
         <div className="flex flex-col gap-1">
-          <h3 className="text-sm font-semibold text-[var(--glass-text-muted)] tracking-[0.01em]">Demo flow setup</h3>
-          <p className="text-xs text-[var(--glass-text-tertiary)]">Chọn outcome kinh doanh trước, sau đó chốt style + nhân vật + bối cảnh để ra script demo mạch hơn.</p>
+          <h3 className="text-sm font-semibold text-[var(--glass-text-muted)] tracking-[0.01em]">{t('storyInput.demoFlow.title')}</h3>
+          <p className="text-xs text-[var(--glass-text-tertiary)]">{t('storyInput.demoFlow.description')}</p>
         </div>
 
         <div className="rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/15 p-4 space-y-3">
           <div className="flex items-center justify-between gap-3 flex-wrap">
-            <p className="text-xs text-[var(--glass-text-secondary)]">Model route: {providerRouteLabel}</p>
+            <p className="text-xs text-[var(--glass-text-secondary)]">{t('storyInput.demoFlow.providerRoute')}: {providerRouteLabel}</p>
             <div className="flex items-center gap-2 flex-wrap justify-end">
-              <p className="text-xs text-[var(--glass-text-tertiary)]">Image models khả dụng: {providerFirstModels.total}</p>
+              <p className="text-xs text-[var(--glass-text-tertiary)]">{t('storyInput.demoFlow.availableImageModels', { count: providerFirstModels.total })}</p>
               {onGenerateDemoSampleAssets && (
                 <button
                   type="button"
@@ -684,7 +684,7 @@ export default function NovelInputStage({
                   onClick={handleGenerateSampleAssets}
                   className="glass-btn-base px-3 py-1.5 text-xs disabled:opacity-60"
                 >
-                  {demoSampleAssetsPending ? 'Đang tạo sample assets...' : 'Tạo sample assets'}
+                  {demoSampleAssetsPending ? t('storyInput.demoFlow.sampleAssets.pending') : t('storyInput.demoFlow.sampleAssets.idle')}
                 </button>
               )}
             </div>
@@ -858,7 +858,7 @@ export default function NovelInputStage({
             )}
             {recommendationBundle && recommendationBundle.id !== activeBundle?.id && (
               <p className="text-xs text-[var(--glass-text-tertiary)]">
-                Gợi ý so sánh nhanh: thử thêm <span className="font-medium">{recommendationBundle.name}</span> — {recommendationBundle.compareHint}
+                {t('storyInput.demoFlow.recommendationPrefix')} <span className="font-medium">{recommendationBundle.name}</span> — {recommendationBundle.compareHint}
               </p>
             )}
           </div>
@@ -866,7 +866,7 @@ export default function NovelInputStage({
 
         {isMangaJourney && (
           <div className="rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/10 px-3 py-2 text-xs text-[var(--glass-text-tertiary)]">
-            Tip: Manga/Webtoon lane đã có thêm Quick Manga controls phía trên để tối ưu continuity theo chapter.
+            {t('storyInput.demoFlow.tip')}
           </div>
         )}
       </div>
