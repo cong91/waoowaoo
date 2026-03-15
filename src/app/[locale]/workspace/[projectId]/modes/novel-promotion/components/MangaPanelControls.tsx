@@ -494,7 +494,8 @@ export default function MangaPanelControls({
 
       {shouldShowQuickActions ? (
         <div className="space-y-2">
-          <p className="text-xs font-semibold text-[var(--glass-text-secondary)] uppercase tracking-wide">Webtoon panel quick actions (P1)</p>
+          <p className="text-xs font-semibold text-[var(--glass-text-secondary)] uppercase tracking-wide">{t('storyInput.manga.ui.quickActionsTitle')}</p>
+          <p className="text-[11px] text-[var(--glass-text-tertiary)]">{t('storyInput.manga.ui.quickActionsGuidance')}</p>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
             {WEBTOON_PANEL_QUICK_ACTIONS.map((action) => (
               <button
@@ -537,7 +538,12 @@ export default function MangaPanelControls({
                 className="rounded-lg border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/15 px-3 py-2 text-left hover:bg-[var(--glass-bg-muted)]/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label={`quick-action-${action.id}`}
               >
-                <div className="text-xs font-semibold text-[var(--glass-text-primary)]">{action.label}</div>
+                <div className="flex items-center justify-between gap-2">
+                  <div className="text-xs font-semibold text-[var(--glass-text-primary)]">{action.label}</div>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full ${action.category === 'safe' ? 'bg-emerald-500/15 text-emerald-200' : 'bg-amber-500/15 text-amber-200'}`}>
+                    {action.category === 'safe' ? t('storyInput.manga.ui.quickActionSafe') : t('storyInput.manga.ui.quickActionAdvanced')}
+                  </span>
+                </div>
                 <div className="mt-1 text-[11px] text-[var(--glass-text-tertiary)]">{action.helper}</div>
               </button>
             ))}

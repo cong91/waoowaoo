@@ -4,6 +4,7 @@ export interface WebtoonQuickActionMeta {
   id: WebtoonPanelQuickAction
   label: string
   helper: string
+  category: 'safe' | 'advanced'
 }
 
 export interface WebtoonScrollPreviewItem {
@@ -43,11 +44,11 @@ export interface WebtoonQuickActionCreatePayload extends Record<string, unknown>
 }
 
 export const WEBTOON_PANEL_QUICK_ACTIONS: WebtoonQuickActionMeta[] = [
-  { id: 'add', label: 'Add', helper: 'Thêm panel mới ở nhịp hiện tại.' },
-  { id: 'duplicate', label: 'Duplicate', helper: 'Nhân bản panel để giữ continuity.' },
-  { id: 'split', label: 'Split', helper: 'Chia panel dài thành 2 beat rõ hơn.' },
-  { id: 'merge', label: 'Merge', helper: 'Gộp panel ngắn để giảm nhiễu nhịp đọc.' },
-  { id: 'reorder', label: 'Reorder', helper: 'Đổi thứ tự beat để tối ưu flow dọc.' },
+  { id: 'add', label: 'Add', helper: 'Create a new panel after the current point.', category: 'safe' },
+  { id: 'duplicate', label: 'Duplicate', helper: 'Reuse the current panel as a quick starting point.', category: 'safe' },
+  { id: 'split', label: 'Split', helper: 'Break one long panel into two clearer story beats.', category: 'advanced' },
+  { id: 'merge', label: 'Merge', helper: 'Combine short adjacent beats into one stronger panel.', category: 'advanced' },
+  { id: 'reorder', label: 'Reorder', helper: 'Change panel order to improve reading flow.', category: 'advanced' },
 ]
 
 function safeNumber(value: number | null | undefined): number | null {
