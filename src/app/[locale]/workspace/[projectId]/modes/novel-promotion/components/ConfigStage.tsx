@@ -2,12 +2,15 @@
 
 import NovelInputStage from './NovelInputStage'
 import QuickMangaHistoryPanel from './QuickMangaHistoryPanel'
+import MangaPanelControls from './MangaPanelControls'
 import { useWorkspaceStageRuntime } from '../WorkspaceStageRuntimeContext'
+import { useWorkspaceProvider } from '../WorkspaceProvider'
 import { useWorkspaceEpisodeStageData } from '../hooks/useWorkspaceEpisodeStageData'
 
 export default function ConfigStage() {
   const runtime = useWorkspaceStageRuntime()
-  const { episodeName, novelText } = useWorkspaceEpisodeStageData()
+  const { projectId, onRefresh } = useWorkspaceProvider()
+  const { episodeName, novelText, storyboards } = useWorkspaceEpisodeStageData()
 
   return (
     <div className="space-y-5">
@@ -42,10 +45,41 @@ export default function ConfigStage() {
         artStyle={runtime.artStyle ?? undefined}
         onVideoRatioChange={runtime.onVideoRatioChange}
         onArtStyleChange={runtime.onArtStyleChange}
+        selectedCharacterStrategy={runtime.selectedCharacterStrategy}
+        onCharacterStrategyChange={runtime.onCharacterStrategyChange}
+        selectedEnvironmentId={runtime.selectedEnvironmentId}
+        onEnvironmentChange={runtime.onEnvironmentChange}
+        onGenerateDemoSampleAssets={runtime.onGenerateDemoSampleAssets}
+        demoSampleAssetsPending={runtime.demoSampleAssetsPending}
         onNext={runtime.onRunStoryToScript}
       />
       {runtime.journeyType === 'manga_webtoon' && (
-        <QuickMangaHistoryPanel enabled={runtime.quickMangaEnabled} />
+        <>
+          <MangaPanelControls
+            projectId={projectId}
+            storyboards={storyboards}
+            onRefresh={() => onRefresh({ scope: 'all' })}
+            enabled={runtime.quickMangaEnabled}
+            preset={runtime.quickMangaPreset}
+            layout={runtime.quickMangaLayout}
+            colorMode={runtime.quickMangaColorMode}
+            panelTemplateId={runtime.quickMangaPanelTemplateId}
+            styleLockEnabled={runtime.quickMangaStyleLockEnabled}
+            styleLockProfile={runtime.quickMangaStyleLockProfile}
+            styleLockStrength={runtime.quickMangaStyleLockStrength}
+            conflictPolicy={runtime.quickMangaConflictPolicy}
+            onEnabledChange={runtime.onQuickMangaEnabledChange}
+            onPresetChange={runtime.onQuickMangaPresetChange}
+            onLayoutChange={runtime.onQuickMangaLayoutChange}
+            onColorModeChange={runtime.onQuickMangaColorModeChange}
+            onPanelTemplateChange={runtime.onQuickMangaPanelTemplateChange}
+            onStyleLockEnabledChange={runtime.onQuickMangaStyleLockEnabledChange}
+            onStyleLockProfileChange={runtime.onQuickMangaStyleLockProfileChange}
+            onStyleLockStrengthChange={runtime.onQuickMangaStyleLockStrengthChange}
+            onConflictPolicyChange={runtime.onQuickMangaConflictPolicyChange}
+          />
+          <QuickMangaHistoryPanel enabled={runtime.quickMangaEnabled} />
+        </>
       )}
     </div>
   )

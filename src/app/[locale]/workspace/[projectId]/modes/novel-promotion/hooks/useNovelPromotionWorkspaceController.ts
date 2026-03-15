@@ -35,6 +35,11 @@ import {
   writeQuickMangaSessionPreference,
 } from '@/lib/workspace/quick-manga-session'
 
+const VAT121_VISUAL_DIRECTION_STORAGE_KEY = 'vat121.visual-direction.v1'
+
+type CharacterStrategyId = 'consistency-first' | 'emotion-first' | 'dynamic-action'
+type EnvironmentPresetId = 'city-night-neon' | 'forest-mist-dawn' | 'interior-cinematic'
+
 export function useNovelPromotionWorkspaceController({
   project,
   projectId,
@@ -59,7 +64,9 @@ export function useNovelPromotionWorkspaceController({
     preset: 'auto' as QuickMangaPreset,
     layout: 'auto' as QuickMangaLayout,
     colorMode: 'auto' as QuickMangaColorMode,
+    panelTemplateId: null as string | null,
     controls: {
+      panelTemplateId: null as string | null,
       styleLock: {
         enabled: false,
         profile: 'auto' as QuickMangaStyleLockProfile,
@@ -73,6 +80,17 @@ export function useNovelPromotionWorkspaceController({
     },
   }), [])
   const [quickManga, setQuickManga] = useState(quickMangaDefaults)
+  const initialCharacterStrategy: CharacterStrategyId =
+    projectSnapshot.selectedCharacterStrategy === 'emotion-first' || projectSnapshot.selectedCharacterStrategy === 'dynamic-action'
+      ? projectSnapshot.selectedCharacterStrategy
+      : 'consistency-first'
+  const initialEnvironmentId: EnvironmentPresetId =
+    projectSnapshot.selectedEnvironmentId === 'forest-mist-dawn' || projectSnapshot.selectedEnvironmentId === 'interior-cinematic'
+      ? projectSnapshot.selectedEnvironmentId
+      : 'city-night-neon'
+  const [selectedCharacterStrategy, setSelectedCharacterStrategy] = useState<CharacterStrategyId>(initialCharacterStrategy)
+  const [selectedEnvironmentId, setSelectedEnvironmentId] = useState<EnvironmentPresetId>(initialEnvironmentId)
+  const [demoSampleAssetsPending, setDemoSampleAssetsPending] = useState(false)
 
   useEffect(() => {
     const enabledFromEntry = shouldEnableQuickMangaFromSearchParams(searchParams)
@@ -91,6 +109,34 @@ export function useNovelPromotionWorkspaceController({
     })
   }, [projectSnapshot.journeyType, searchParams])
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    try {
+      const raw = window.localStorage.getItem(VAT121_VISUAL_DIRECTION_STORAGE_KEY)
+      if (!raw) return
+      const parsed = JSON.parse(raw) as Partial<{
+        selectedCharacterStrategy: CharacterStrategyId
+        selectedEnvironmentId: EnvironmentPresetId
+      }>
+      if (parsed.selectedCharacterStrategy === 'emotion-first' || parsed.selectedCharacterStrategy === 'dynamic-action' || parsed.selectedCharacterStrategy === 'consistency-first') {
+        setSelectedCharacterStrategy(parsed.selectedCharacterStrategy)
+      }
+      if (parsed.selectedEnvironmentId === 'forest-mist-dawn' || parsed.selectedEnvironmentId === 'interior-cinematic' || parsed.selectedEnvironmentId === 'city-night-neon') {
+        setSelectedEnvironmentId(parsed.selectedEnvironmentId)
+      }
+    } catch {
+      // ignore malformed local cache
+    }
+  }, [])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    window.localStorage.setItem(VAT121_VISUAL_DIRECTION_STORAGE_KEY, JSON.stringify({
+      selectedCharacterStrategy,
+      selectedEnvironmentId,
+    }))
+  }, [selectedCharacterStrategy, selectedEnvironmentId])
+
   const handleQuickMangaEnabledChange = useCallback(async (enabled: boolean) => {
     writeQuickMangaSessionPreference(enabled)
     setQuickManga((prev) => ({ ...prev, enabled }))
@@ -106,6 +152,20 @@ export function useNovelPromotionWorkspaceController({
 
   const handleQuickMangaColorModeChange = useCallback(async (value: QuickMangaColorMode) => {
     setQuickManga((prev) => ({ ...prev, colorMode: value }))
+  }, [])
+
+  const handleQuickMangaPanelTemplateChange = useCallback(async (templateId: string | null) => {
+    setQuickManga((prev) => {
+      const resolved = typeof templateId === 'string' && templateId.trim() ? templateId.trim() : null
+      return {
+        ...prev,
+        panelTemplateId: resolved,
+        controls: {
+          ...prev.controls,
+          panelTemplateId: resolved,
+        },
+      }
+    })
   }, [])
 
   const handleQuickMangaStyleLockEnabledChange = useCallback(async (enabled: boolean) => {
@@ -231,6 +291,81 @@ export function useNovelPromotionWorkspaceController({
     onStageChange,
   })
 
+  const handleCharacterStrategyChange = useCallback(async (value: CharacterStrategyId) => {
+    setSelectedCharacterStrategy(value)
+    await configActions.handleUpdateConfig('selectedCharacterStrategy', value)
+  }, [configActions])
+
+  const handleEnvironmentChange = useCallback(async (value: EnvironmentPresetId) => {
+    setSelectedEnvironmentId(value)
+    await configActions.handleUpdateConfig('selectedEnvironmentId', value)
+  }, [configActions])
+
+  const handleGenerateDemoSampleAssets = useCallback(async () => {
+    if (demoSampleAssetsPending) {
+      return { mode: 'fallback' as const, realTriggered: 0, fallbackApplied: 0 }
+    }
+
+    setDemoSampleAssetsPending(true)
+    try {
+      const response = await fetch(`/api/novel-promotion/${projectId}/demo-sample-assets`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          journeyType: projectSnapshot.journeyType,
+          artStyle: projectSnapshot.artStyle,
+          selectedCharacterStrategy,
+          selectedEnvironmentId,
+          locale: 'vi',
+          source: 'vat121-novel-input',
+        }),
+      })
+
+      const payload = await response.json().catch(() => ({})) as {
+        success?: boolean
+        mode?: 'real' | 'fallback' | 'mixed'
+        realTriggered?: number
+        fallbackApplied?: number
+        error?: { message?: string }
+        message?: string
+      }
+
+      if (!response.ok || payload.success !== true) {
+        throw new Error(payload.error?.message || payload.message || 'Không tạo được demo sample assets')
+      }
+
+      const mode = payload.mode || 'fallback'
+      const realTriggered = Number(payload.realTriggered || 0)
+      const fallbackApplied = Number(payload.fallbackApplied || 0)
+
+      await onRefresh({ mode: 'assets' })
+
+      if (mode === 'real') {
+        _ulogInfo(`[VAT-121] sample assets real triggered=${realTriggered}`)
+      } else if (mode === 'mixed') {
+        _ulogInfo(`[VAT-121] sample assets mixed real=${realTriggered} fallback=${fallbackApplied}`)
+      } else {
+        _ulogInfo(`[VAT-121] sample assets fallback=${fallbackApplied}`)
+      }
+
+      return {
+        mode,
+        realTriggered,
+        fallbackApplied,
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Không tạo được demo sample assets'
+      _ulogInfo(`[VAT-121] sample assets failed: ${message}`)
+      return {
+        mode: 'fallback' as const,
+        realTriggered: 0,
+        fallbackApplied: 0,
+      }
+    } finally {
+      setDemoSampleAssetsPending(false)
+    }
+  }, [demoSampleAssetsPending, onRefresh, projectId, projectSnapshot.artStyle, projectSnapshot.journeyType, selectedCharacterStrategy, selectedEnvironmentId])
+
   const rebuildState = useRebuildConfirm({
     episodeId,
     episodeStoryboards: episode?.storyboards,
@@ -250,6 +385,8 @@ export function useNovelPromotionWorkspaceController({
     entryIntent: projectSnapshot.entryIntent,
     sourceType: projectSnapshot.sourceType,
     artStyle: projectSnapshot.artStyle,
+    selectedCharacterStrategy,
+    selectedEnvironmentId,
     t,
     onRefresh,
     onUpdateConfig: configActions.handleUpdateConfig,
@@ -276,6 +413,7 @@ export function useNovelPromotionWorkspaceController({
     episode,
     projectCharacterCount: projectSnapshot.projectCharacters.length,
     episodeStoryboards,
+    journeyType: projectSnapshot.journeyType,
     t,
   })
 
@@ -290,12 +428,15 @@ export function useNovelPromotionWorkspaceController({
     quickMangaPreset: quickManga.preset,
     quickMangaLayout: quickManga.layout,
     quickMangaColorMode: quickManga.colorMode,
+    quickMangaPanelTemplateId: quickManga.panelTemplateId,
     quickMangaStyleLockEnabled: quickManga.controls.styleLock.enabled,
     quickMangaStyleLockProfile: quickManga.controls.styleLock.profile,
     quickMangaStyleLockStrength: quickManga.controls.styleLock.strength,
     quickMangaChapterContinuityMode: quickManga.controls.chapterContinuity.mode,
     quickMangaChapterId: quickManga.controls.chapterContinuity.chapterId,
     quickMangaConflictPolicy: quickManga.controls.chapterContinuity.conflictPolicy,
+    selectedCharacterStrategy,
+    selectedEnvironmentId,
     videoModel: projectSnapshot.videoModel,
     journeyType: projectSnapshot.journeyType,
     projectName: projectSnapshot.projectName,
@@ -307,12 +448,17 @@ export function useNovelPromotionWorkspaceController({
     onQuickMangaPresetChange: handleQuickMangaPresetChange,
     onQuickMangaLayoutChange: handleQuickMangaLayoutChange,
     onQuickMangaColorModeChange: handleQuickMangaColorModeChange,
+    onQuickMangaPanelTemplateChange: handleQuickMangaPanelTemplateChange,
     onQuickMangaStyleLockEnabledChange: handleQuickMangaStyleLockEnabledChange,
     onQuickMangaStyleLockProfileChange: handleQuickMangaStyleLockProfileChange,
     onQuickMangaStyleLockStrengthChange: handleQuickMangaStyleLockStrengthChange,
     onQuickMangaChapterContinuityModeChange: handleQuickMangaChapterContinuityModeChange,
     onQuickMangaChapterIdChange: handleQuickMangaChapterIdChange,
     onQuickMangaConflictPolicyChange: handleQuickMangaConflictPolicyChange,
+    onCharacterStrategyChange: handleCharacterStrategyChange,
+    onEnvironmentChange: handleEnvironmentChange,
+    onGenerateDemoSampleAssets: handleGenerateDemoSampleAssets,
+    demoSampleAssetsPending,
     runWithRebuildConfirm: rebuildState.runWithRebuildConfirm,
     runStoryToScriptFlow: execution.runStoryToScriptFlow,
     runScriptToStoryboardFlow: execution.runScriptToStoryboardFlow,
@@ -387,7 +533,11 @@ export function useNovelPromotionWorkspaceController({
     t,
     tc,
     te,
-    projectSnapshot: projectSection,
+    projectSnapshot: {
+      ...projectSection,
+      selectedCharacterStrategy,
+      selectedEnvironmentId,
+    },
     uiState,
     stageNavState,
     rebuildState,

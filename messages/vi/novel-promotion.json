@@ -5,13 +5,18 @@
     "storyboard": "Bảng phân cảnh",
     "video": "Băng hình",
     "editor": "Trình chỉnh sửa AI",
-    "editorComingSoon": "Sắp có, hãy theo dõi chúng tôi để cập nhật"
+    "editorComingSoon": "Sắp có, hãy theo dõi chúng tôi để cập nhật",
+    "mangaKickoff": "Khởi tạo Manga",
+    "panelScript": "Kịch bản phân khung",
+    "panelBoard": "Bảng phân khung",
+    "webtoonPanels": "Khung Webtoon"
   },
   "buttons": {
     "assetLibrary": "Thư viện nội dung",
     "settings": "Cài đặt",
     "refreshData": "Làm mới dữ liệu",
-    "enterVideoGeneration": "Nhập video →"
+    "enterVideoGeneration": "Nhập video →",
+    "enterPanelMotion": "Vào chuyển động panel →"
   },
   "smartImport": {
     "title": "Bắt đầu hành trình sáng tạo của bạn",
@@ -139,7 +144,7 @@
         "label": "Bố cục khung",
         "options": {
           "auto": "Tự động",
-          "cinematic": "Khung điện ảnh",
+          "cinematic": "Nhịp khung động",
           "fourKoma": "Nhịp 4-koma",
           "verticalScroll": "Cuộn dọc",
           "splashFocus": "Tập trung splash"

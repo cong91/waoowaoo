@@ -27,12 +27,15 @@ interface UseWorkspaceStageRuntimeParams {
   quickMangaPreset: QuickMangaPreset
   quickMangaLayout: QuickMangaLayout
   quickMangaColorMode: QuickMangaColorMode
+  quickMangaPanelTemplateId: string | null
   quickMangaStyleLockEnabled: boolean
   quickMangaStyleLockProfile: QuickMangaStyleLockProfile
   quickMangaStyleLockStrength: number
   quickMangaChapterContinuityMode: QuickMangaContinuityMode
   quickMangaChapterId: string | null
   quickMangaConflictPolicy: QuickMangaContinuityConflictPolicy
+  selectedCharacterStrategy: 'consistency-first' | 'emotion-first' | 'dynamic-action'
+  selectedEnvironmentId: 'city-night-neon' | 'forest-mist-dawn' | 'interior-cinematic'
   videoModel: string | undefined
   journeyType: 'film_video' | 'manga_webtoon'
   projectName: string
@@ -51,12 +54,17 @@ interface UseWorkspaceStageRuntimeParams {
   onQuickMangaPresetChange: (value: QuickMangaPreset) => Promise<void>
   onQuickMangaLayoutChange: (value: QuickMangaLayout) => Promise<void>
   onQuickMangaColorModeChange: (value: QuickMangaColorMode) => Promise<void>
+  onQuickMangaPanelTemplateChange: (templateId: string | null) => Promise<void>
   onQuickMangaStyleLockEnabledChange: (enabled: boolean) => Promise<void>
   onQuickMangaStyleLockProfileChange: (value: QuickMangaStyleLockProfile) => Promise<void>
   onQuickMangaStyleLockStrengthChange: (value: number) => Promise<void>
   onQuickMangaChapterContinuityModeChange: (value: QuickMangaContinuityMode) => Promise<void>
   onQuickMangaChapterIdChange: (value: string | null) => Promise<void>
   onQuickMangaConflictPolicyChange: (value: QuickMangaContinuityConflictPolicy) => Promise<void>
+  onCharacterStrategyChange: (value: 'consistency-first' | 'emotion-first' | 'dynamic-action') => Promise<void>
+  onEnvironmentChange: (value: 'city-night-neon' | 'forest-mist-dawn' | 'interior-cinematic') => Promise<void>
+  onGenerateDemoSampleAssets: () => Promise<{ mode: 'real' | 'fallback' | 'mixed'; realTriggered: number; fallbackApplied: number }>
+  demoSampleAssetsPending: boolean
   runWithRebuildConfirm: (action: 'storyToScript' | 'scriptToStoryboard', operation: () => Promise<void>) => Promise<void>
   runStoryToScriptFlow: () => Promise<void>
   runScriptToStoryboardFlow: () => Promise<void>
@@ -97,12 +105,15 @@ export function useWorkspaceStageRuntime({
   quickMangaPreset,
   quickMangaLayout,
   quickMangaColorMode,
+  quickMangaPanelTemplateId,
   quickMangaStyleLockEnabled,
   quickMangaStyleLockProfile,
   quickMangaStyleLockStrength,
   quickMangaChapterContinuityMode,
   quickMangaChapterId,
   quickMangaConflictPolicy,
+  selectedCharacterStrategy,
+  selectedEnvironmentId,
   videoModel,
   journeyType,
   projectName,
@@ -114,12 +125,17 @@ export function useWorkspaceStageRuntime({
   onQuickMangaPresetChange,
   onQuickMangaLayoutChange,
   onQuickMangaColorModeChange,
+  onQuickMangaPanelTemplateChange,
   onQuickMangaStyleLockEnabledChange,
   onQuickMangaStyleLockProfileChange,
   onQuickMangaStyleLockStrengthChange,
   onQuickMangaChapterContinuityModeChange,
   onQuickMangaChapterIdChange,
   onQuickMangaConflictPolicyChange,
+  onCharacterStrategyChange,
+  onEnvironmentChange,
+  onGenerateDemoSampleAssets,
+  demoSampleAssetsPending,
   runWithRebuildConfirm,
   runStoryToScriptFlow,
   runScriptToStoryboardFlow,
@@ -153,6 +169,7 @@ export function useWorkspaceStageRuntime({
     quickMangaPreset,
     quickMangaLayout,
     quickMangaColorMode,
+    quickMangaPanelTemplateId,
     quickMangaStyleLockEnabled,
     quickMangaStyleLockProfile,
     quickMangaStyleLockStrength,
@@ -163,14 +180,21 @@ export function useWorkspaceStageRuntime({
     onQuickMangaPresetChange,
     onQuickMangaLayoutChange,
     onQuickMangaColorModeChange,
+    onQuickMangaPanelTemplateChange,
     onQuickMangaStyleLockEnabledChange,
     onQuickMangaStyleLockProfileChange,
     onQuickMangaStyleLockStrengthChange,
     onQuickMangaChapterContinuityModeChange,
     onQuickMangaChapterIdChange,
     onQuickMangaConflictPolicyChange,
+    selectedCharacterStrategy,
+    selectedEnvironmentId,
     onVideoRatioChange: (value) => handleUpdateConfig('videoRatio', value),
     onArtStyleChange: (value) => handleUpdateConfig('artStyle', value),
+    onCharacterStrategyChange,
+    onEnvironmentChange,
+    onGenerateDemoSampleAssets,
+    demoSampleAssetsPending,
     onRunStoryToScript: () => runWithRebuildConfirm('storyToScript', runStoryToScriptFlow),
     onClipUpdate: (clipId, data) => {
       if (!data || typeof data !== 'object' || Array.isArray(data)) {
@@ -206,7 +230,12 @@ export function useWorkspaceStageRuntime({
     onQuickMangaColorModeChange,
     onQuickMangaConflictPolicyChange,
     onQuickMangaEnabledChange,
+    onCharacterStrategyChange,
+    onEnvironmentChange,
+    onGenerateDemoSampleAssets,
+    demoSampleAssetsPending,
     onQuickMangaLayoutChange,
+    onQuickMangaPanelTemplateChange,
     onQuickMangaPresetChange,
     onQuickMangaStyleLockEnabledChange,
     onQuickMangaStyleLockProfileChange,
@@ -220,6 +249,9 @@ export function useWorkspaceStageRuntime({
     quickMangaConflictPolicy,
     quickMangaEnabled,
     quickMangaLayout,
+    quickMangaPanelTemplateId,
+    selectedCharacterStrategy,
+    selectedEnvironmentId,
     quickMangaPreset,
     quickMangaStyleLockEnabled,
     quickMangaStyleLockProfile,
