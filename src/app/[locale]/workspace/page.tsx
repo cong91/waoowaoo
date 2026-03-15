@@ -69,6 +69,20 @@ function formatProjectCost(amount: number, currency = DEFAULT_BILLING_CURRENCY):
   return `¥${amount.toFixed(2)}`
 }
 
+function isInternalProject(project: Project): boolean {
+  const haystack = `${project.name || ''} ${project.description || ''}`.toLowerCase()
+  return [
+    'ux manga flow test',
+    'vat132',
+    'runtime benchmark',
+    'analysis run',
+    'story text run',
+    'test',
+    'fasda',
+    '1231',
+  ].some((token) => haystack.includes(token))
+}
+
 export default function WorkspacePage() {
   const { data: session, status } = useSession()
   const router = useRouter()
@@ -98,6 +112,7 @@ export default function WorkspacePage() {
   const [pagination, setPagination] = useState<Pagination>({ page: 1, pageSize: PAGE_SIZE, total: 0, totalPages: 0 })
   const [searchQuery, setSearchQuery] = useState('')
   const [searchInput, setSearchInput] = useState('')
+  const [showInternalProjects, setShowInternalProjects] = useState(false)
 
   const t = useTranslations('workspace')
   const tc = useTranslations('common')
@@ -113,6 +128,16 @@ export default function WorkspacePage() {
     if (starterTemplates.length === 0) return null
     return starterTemplates.find((template) => template.id === formData.starterTemplateId) || starterTemplates[0]
   }, [formData.starterTemplateId, starterTemplates])
+
+  const hiddenInternalProjects = useMemo(
+    () => projects.filter((project) => isInternalProject(project)),
+    [projects],
+  )
+
+  const visibleProjects = useMemo(
+    () => showInternalProjects ? projects : projects.filter((project) => !isInternalProject(project)),
+    [projects, showInternalProjects],
+  )
 
   const selectedJourneyTitle = formData.entryMode === 'manga'
     ? t('projectTypeMangaTitle')
@@ -523,6 +548,22 @@ export default function WorkspacePage() {
           </div>
         </div>
 
+        {hiddenInternalProjects.length > 0 && (
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/10 px-4 py-3 mb-4">
+            <div>
+              <div className="text-sm font-medium text-[var(--glass-text-primary)]">{t('internalProjectsCount', { count: hiddenInternalProjects.length })}</div>
+              <div className="text-xs text-[var(--glass-text-tertiary)] mt-1">{t('internalProjectsHint')}</div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowInternalProjects((value) => !value)}
+              className="glass-btn-base glass-btn-secondary px-3 py-2 text-sm"
+            >
+              {showInternalProjects ? t('hideInternalProjects') : t('showInternalProjects')}
+            </button>
+          </div>
+        )}
+
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {/* Film/Video Journey Card */}
@@ -587,7 +628,7 @@ export default function WorkspacePage() {
               </div>
             ))
           ) : (
-            projects.map((project) => (
+            visibleProjects.map((project) => (
               <Link
                 key={project.id}
                 href={`/workspace/${project.id}`}
