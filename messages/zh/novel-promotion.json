@@ -217,6 +217,36 @@
         },
         "conflictHelp": "选择策略以处理重生成时风格锁定与章节连续性的冲突。"
       },
+      "ui": {
+        "title": "Manga 叙事控制",
+        "description": "Manga/Webtoon 路径的 panel-first 控制（P1）——优先使用分镜叙事语言，而不是偏视频语义。",
+        "toggleOn": "Manga lane：已开启",
+        "toggleOff": "开启 Manga lane",
+        "panelTemplate": "分镜模板",
+        "storytellingPromptKit": "叙事 Prompt Kit",
+        "active": "当前启用",
+        "quickActionsEmpty": "当前还没有 storyboard/panel 可用于 quick actions。",
+        "scrollPreviewEmpty": "请选择一个模板来预览竖向阅读节奏。",
+        "activeLabel": "当前启用",
+        "templateLabel": "模板",
+        "styleLock": "风格锁定",
+        "conflictPolicy": "冲突策略",
+        "advancedControlsTitle": "高级 Manga 控制",
+        "advancedControlsDescription": "只有在需要更深入控制时，再打开 panel controls、quick actions 和运行历史。",
+        "showAdvancedControls": "显示高级控制",
+        "hideAdvancedControls": "隐藏高级控制"
+      },
+      "storyKits": {
+        "setup": "建立清晰易读的开场场景与阅读节奏。",
+        "continuity": "让相邻 panel 中的人物与道具保持稳定。",
+        "action": "增强动作感，同时保持清晰的 panel 阅读方向。",
+        "dialogue": "优先保留表情与对白气泡的留白空间。",
+        "transition": "让前后场景之间的节奏衔接更顺滑。",
+        "opening": "用强钩子开场，并优先建立主角识别度。",
+        "conflict": "通过动作与情绪对比强化冲突感。",
+        "payoff": "用清晰的 panel 节奏收住情绪或结果，让人更容易记住。",
+        "cliffhanger": "用悬念式结尾保持读者对下一章的好奇。"
+      },
       "regenerate": {
         "invalidSource": "所选历史项不是有效的 Manga 来源",
         "missingContent": "由于缺少来源内容，无法重生成",

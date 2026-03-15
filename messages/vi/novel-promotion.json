@@ -217,6 +217,36 @@
         },
         "conflictHelp": "Chọn chính sách để xử lý xung đột giữa khóa phong cách và tính liên tục theo chương khi tái tạo."
       },
+      "ui": {
+        "title": "Điều khiển kể chuyện Manga",
+        "description": "Bộ điều khiển ưu tiên panel cho lane Manga/Webtoon (P1) — ưu tiên ngôn ngữ kể chuyện theo panel thay vì semantics kiểu video.",
+        "toggleOn": "Manga lane: BẬT",
+        "toggleOff": "Bật Manga lane",
+        "panelTemplate": "Mẫu panel",
+        "storytellingPromptKit": "Bộ prompt kể chuyện",
+        "active": "Đang active",
+        "quickActionsEmpty": "Chưa có storyboard/panel để thao tác quick actions.",
+        "scrollPreviewEmpty": "Chọn template để preview vertical flow theo panel rhythm.",
+        "activeLabel": "Đang active",
+        "templateLabel": "template",
+        "styleLock": "Style lock",
+        "conflictPolicy": "Conflict policy",
+        "advancedControlsTitle": "Điều khiển manga nâng cao",
+        "advancedControlsDescription": "Chỉ mở panel controls, quick actions và run history khi bạn cần kiểm soát sâu hơn.",
+        "showAdvancedControls": "Hiện điều khiển nâng cao",
+        "hideAdvancedControls": "Ẩn điều khiển nâng cao"
+      },
+      "storyKits": {
+        "setup": "Thiết lập bối cảnh và nhịp đọc mở đầu dễ theo dõi.",
+        "continuity": "Giữ nhân vật và đạo cụ ổn định giữa các panel liền nhau.",
+        "action": "Tăng lực chuyển động nhưng vẫn giữ hướng đọc panel rõ ràng.",
+        "dialogue": "Ưu tiên biểu cảm và khoảng trống cho balloon hội thoại.",
+        "transition": "Nối nhịp mượt hơn giữa cảnh trước và cảnh sau.",
+        "opening": "Mở tập bằng hook mạnh và ưu tiên nhận diện nhân vật chính.",
+        "conflict": "Đẩy cao đối kháng bằng hành động và tương phản cảm xúc.",
+        "payoff": "Chốt cảm xúc hoặc kết quả bằng nhịp panel rõ và dễ đọng lại.",
+        "cliffhanger": "Kết đoạn bằng một beat treo để giữ tò mò cho chapter tiếp theo."
+      },
       "regenerate": {
         "invalidSource": "Mục lịch sử đã chọn không phải nguồn Manga hợp lệ",
         "missingContent": "Không thể tái tạo vì thiếu nội dung nguồn",

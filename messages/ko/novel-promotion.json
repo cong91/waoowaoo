@@ -217,6 +217,36 @@
         },
         "conflictHelp": "재생성 시 스타일 락과 챕터 연속성 충돌을 해결할 정책을 선택하세요."
       },
+      "ui": {
+        "title": "Manga 스토리텔링 컨트롤",
+        "description": "Manga/Webtoon 레인의 panel-first 컨트롤(P1) — 비디오식 의미 체계보다 패널 중심의 서사 언어를 우선합니다.",
+        "toggleOn": "Manga lane: ON",
+        "toggleOff": "Manga lane 켜기",
+        "panelTemplate": "패널 템플릿",
+        "storytellingPromptKit": "스토리텔링 프롬프트 키트",
+        "active": "현재 활성화",
+        "quickActionsEmpty": "quick actions에 사용할 storyboard/panel이 아직 없습니다.",
+        "scrollPreviewEmpty": "템플릿을 선택해 세로 읽기 흐름을 미리보세요.",
+        "activeLabel": "현재 활성화",
+        "templateLabel": "템플릿",
+        "styleLock": "스타일 락",
+        "conflictPolicy": "충돌 정책",
+        "advancedControlsTitle": "고급 Manga 컨트롤",
+        "advancedControlsDescription": "더 깊은 제어가 필요할 때만 panel controls, quick actions, 실행 히스토리를 여세요.",
+        "showAdvancedControls": "고급 컨트롤 보기",
+        "hideAdvancedControls": "고급 컨트롤 숨기기"
+      },
+      "storyKits": {
+        "setup": "도입부의 배경과 읽기 리듬을 이해하기 쉽게 정리합니다.",
+        "continuity": "인접 패널 사이에서 캐릭터와 소품의 일관성을 유지합니다.",
+        "action": "패널 읽기 흐름을 유지하면서 움직임의 감각을 강화합니다.",
+        "dialogue": "대사 말풍선과 표정을 위한 여백을 우선 확보합니다.",
+        "transition": "이전 장면과 다음 장면 사이의 리듬을 부드럽게 연결합니다.",
+        "opening": "강한 훅으로 시작하고 주인공 인지도를 우선 확보합니다.",
+        "conflict": "행동과 감정 대비를 통해 갈등감을 강화합니다.",
+        "payoff": "감정 또는 결과를 또렷한 패널 리듬으로 마무리해 여운을 남깁니다.",
+        "cliffhanger": "다음 챕터에 대한 궁금증을 남기는 매달린 비트로 끝냅니다."
+      },
       "regenerate": {
         "invalidSource": "선택한 히스토리 항목은 유효한 Manga 소스가 아닙니다",
         "missingContent": "원본 콘텐츠가 없어 재생성할 수 없습니다",
