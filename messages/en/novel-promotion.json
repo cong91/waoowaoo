@@ -312,6 +312,17 @@
         "showAdvancedControls": "Show advanced controls",
         "hideAdvancedControls": "Hide advanced controls"
       },
+      "storyKits": {
+        "setup": "Set the opening context and reading rhythm so the first beats are easy to follow.",
+        "continuity": "Keep characters and props stable across adjacent panels.",
+        "action": "Increase the feeling of motion while keeping panel reading flow clear.",
+        "dialogue": "Prioritize facial expression and breathing room for dialogue balloons.",
+        "transition": "Smoothly connect the rhythm between the previous and next scene.",
+        "opening": "Open with a strong hook and prioritize recognition of the main character.",
+        "conflict": "Push confrontation through stronger action and emotional contrast.",
+        "payoff": "Land the emotion or result with a clear panel rhythm that feels memorable.",
+        "cliffhanger": "End on a suspended beat that keeps curiosity for the next chapter."
+      },
       "regenerate": {
         "invalidSource": "Selected history item is not a valid Manga source",
         "missingContent": "Cannot regenerate because source content is missing",

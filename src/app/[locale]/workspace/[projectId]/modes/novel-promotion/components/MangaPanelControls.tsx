@@ -63,7 +63,7 @@ const STORY_KIT_THUMBNAILS: Record<string, string> = {
   cliffhanger: '/assets/manga-webtoon/preset-templates/05_busy_day_witch.webp',
 }
 
-export const STORY_KITS: Array<{
+type StoryKit = {
   id: string
   label: string
   helper: string
@@ -76,134 +76,138 @@ export const STORY_KITS: Array<{
     styleLockStrength: number
     conflictPolicy: QuickMangaContinuityConflictPolicy
   }
-}> = [
-  {
-    id: 'setup',
-    label: 'Setup',
-    helper: 'Thiết lập bối cảnh và nhịp đọc mở đầu dễ theo dõi.',
-    values: {
-      preset: 'slice-of-life',
-      layout: 'vertical-scroll',
-      colorMode: 'full-color',
-      styleLockEnabled: true,
-      styleLockProfile: 'soft-tones',
-      styleLockStrength: 0.65,
-      conflictPolicy: 'balanced',
+}
+
+function buildStoryKits(t: ReturnType<typeof useTranslations<'novelPromotion'>>): StoryKit[] {
+  return [
+    {
+      id: 'setup',
+      label: 'Setup',
+      helper: t('storyInput.manga.storyKits.setup'),
+      values: {
+        preset: 'slice-of-life',
+        layout: 'vertical-scroll',
+        colorMode: 'full-color',
+        styleLockEnabled: true,
+        styleLockProfile: 'soft-tones',
+        styleLockStrength: 0.65,
+        conflictPolicy: 'balanced',
+      },
     },
-  },
-  {
-    id: 'continuity',
-    label: 'Continuity',
-    helper: 'Giữ nhân vật/đạo cụ ổn định giữa các panel liền nhau.',
-    values: {
-      preset: 'romance-drama',
-      layout: 'vertical-scroll',
-      colorMode: 'full-color',
-      styleLockEnabled: true,
-      styleLockProfile: 'line-consistent',
-      styleLockStrength: 0.82,
-      conflictPolicy: 'prefer-chapter-context',
+    {
+      id: 'continuity',
+      label: 'Continuity',
+      helper: t('storyInput.manga.storyKits.continuity'),
+      values: {
+        preset: 'romance-drama',
+        layout: 'vertical-scroll',
+        colorMode: 'full-color',
+        styleLockEnabled: true,
+        styleLockProfile: 'line-consistent',
+        styleLockStrength: 0.82,
+        conflictPolicy: 'prefer-chapter-context',
+      },
     },
-  },
-  {
-    id: 'action',
-    label: 'Action',
-    helper: 'Tăng lực chuyển động, giữ bố cục panel rõ hướng mắt đọc.',
-    values: {
-      preset: 'action-battle',
-      layout: 'cinematic',
-      colorMode: 'black-white',
-      styleLockEnabled: true,
-      styleLockProfile: 'ink-contrast',
-      styleLockStrength: 0.78,
-      conflictPolicy: 'balanced',
+    {
+      id: 'action',
+      label: 'Action',
+      helper: t('storyInput.manga.storyKits.action'),
+      values: {
+        preset: 'action-battle',
+        layout: 'cinematic',
+        colorMode: 'black-white',
+        styleLockEnabled: true,
+        styleLockProfile: 'ink-contrast',
+        styleLockStrength: 0.78,
+        conflictPolicy: 'balanced',
+      },
     },
-  },
-  {
-    id: 'dialogue',
-    label: 'Dialogue',
-    helper: 'Ưu tiên biểu cảm và khoảng trống cho balloon hội thoại.',
-    values: {
-      preset: 'romance-drama',
-      layout: 'four-koma',
-      colorMode: 'full-color',
-      styleLockEnabled: true,
-      styleLockProfile: 'soft-tones',
-      styleLockStrength: 0.7,
-      conflictPolicy: 'prefer-style-lock',
+    {
+      id: 'dialogue',
+      label: 'Dialogue',
+      helper: t('storyInput.manga.storyKits.dialogue'),
+      values: {
+        preset: 'romance-drama',
+        layout: 'four-koma',
+        colorMode: 'full-color',
+        styleLockEnabled: true,
+        styleLockProfile: 'soft-tones',
+        styleLockStrength: 0.7,
+        conflictPolicy: 'prefer-style-lock',
+      },
     },
-  },
-  {
-    id: 'transition',
-    label: 'Transition',
-    helper: 'Nối nhịp giữa cảnh trước/sau bằng panel chuyển mượt.',
-    values: {
-      preset: 'auto',
-      layout: 'vertical-scroll',
-      colorMode: 'limited-palette',
-      styleLockEnabled: true,
-      styleLockProfile: 'line-consistent',
-      styleLockStrength: 0.68,
-      conflictPolicy: 'balanced',
+    {
+      id: 'transition',
+      label: 'Transition',
+      helper: t('storyInput.manga.storyKits.transition'),
+      values: {
+        preset: 'auto',
+        layout: 'vertical-scroll',
+        colorMode: 'limited-palette',
+        styleLockEnabled: true,
+        styleLockProfile: 'line-consistent',
+        styleLockStrength: 0.68,
+        conflictPolicy: 'balanced',
+      },
     },
-  },
-  {
-    id: 'opening',
-    label: 'Opening',
-    helper: 'Mở tập bằng hook mạnh, ưu tiên nhận diện nhân vật chính.',
-    values: {
-      preset: 'action-battle',
-      layout: 'splash-focus',
-      colorMode: 'full-color',
-      styleLockEnabled: true,
-      styleLockProfile: 'line-consistent',
-      styleLockStrength: 0.74,
-      conflictPolicy: 'prefer-style-lock',
+    {
+      id: 'opening',
+      label: 'Opening',
+      helper: t('storyInput.manga.storyKits.opening'),
+      values: {
+        preset: 'action-battle',
+        layout: 'splash-focus',
+        colorMode: 'full-color',
+        styleLockEnabled: true,
+        styleLockProfile: 'line-consistent',
+        styleLockStrength: 0.74,
+        conflictPolicy: 'prefer-style-lock',
+      },
     },
-  },
-  {
-    id: 'conflict',
-    label: 'Conflict',
-    helper: 'Đẩy đối kháng bằng tương phản hành động và biểu cảm.',
-    values: {
-      preset: 'action-battle',
-      layout: 'cinematic',
-      colorMode: 'black-white',
-      styleLockEnabled: true,
-      styleLockProfile: 'ink-contrast',
-      styleLockStrength: 0.85,
-      conflictPolicy: 'balanced',
+    {
+      id: 'conflict',
+      label: 'Conflict',
+      helper: t('storyInput.manga.storyKits.conflict'),
+      values: {
+        preset: 'action-battle',
+        layout: 'cinematic',
+        colorMode: 'black-white',
+        styleLockEnabled: true,
+        styleLockProfile: 'ink-contrast',
+        styleLockStrength: 0.85,
+        conflictPolicy: 'balanced',
+      },
     },
-  },
-  {
-    id: 'payoff',
-    label: 'Payoff',
-    helper: 'Chốt cảm xúc/kết quả bằng nhịp panel rõ, dễ đọng lại.',
-    values: {
-      preset: 'slice-of-life',
-      layout: 'splash-focus',
-      colorMode: 'limited-palette',
-      styleLockEnabled: true,
-      styleLockProfile: 'soft-tones',
-      styleLockStrength: 0.72,
-      conflictPolicy: 'prefer-chapter-context',
+    {
+      id: 'payoff',
+      label: 'Payoff',
+      helper: t('storyInput.manga.storyKits.payoff'),
+      values: {
+        preset: 'slice-of-life',
+        layout: 'splash-focus',
+        colorMode: 'limited-palette',
+        styleLockEnabled: true,
+        styleLockProfile: 'soft-tones',
+        styleLockStrength: 0.72,
+        conflictPolicy: 'prefer-chapter-context',
+      },
     },
-  },
-  {
-    id: 'cliffhanger',
-    label: 'Cliffhanger',
-    helper: 'Kết đoạn bằng panel treo, giữ tò mò cho chapter kế tiếp.',
-    values: {
-      preset: 'romance-drama',
-      layout: 'vertical-scroll',
-      colorMode: 'limited-palette',
-      styleLockEnabled: true,
-      styleLockProfile: 'line-consistent',
-      styleLockStrength: 0.8,
-      conflictPolicy: 'prefer-style-lock',
+    {
+      id: 'cliffhanger',
+      label: 'Cliffhanger',
+      helper: t('storyInput.manga.storyKits.cliffhanger'),
+      values: {
+        preset: 'romance-drama',
+        layout: 'vertical-scroll',
+        colorMode: 'limited-palette',
+        styleLockEnabled: true,
+        styleLockProfile: 'line-consistent',
+        styleLockStrength: 0.8,
+        conflictPolicy: 'prefer-style-lock',
+      },
     },
-  },
-]
+  ]
+}
 
 export default function MangaPanelControls({
   projectId,
@@ -340,7 +344,7 @@ export default function MangaPanelControls({
     applyValues(template.values)
   }
 
-  const applyStoryKit = (kit: (typeof STORY_KITS)[number]) => {
+  const applyStoryKit = (kit: StoryKit) => {
     void onPanelTemplateChange(null)
     applyValues(kit.values)
   }
@@ -352,7 +356,7 @@ export default function MangaPanelControls({
       && colorMode === template.values.colorMode
   }
 
-  const isStoryKitActive = (kit: (typeof STORY_KITS)[number]) => {
+  const isStoryKitActive = (kit: StoryKit) => {
     return !panelTemplateId
       && preset === kit.values.preset
       && layout === kit.values.layout
@@ -363,6 +367,8 @@ export default function MangaPanelControls({
   const handleImageLoadError = (imagePath: string, context: string) => () => {
     console.warn(`[MangaPanelControls] Missing real thumbnail: ${imagePath} (${context})`)
   }
+
+  const storyKits = useMemo(() => buildStoryKits(t), [t])
 
   const activeTemplate = panelTemplateId
     ? PANEL_TEMPLATES.find((template) => template.id === panelTemplateId) ?? null
@@ -441,7 +447,7 @@ export default function MangaPanelControls({
       <div className="space-y-2">
         <p className="text-xs font-semibold text-[var(--glass-text-secondary)] uppercase tracking-wide">{t('storyInput.manga.ui.storytellingPromptKit')}</p>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-          {orderStorytellingPromptKits(STORY_KITS).map((kit) => {
+          {orderStorytellingPromptKits(storyKits).map((kit) => {
             const active = isStoryKitActive(kit)
             const thumbnailPath = STORY_KIT_THUMBNAILS[kit.id]
 
