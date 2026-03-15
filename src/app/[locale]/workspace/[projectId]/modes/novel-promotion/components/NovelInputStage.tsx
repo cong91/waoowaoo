@@ -692,7 +692,7 @@ export default function NovelInputStage({
 
           {providerFirstModels.total === 0 && (
             <div className="rounded-lg border border-amber-400/35 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
-              Chưa có image model khả dụng. Vẫn có thể chọn bundle để demo luồng, nhưng nên cấu hình model trước khi generate thật.
+              {t('storyInput.demoFlow.sampleAssets.unavailable')}
             </div>
           )}
 
@@ -764,7 +764,7 @@ export default function NovelInputStage({
                     </div>
                     <div className="mt-2 text-sm font-semibold text-[var(--glass-text-primary)]">{style.label}</div>
                     <div className="mt-1 text-[11px] text-[var(--glass-text-tertiary)]">
-                      {selected ? 'Đang áp cho script demo' : providerHintLabel(style.providerHint)}
+                      {selected ? t('storyInput.demoFlow.selectedStyle') : providerHintLabel(style.providerHint)}
                     </div>
                   </button>
                 )
@@ -776,8 +776,8 @@ export default function NovelInputStage({
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
           <div className="rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/15 p-4 space-y-3">
             <div>
-              <h4 className="text-sm font-semibold text-[var(--glass-text-primary)]">Định hướng nhân vật</h4>
-              <p className="text-xs text-[var(--glass-text-tertiary)] mt-1">Tối ưu cảm xúc/nhận diện cho những cảnh mở đầu để khách thấy rõ concept.</p>
+              <h4 className="text-sm font-semibold text-[var(--glass-text-primary)]">{t('storyInput.demoFlow.characterDirectionTitle')}</h4>
+              <p className="text-xs text-[var(--glass-text-tertiary)] mt-1">{t('storyInput.demoFlow.characterDirectionDescription')}</p>
             </div>
             <div className="grid grid-cols-1 gap-2">
               {characterStrategies.map((strategy) => {
@@ -808,8 +808,8 @@ export default function NovelInputStage({
 
           <div className="rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/15 p-4 space-y-3">
             <div>
-              <h4 className="text-sm font-semibold text-[var(--glass-text-primary)]">Bối cảnh trình diễn</h4>
-              <p className="text-xs text-[var(--glass-text-tertiary)] mt-1">Khớp mood visual với thông điệp sản phẩm để demo thuyết phục hơn.</p>
+              <h4 className="text-sm font-semibold text-[var(--glass-text-primary)]">{t('storyInput.demoFlow.environmentTitle')}</h4>
+              <p className="text-xs text-[var(--glass-text-tertiary)] mt-1">{t('storyInput.demoFlow.environmentDescription')}</p>
             </div>
             <div className="grid grid-cols-1 gap-2">
               {environmentGallery.map((environment) => {
@@ -853,7 +853,7 @@ export default function NovelInputStage({
           <div className="rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/10 px-3 py-3 space-y-2">
             {activeBundle && (
               <p className="text-xs text-[var(--glass-text-secondary)]">
-                Bundle đang dùng: <span className="font-medium">{activeBundle.name}</span> — {activeBundle.compareHint}
+                {t('storyInput.demoFlow.activeBundle')}: <span className="font-medium">{activeBundle.name}</span> — {activeBundle.compareHint}
               </p>
             )}
             {recommendationBundle && recommendationBundle.id !== activeBundle?.id && (
@@ -908,7 +908,7 @@ export default function NovelInputStage({
             <TaskStatusInline state={stageSwitchingState} className="text-white [&>span]:text-white [&_svg]:text-white" />
           ) : (
             <>
-              <span>{isMangaJourney ? 'Tạo Script Demo (Manga)' : 'Tạo Script Demo (Film)'}</span>
+              <span>{isMangaJourney ? 'Generate Manga Demo Script' : 'Generate Film Demo Script'}</span>
               <AppIcon name="arrowRight" className="w-5 h-5" />
             </>
           )}

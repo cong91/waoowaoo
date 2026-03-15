@@ -131,12 +131,19 @@
       "description": "Pick a business outcome first, then lock style + characters + environment to produce a more coherent demo script.",
       "sampleAssets": {
         "idle": "Generate sample assets",
-        "pending": "Generating sample assets..."
+        "pending": "Generating sample assets...",
+        "unavailable": "No image model is currently available. You can still choose a bundle to preview the flow, but configure a model before real generation."
       },
       "providerRoute": "Model route",
       "availableImageModels": "Available image models: {count}",
       "recommendationPrefix": "Quick comparison hint: try",
-      "tip": "Tip: Manga/Webtoon lane includes extra Quick Manga controls above for chapter continuity and panel flow optimization."
+      "activeBundle": "Current bundle",
+      "tip": "Tip: Manga/Webtoon lane includes extra Quick Manga controls above for chapter continuity and panel flow optimization.",
+      "selectedStyle": "Currently applied for demo script",
+      "characterDirectionTitle": "Character direction",
+      "characterDirectionDescription": "Optimize emotion and recognizability so opening beats communicate the concept clearly.",
+      "environmentTitle": "Presentation environment",
+      "environmentDescription": "Match the visual mood to the message so the demo feels more convincing."
     },
     "manga": {
       "title": "Manga / Webtoon",
