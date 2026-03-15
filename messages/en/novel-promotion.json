@@ -5,13 +5,18 @@
     "storyboard": "Storyboard",
     "video": "Video",
     "editor": "AI Editor",
-    "editorComingSoon": "Coming soon, follow us for updates"
+    "editorComingSoon": "Coming soon, follow us for updates",
+    "mangaKickoff": "Manga setup",
+    "panelScript": "Panel script",
+    "panelBoard": "Panel board",
+    "webtoonPanels": "Webtoon panels"
   },
   "buttons": {
     "assetLibrary": "Asset Library",
     "settings": "Settings",
     "refreshData": "Refresh Data",
-    "enterVideoGeneration": "Enter Video Generation →"
+    "enterVideoGeneration": "Enter Video Generation →",
+    "enterPanelMotion": "Enter Panel Motion →"
   },
   "smartImport": {
     "title": "Start Your Creative Journey",
@@ -139,7 +144,7 @@
         "label": "Panel Layout",
         "options": {
           "auto": "Auto",
-          "cinematic": "Cinematic Panels",
+          "cinematic": "Dynamic Panel Flow",
           "fourKoma": "4-koma Rhythm",
           "verticalScroll": "Vertical Scroll",
           "splashFocus": "Splash Focus"

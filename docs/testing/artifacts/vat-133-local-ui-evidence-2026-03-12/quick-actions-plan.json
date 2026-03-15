@@ -1,0 +1,147 @@
+{
+  "generatedAt": "2026-03-12T08:14:43.533Z",
+  "source": "scripts/vat-133-quick-actions-evidence.ts",
+  "scenarios": [
+    {
+      "action": "add",
+      "selectedPanelId": "p2",
+      "beforeOrder": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "deletePanelIds": [],
+      "createCount": 1,
+      "expectedAfterOrder": [
+        "p1",
+        "p2",
+        "p3",
+        "__new_add__"
+      ],
+      "createPayloadPreview": [
+        {
+          "index": 0,
+          "shotType": "Medium shot",
+          "cameraMove": "Static",
+          "description": "Conflict beat",
+          "duration": 2.4
+        }
+      ]
+    },
+    {
+      "action": "duplicate",
+      "selectedPanelId": "p2",
+      "beforeOrder": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "deletePanelIds": [],
+      "createCount": 1,
+      "expectedAfterOrder": [
+        "p1",
+        "p2",
+        "p3",
+        "__new_duplicate_of_p2__"
+      ],
+      "createPayloadPreview": [
+        {
+          "index": 0,
+          "shotType": "Medium shot",
+          "cameraMove": "Static",
+          "description": "Conflict beat",
+          "duration": 2.4
+        }
+      ]
+    },
+    {
+      "action": "split",
+      "selectedPanelId": "p2",
+      "beforeOrder": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "deletePanelIds": [
+        "p2"
+      ],
+      "createCount": 2,
+      "expectedAfterOrder": [
+        "p1",
+        "__new_split_left_of_p2__",
+        "__new_split_right_of_p2__",
+        "p3"
+      ],
+      "createPayloadPreview": [
+        {
+          "index": 0,
+          "shotType": "Medium shot",
+          "cameraMove": "Static",
+          "description": "Conflict beat (Part 1)",
+          "duration": 1.2
+        },
+        {
+          "index": 1,
+          "shotType": "Medium shot",
+          "cameraMove": "Static",
+          "description": "Conflict beat (Part 2)",
+          "duration": 1.2
+        }
+      ]
+    },
+    {
+      "action": "merge",
+      "selectedPanelId": "p2",
+      "beforeOrder": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "deletePanelIds": [
+        "p2",
+        "p1"
+      ],
+      "createCount": 1,
+      "expectedAfterOrder": [
+        "__new_merge_p1_p2__",
+        "p3"
+      ],
+      "createPayloadPreview": [
+        {
+          "index": 0,
+          "shotType": "Medium shot",
+          "cameraMove": "Static",
+          "description": "Opening beat → Conflict beat",
+          "duration": 3.6
+        }
+      ]
+    },
+    {
+      "action": "reorder",
+      "selectedPanelId": "p3",
+      "beforeOrder": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "deletePanelIds": [
+        "p1"
+      ],
+      "createCount": 1,
+      "expectedAfterOrder": [
+        "p2",
+        "p3",
+        "p1"
+      ],
+      "createPayloadPreview": [
+        {
+          "index": 0,
+          "shotType": "Medium shot",
+          "cameraMove": "Static",
+          "description": "Opening beat",
+          "duration": 1.2
+        }
+      ]
+    }
+  ]
+}

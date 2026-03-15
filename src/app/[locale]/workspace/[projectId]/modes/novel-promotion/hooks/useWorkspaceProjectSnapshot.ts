@@ -3,6 +3,7 @@
 import { useMemo } from 'react'
 import type { NovelPromotionWorkspaceProps } from '../types'
 import type { CapabilitySelections } from '@/lib/model-config-contract'
+import { normalizeWorkspaceStage } from '@/lib/workspace/stage-alias'
 import type {
   QuickMangaColorMode,
   QuickMangaLayout,
@@ -13,6 +14,11 @@ import type {
   QuickMangaContinuityMode,
   QuickMangaStyleLockProfile,
 } from '@/lib/novel-promotion/quick-manga-contract'
+
+interface Vat121VisualDirectionFields {
+  selectedCharacterStrategy?: 'consistency-first' | 'emotion-first' | 'dynamic-action'
+  selectedEnvironmentId?: 'city-night-neon' | 'forest-mist-dawn' | 'interior-cinematic'
+}
 
 function parseCapabilitySelections(raw: unknown): CapabilitySelections {
   if (!raw) return {}
@@ -36,6 +42,7 @@ export function useWorkspaceProjectSnapshot({
 }: Pick<NovelPromotionWorkspaceProps, 'project' | 'episode' | 'urlStage'>) {
   return useMemo(() => {
     const projectData = project.novelPromotionData
+    const visualDirectionData = (projectData || {}) as typeof projectData & Vat121VisualDirectionFields
     const capabilityOverrides = parseCapabilitySelections(projectData?.capabilityOverrides)
     const journeyType: 'film_video' | 'manga_webtoon' =
       projectData?.onboardingContext?.journeyType === 'manga_webtoon'
@@ -49,7 +56,7 @@ export function useWorkspaceProjectSnapshot({
       projectCharacters: projectData?.characters || [],
       projectLocations: projectData?.locations || [],
       episodeStoryboards: episode?.storyboards || [],
-      currentStage: urlStage === 'editor' ? 'videos' : (urlStage || 'config'),
+      currentStage: normalizeWorkspaceStage(urlStage),
       globalAssetText: projectData?.globalAssetText || '',
       novelText: episode?.novelText || '',
       analysisModel: projectData?.analysisModel,
@@ -66,10 +73,17 @@ export function useWorkspaceProjectSnapshot({
       capabilityOverrides,
       ttsRate: projectData?.ttsRate,
       artStyle: projectData?.artStyle,
+      selectedCharacterStrategy: visualDirectionData.selectedCharacterStrategy === 'emotion-first' || visualDirectionData.selectedCharacterStrategy === 'dynamic-action'
+        ? visualDirectionData.selectedCharacterStrategy
+        : 'consistency-first',
+      selectedEnvironmentId: visualDirectionData.selectedEnvironmentId === 'forest-mist-dawn' || visualDirectionData.selectedEnvironmentId === 'interior-cinematic'
+        ? visualDirectionData.selectedEnvironmentId
+        : 'city-night-neon',
       quickMangaEnabled: false,
       quickMangaPreset: 'auto' as QuickMangaPreset,
       quickMangaLayout: 'auto' as QuickMangaLayout,
       quickMangaColorMode: 'auto' as QuickMangaColorMode,
+      quickMangaPanelTemplateId: null as string | null,
       quickMangaStyleLockEnabled: false,
       quickMangaStyleLockProfile: 'auto' as QuickMangaStyleLockProfile,
       quickMangaStyleLockStrength: 0.65,

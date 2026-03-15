@@ -17,6 +17,7 @@ export type QuickMangaContinuityMode = 'off' | 'chapter-strict' | 'chapter-flex'
 export type QuickMangaContinuityConflictPolicy = 'balanced' | 'prefer-style-lock' | 'prefer-chapter-context'
 
 export type QuickMangaGenerationControls = {
+  panelTemplateId: string | null
   styleLock: {
     enabled: boolean
     profile: QuickMangaStyleLockProfile
@@ -38,12 +39,14 @@ export type QuickMangaContinuityContext = {
     preset: QuickMangaPreset
     layout: QuickMangaLayout
     colorMode: QuickMangaColorMode
+    panelTemplateId: string | null
     style: string | null
   }
   reusedControls?: QuickMangaGenerationControls
 }
 
 export type QuickMangaFacadeOptions = QuickMangaOptions & {
+  panelTemplateId: string | null
   style: string | null
 }
 
@@ -164,6 +167,7 @@ function parseGenerationControls(input: unknown): QuickMangaGenerationControls {
   const chapterContinuity = toObject(payload.chapterContinuity)
 
   return {
+    panelTemplateId: toNullableTrimmedString(payload.panelTemplateId),
     styleLock: {
       enabled: toBoolean(styleLock.enabled, false),
       profile: toStyleLockProfile(styleLock.profile, 'auto'),
@@ -199,6 +203,7 @@ function parseContinuityContext(input: unknown): QuickMangaContinuityContext | n
       preset: toQuickMangaPreset(reusedOptionsInput.preset, 'auto'),
       layout: toQuickMangaLayout(reusedOptionsInput.layout, 'auto'),
       colorMode: toQuickMangaColorMode(reusedOptionsInput.colorMode, 'auto'),
+      panelTemplateId: toNullableTrimmedString(reusedOptionsInput.panelTemplateId),
       style: toNullableTrimmedString(reusedOptionsInput.style),
     },
     ...(hasReusedControls
@@ -224,6 +229,7 @@ export function parseQuickMangaFacadeRequest(body: unknown): QuickMangaFacadeReq
     preset: toQuickMangaPreset(optionsInput.preset, 'auto'),
     layout: toQuickMangaLayout(optionsInput.layout, 'auto'),
     colorMode: toQuickMangaColorMode(optionsInput.colorMode, 'auto'),
+    panelTemplateId: toNullableTrimmedString(optionsInput.panelTemplateId),
     style: toNullableTrimmedString(optionsInput.style),
   }
 
@@ -250,6 +256,7 @@ export function readQuickMangaOptionsFromPayload(payload: unknown): QuickMangaFa
     preset: toQuickMangaPreset(input.preset, 'auto'),
     layout: toQuickMangaLayout(input.layout, 'auto'),
     colorMode: toQuickMangaColorMode(input.colorMode, 'auto'),
+    panelTemplateId: toNullableTrimmedString(input.panelTemplateId),
     style: toNullableTrimmedString(input.style),
   }
 }
