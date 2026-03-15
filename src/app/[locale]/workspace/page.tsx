@@ -562,6 +562,7 @@ export default function WorkspacePage() {
                     <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--glass-tone-info-fg)]">{t('journeyCardMangaLabel')}</div>
                     <h3 className="mt-2 text-lg font-bold text-[var(--glass-text-primary)]">{t('projectTypeMangaTitle')}</h3>
                     <p className="mt-2 text-sm text-[var(--glass-text-secondary)] leading-relaxed">{t('projectTypeMangaDesc')}</p>
+                    <p className="mt-2 text-xs font-medium text-[var(--glass-text-tertiary)]">{t('projectTypeMangaHint')}</p>
                   </div>
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-fuchsia-500 to-orange-400 flex items-center justify-center shadow-lg shadow-fuchsia-500/20 group-hover:scale-110 transition-transform duration-300">
                     <AppIcon name="sparkles" className="w-6 h-6 text-white" />

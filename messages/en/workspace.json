@@ -25,6 +25,7 @@
   "projectTypeStoryDesc": "Default screenplay/video workflow",
   "projectTypeMangaTitle": "Manga / Webtoon Studio",
   "projectTypeMangaDesc": "Turn a short story idea into manga/webtoon panels with guided setup and panel-first controls",
+  "projectTypeMangaHint": "Start with 1–3 sentences. No screenplay required.",
   "journeyCardFilmLabel": "Create Video / Film",
   "journeyCardMangaLabel": "Create Manga / Webtoon",
   "journeyBadgeFilm": "Film / Video",
