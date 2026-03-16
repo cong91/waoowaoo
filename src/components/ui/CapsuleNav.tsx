@@ -4,6 +4,26 @@ import { useState, useRef, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { AppIcon } from '@/components/ui/icons'
 
+function normalizeDefaultEpisodeLabel(name: string | undefined, episodeLabel: string): string {
+    if (!name) return ''
+    const trimmed = name.trim()
+    const patterns = [
+        /^Episode\s+(\d+)$/i,
+        /^Tập\s+(\d+)$/i,
+        /^第\s*(\d+)\s*集$/,
+        /^에피소드\s*(\d+)$/i,
+    ]
+
+    for (const pattern of patterns) {
+        const match = trimmed.match(pattern)
+        if (match?.[1]) {
+            return `${episodeLabel} ${match[1]}`
+        }
+    }
+
+    return name
+}
+
 type StepStatus = 'empty' | 'active' | 'processing' | 'ready'
 
 interface NavItemData {
@@ -229,7 +249,7 @@ export function EpisodeSelector({
                         {projectName || t('project')}
                     </span>
                     <span className="text-sm text-[var(--glass-text-secondary)] line-clamp-1 max-w-[160px]">
-                        {currentEp.title}
+                        {normalizeDefaultEpisodeLabel(currentEp.title, t('episode'))}
                     </span>
                 </div>
                 <AppIcon name="chevronDown" className={`w-4 h-4 text-[var(--glass-text-tertiary)] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
@@ -327,7 +347,7 @@ export function EpisodeSelector({
                                     >
                                         <div className={`w-2 h-10 rounded-full ${statusColor}`} />
                                         <div className="flex-1">
-                                            <div className="font-bold text-[var(--glass-text-primary)] text-sm truncate">{ep.title}</div>
+                                            <div className="font-bold text-[var(--glass-text-primary)] text-sm truncate">{normalizeDefaultEpisodeLabel(ep.title, t('episode'))}</div>
                                             {ep.summary && (
                                                 <div className="text-xs text-[var(--glass-text-tertiary)] truncate">{ep.summary}</div>
                                             )}
