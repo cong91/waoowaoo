@@ -45,5 +45,5 @@ services:
     command: >
       sh -c "
         npx prisma db push --skip-generate &&
-        npm run start
+        npm run start:next
       "

@@ -23,7 +23,7 @@ ENV NODE_ENV=production
 
 RUN apk add --no-cache tini
 
-# node_modules（含 devDeps，因为 npm run start 需要 concurrently + tsx）
+# Keep node_modules as built in builder stage. Production app container now runs web app only.
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 
@@ -34,7 +34,7 @@ COPY --from=builder /app/public ./public
 # Prisma schema（db push 需要）
 COPY --from=builder /app/prisma ./prisma
 
-# Worker 和 Watchdog 源码（tsx 运行 TypeScript）
+# Keep source/runtime files available, but production app container will no longer launch worker/watchdog/board by default.
 COPY --from=builder /app/src ./src
 COPY --from=builder /app/scripts ./scripts
 COPY --from=builder /app/lib ./lib
@@ -55,4 +55,4 @@ RUN mkdir -p /app/data/uploads /app/logs && touch /app/.env
 EXPOSE 3000 3010
 
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start:next"]
