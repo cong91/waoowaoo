@@ -35,10 +35,10 @@
   "journeyKickoffFilm": "Kickoff Film",
   "journeyKickoffManga": "Kickoff Manga",
   "wizard": {
-    "modalIntro": "Chọn studio và thông tin cơ bản trước, sau đó tiếp tục chọn mẫu và nguồn nội dung.",
-    "stepJourney": "Chọn studio",
-    "stepTemplate": "Chọn mẫu",
-    "stepSource": "Thêm nguồn",
+    "modalIntro": "Chọn điều bạn muốn tạo, sau đó tiếp tục với phong cách khởi đầu và điểm bắt đầu cho câu chuyện.",
+    "stepJourney": "Bạn muốn tạo gì?",
+    "stepTemplate": "Chọn phong cách khởi đầu",
+    "stepSource": "Chọn điểm bắt đầu cho câu chuyện",
     "next": "Tiếp theo",
     "nextToTemplate": "Tiếp tục tới chọn mẫu",
     "nextToSource": "Tiếp tục tới nguồn nội dung",
@@ -51,7 +51,7 @@
     "sourceContentLabel": "Nội dung nguồn",
     "sourceContentPlaceholder": "Dán nội dung truyện hoặc bản nháp script...",
     "sourceContentHint": "Vui lòng nhập tối thiểu 20 ký tự cho chế độ tạo theo nguồn.",
-    "readinessSummary": "Sẵn sàng tạo: {journey} · {template} · {sourceType}",
+    "readinessSummary": "Bạn đã sẵn sàng: {journey} → {template} → {sourceType}",
     "sourceType": {
       "blank": "Bắt đầu trống",
       "story_text": "Văn bản truyện",
