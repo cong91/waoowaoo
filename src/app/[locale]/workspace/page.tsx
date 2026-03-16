@@ -584,7 +584,7 @@ export default function WorkspacePage() {
                 </div>
               </div>
               <div className="inline-flex items-center gap-2 text-sm font-medium text-[var(--glass-tone-info-fg)]">
-                <span>{t('createProject')}</span>
+                <span>{t('newStoryProject')}</span>
                 <AppIcon name="arrowRight" className="w-4 h-4" />
               </div>
             </div>
