@@ -689,9 +689,14 @@ export default function WorkspacePage() {
                   {(project.description || project.stats?.firstEpisodePreview) && (
                     <div className="flex items-start gap-2 mb-4">
                       <AppIcon name="fileText" className="w-4 h-4 text-[var(--glass-text-tertiary)] mt-0.5 flex-shrink-0" />
-                      <p className="text-sm text-[var(--glass-text-secondary)] line-clamp-2 leading-relaxed">
-                        {project.description || project.stats?.firstEpisodePreview}
-                      </p>
+                      <div className="min-w-0">
+                        <div className="text-[11px] uppercase tracking-[0.08em] text-[var(--glass-text-tertiary)] mb-1">
+                          {project.description ? t('projectCardSourceDescription') : t('projectCardSourceStory')}
+                        </div>
+                        <p className="text-sm text-[var(--glass-text-secondary)] line-clamp-2 leading-relaxed">
+                          {project.description || project.stats?.firstEpisodePreview}
+                        </p>
+                      </div>
                     </div>
                   )}
 
@@ -725,7 +730,7 @@ export default function WorkspacePage() {
                   ) : (
                     <div className="flex items-center gap-2.5 mb-3">
                       <AppIcon name="statsBar" className="w-4 h-4 text-[var(--glass-text-tertiary)] flex-shrink-0" />
-                      <span className="text-xs text-[var(--glass-text-tertiary)]">{t('noContent')}</span>
+                      <span className="text-xs text-[var(--glass-text-tertiary)]">{t('projectCardNoContent')}</span>
                     </div>
                   )}
 
@@ -733,7 +738,7 @@ export default function WorkspacePage() {
                   <div className="flex items-center justify-between text-[11px] text-[var(--glass-text-tertiary)]">
                     <div className="flex items-center gap-1">
                       <AppIcon name="clock" className="w-3 h-3" />
-                      {formatDate(project.updatedAt)}
+                      <span>{t('projectCardUpdated')} {formatDate(project.updatedAt)}</span>
                     </div>
                     {project.totalCost !== undefined && project.totalCost > 0 && (
                       <span className="text-[11px] font-mono font-medium text-[var(--glass-text-secondary)]">
