@@ -6,12 +6,14 @@ import NovelInputStage from './NovelInputStage'
 import QuickMangaHistoryPanel from './QuickMangaHistoryPanel'
 import MangaPanelControls from './MangaPanelControls'
 import { useWorkspaceStageRuntime } from '../WorkspaceStageRuntimeContext'
+import { useWorkspaceProvider } from '../WorkspaceProvider'
 import { useWorkspaceEpisodeStageData } from '../hooks/useWorkspaceEpisodeStageData'
 
 export default function ConfigStage() {
   const runtime = useWorkspaceStageRuntime()
+  const { projectId, onRefresh } = useWorkspaceProvider()
   const t = useTranslations('novelPromotion')
-  const { episodeName, novelText } = useWorkspaceEpisodeStageData()
+  const { episodeName, novelText, storyboards } = useWorkspaceEpisodeStageData()
   const [showAdvancedControls, setShowAdvancedControls] = useState(false)
 
   return (
@@ -74,6 +76,9 @@ export default function ConfigStage() {
           {showAdvancedControls && (
             <>
               <MangaPanelControls
+                projectId={projectId}
+                storyboards={storyboards}
+                onRefresh={() => onRefresh({ scope: 'all' })}
                 enabled={runtime.quickMangaEnabled}
                 preset={runtime.quickMangaPreset}
                 layout={runtime.quickMangaLayout}

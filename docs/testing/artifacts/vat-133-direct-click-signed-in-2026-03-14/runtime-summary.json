@@ -1,0 +1,69 @@
+{
+  "ticket": "VAT-133",
+  "date": "2026-03-14",
+  "runtimeUrl": "http://127.0.0.1:13000",
+  "projectId": "11895b41-c233-49f3-823f-c4d0894c1c20",
+  "episodeId": "9a32f0f4-e57b-488c-9f95-cc1021b29148",
+  "user": {
+    "name": "sean",
+    "id": "a7052e55-09ac-4fb8-9db3-967ef25f6999"
+  },
+  "image": {
+    "name": "vat-app:vat133fix",
+    "id": "73716cf9f333"
+  },
+  "container": {
+    "name": "waoowaoo-app",
+    "status": "running",
+    "ports": ["13000:3000", "13010:3010"]
+  },
+  "sourceMarkers": [
+    "shouldShowQuickActions",
+    "Webtoon panel quick actions (P1)",
+    "data-vat133-quick-actions-gate=hidden"
+  ],
+  "dom": {
+    "quickActionHeading": true,
+    "gatePlaceholder": false,
+    "buttons": ["Add", "Duplicate", "Split", "Merge", "Reorder"]
+  },
+  "mutations": {
+    "add": {
+      "method": "POST",
+      "path": "/api/novel-promotion/11895b41-c233-49f3-823f-c4d0894c1c20/panel",
+      "status": 200,
+      "createdPanelId": "dea7010a-3d98-4e88-b3a1-0b0e2e483a4b"
+    },
+    "duplicate": {
+      "method": "POST",
+      "path": "/api/novel-promotion/11895b41-c233-49f3-823f-c4d0894c1c20/panel",
+      "status": 200,
+      "createdPanelId": "8ec6bd79-8ac1-47d4-8871-de752c777814"
+    },
+    "split": {
+      "deletePath": "/api/novel-promotion/11895b41-c233-49f3-823f-c4d0894c1c20/panel?panelId=8ec6bd79-8ac1-47d4-8871-de752c777814",
+      "postPath": "/api/novel-promotion/11895b41-c233-49f3-823f-c4d0894c1c20/panel",
+      "status": 200,
+      "createdPanelIds": [
+        "7b77941e-4111-4ff1-87d2-b0459dd09d28",
+        "b6a2b4fe-d1cd-431e-a6e2-e08e34993897"
+      ]
+    },
+    "merge": {
+      "deletePaths": [
+        "/api/novel-promotion/11895b41-c233-49f3-823f-c4d0894c1c20/panel?panelId=b6a2b4fe-d1cd-431e-a6e2-e08e34993897",
+        "/api/novel-promotion/11895b41-c233-49f3-823f-c4d0894c1c20/panel?panelId=7b77941e-4111-4ff1-87d2-b0459dd09d28"
+      ],
+      "postPath": "/api/novel-promotion/11895b41-c233-49f3-823f-c4d0894c1c20/panel",
+      "status": 200,
+      "createdPanelId": "cb774037-dc72-4286-9ae1-7121735bbb70"
+    },
+    "reorder": {
+      "deletePath": "/api/novel-promotion/11895b41-c233-49f3-823f-c4d0894c1c20/panel?panelId=a3c4b504-4675-4062-8621-1df5823658b9",
+      "postPath": "/api/novel-promotion/11895b41-c233-49f3-823f-c4d0894c1c20/panel",
+      "status": 200,
+      "createdPanelId": "b46b5881-34d4-43c2-a37e-799ec3b41aec"
+    }
+  },
+  "verdict": "VAT-133 signed-in runtime direct-click evidence PASS"
+}

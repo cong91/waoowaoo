@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import type {
   QuickMangaColorMode,
   QuickMangaLayout,
@@ -10,9 +10,23 @@ import type {
   QuickMangaContinuityConflictPolicy,
   QuickMangaStyleLockProfile,
 } from '@/lib/novel-promotion/quick-manga-contract'
+import type { NovelPromotionPanel, NovelPromotionStoryboard } from '@/types/project'
+import {
+  useCreateProjectPanel,
+  useDeleteProjectPanel,
+} from '@/lib/query/hooks'
 import { MANGA_PANEL_TEMPLATE_SPECS } from '@/lib/workspace/manga-webtoon-layout-map'
+import {
+  buildWebtoonScrollNarrativePreview,
+  planWebtoonQuickActionMutation,
+  WEBTOON_PANEL_QUICK_ACTIONS,
+} from '@/lib/workspace/webtoon-panel-controls'
+import { orderStorytellingPromptKits } from '@/lib/workspace/storytelling-prompt-kit'
 
 interface MangaPanelControlsProps {
+  projectId: string
+  storyboards?: NovelPromotionStoryboard[]
+  onRefresh?: () => Promise<void> | void
   enabled: boolean
   preset: QuickMangaPreset
   layout: QuickMangaLayout
@@ -48,7 +62,7 @@ const STORY_KIT_THUMBNAILS: Record<string, string> = {
   cliffhanger: '/assets/manga-webtoon/preset-templates/05_busy_day_witch.webp',
 }
 
-const STORY_KITS: Array<{
+export const STORY_KITS: Array<{
   id: string
   label: string
   helper: string
@@ -191,6 +205,9 @@ const STORY_KITS: Array<{
 ]
 
 export default function MangaPanelControls({
+  projectId,
+  storyboards = [],
+  onRefresh,
   enabled,
   preset,
   layout,
@@ -211,6 +228,69 @@ export default function MangaPanelControls({
   onConflictPolicyChange,
   compact = false,
 }: MangaPanelControlsProps) {
+  const createPanelMutation = useCreateProjectPanel(projectId)
+  const deletePanelMutation = useDeleteProjectPanel(projectId)
+  const [quickActionBusy, setQuickActionBusy] = useState<string | null>(null)
+  const [quickActionMessage, setQuickActionMessage] = useState<string | null>(null)
+
+  const activeStoryboard = useMemo(() => {
+    if (!storyboards.length) return null
+    return [...storyboards].sort((a, b) => {
+      const aPanels = (a.panels || []).length
+      const bPanels = (b.panels || []).length
+      return bPanels - aPanels
+    })[0] || null
+  }, [storyboards])
+
+  const activePanels = useMemo(() => {
+    const panels = [...(activeStoryboard?.panels || [])]
+    return panels.sort((a, b) => a.panelIndex - b.panelIndex)
+  }, [activeStoryboard])
+
+  const selectedPanelForActions = useMemo(() => {
+    if (!activePanels.length) return null
+    return activePanels[activePanels.length - 1] || null
+  }, [activePanels])
+
+  const canRunQuickAction = (actionId: typeof WEBTOON_PANEL_QUICK_ACTIONS[number]['id']) => {
+    if (quickActionBusy) return false
+    if (!activeStoryboard) return false
+    if (actionId === 'add') return true
+    return !!selectedPanelForActions
+  }
+
+  const runQuickAction = async (label: string, operation: () => Promise<void>) => {
+    if (quickActionBusy) return
+    setQuickActionBusy(label)
+    setQuickActionMessage(null)
+    try {
+      await operation()
+      await onRefresh?.()
+      setQuickActionMessage(`${label} applied`)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : `${label} failed`
+      setQuickActionMessage(message)
+    } finally {
+      setQuickActionBusy(null)
+    }
+  }
+
+  const buildPanelLite = (panel: NovelPromotionPanel) => ({
+    id: panel.id,
+    storyboardId: panel.storyboardId,
+    panelIndex: panel.panelIndex,
+    panelNumber: panel.panelNumber,
+    shotType: panel.shotType,
+    cameraMove: panel.cameraMove,
+    description: panel.description,
+    location: panel.location,
+    characters: panel.characters,
+    srtStart: panel.srtStart,
+    srtEnd: panel.srtEnd,
+    duration: panel.duration,
+    videoPrompt: panel.videoPrompt,
+  })
+
   const recommendedTemplateId = useMemo(() => {
     let best: { id: string; score: number } | null = null
 
@@ -229,6 +309,8 @@ export default function MangaPanelControls({
 
     return best?.score && best.score > 0 ? best.id : null
   }, [colorMode, layout, preset])
+
+  const shouldShowQuickActions = enabled && !!activeStoryboard
 
   const applyValues = (values: {
     preset: QuickMangaPreset
@@ -279,6 +361,15 @@ export default function MangaPanelControls({
   const handleImageLoadError = (imagePath: string, context: string) => () => {
     console.warn(`[MangaPanelControls] Missing real thumbnail: ${imagePath} (${context})`)
   }
+
+  const activeTemplate = panelTemplateId
+    ? PANEL_TEMPLATES.find((template) => template.id === panelTemplateId) ?? null
+    : null
+
+  const scrollPreview = buildWebtoonScrollNarrativePreview({
+    panelSlotCount: activeTemplate?.metadata.panelSlotCount ?? 4,
+    layoutFamily: activeTemplate?.metadata.layoutFamily,
+  })
 
   return (
     <section className={`glass-surface ${compact ? 'p-4' : 'p-6'} space-y-4`}>
@@ -348,7 +439,7 @@ export default function MangaPanelControls({
       <div className="space-y-2">
         <p className="text-xs font-semibold text-[var(--glass-text-secondary)] uppercase tracking-wide">Storytelling prompt kit</p>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-          {STORY_KITS.map((kit) => {
+          {orderStorytellingPromptKits(STORY_KITS).map((kit) => {
             const active = isStoryKitActive(kit)
             const thumbnailPath = STORY_KIT_THUMBNAILS[kit.id]
 
@@ -390,6 +481,98 @@ export default function MangaPanelControls({
               </button>
             )
           })}
+        </div>
+      </div>
+
+      {shouldShowQuickActions ? (
+        <div className="space-y-2">
+          <p className="text-xs font-semibold text-[var(--glass-text-secondary)] uppercase tracking-wide">Webtoon panel quick actions (P1)</p>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+            {WEBTOON_PANEL_QUICK_ACTIONS.map((action) => (
+              <button
+                key={action.id}
+                type="button"
+                disabled={!canRunQuickAction(action.id)}
+                onClick={() => {
+                  if (!activeStoryboard) return
+                  if (action.id !== 'add' && !selectedPanelForActions) return
+
+                  if (action.id === 'add' || action.id === 'duplicate' || action.id === 'split' || action.id === 'merge' || action.id === 'reorder') {
+                    void runQuickAction(action.id, async () => {
+                      const plan = planWebtoonQuickActionMutation({
+                        action: action.id,
+                        panels: activePanels.map(buildPanelLite),
+                        selectedPanelId: selectedPanelForActions?.id ?? null,
+                        fallbackStoryboardId: activeStoryboard.id,
+                      })
+
+                      for (const panelId of plan.deletePanelIds) {
+                        await deletePanelMutation.mutateAsync({ panelId })
+                      }
+
+                      for (const payload of plan.createPayloads) {
+                        await createPanelMutation.mutateAsync(payload)
+                      }
+
+                      if (typeof window !== 'undefined') {
+                        console.info('[VAT-133][quick-action-plan]', {
+                          action: plan.action,
+                          beforeOrder: plan.beforeOrder,
+                          expectedAfterOrder: plan.expectedAfterOrder,
+                          deletePanelIds: plan.deletePanelIds,
+                          createCount: plan.createPayloads.length,
+                        })
+                      }
+                    })
+                  }
+                }}
+                className="rounded-lg border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/15 px-3 py-2 text-left hover:bg-[var(--glass-bg-muted)]/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label={`quick-action-${action.id}`}
+              >
+                <div className="text-xs font-semibold text-[var(--glass-text-primary)]">{action.label}</div>
+                <div className="mt-1 text-[11px] text-[var(--glass-text-tertiary)]">{action.helper}</div>
+              </button>
+            ))}
+          </div>
+          <div className="text-[11px] text-[var(--glass-text-tertiary)]">
+            {activeStoryboard
+              ? `Target storyboard: ${activeStoryboard.id} · panels=${activePanels.length} · anchor=#${(selectedPanelForActions?.panelIndex ?? 0) + 1}`
+              : 'Chưa có storyboard/panel để thao tác quick actions.'}
+          </div>
+          {quickActionMessage ? (
+            <div className="text-[11px] text-[var(--glass-tone-info-fg)]">{quickActionMessage}</div>
+          ) : null}
+        </div>
+      ) : (
+        <div className="rounded-xl border border-dashed border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/10 p-3 text-[11px] text-[var(--glass-text-tertiary)]" data-vat133-quick-actions-gate="hidden">
+          Quick actions hidden until a storyboard is available in the signed-in runtime path.
+        </div>
+      )}
+
+      <div className="space-y-2">
+        <p className="text-xs font-semibold text-[var(--glass-text-secondary)] uppercase tracking-wide">Scroll narrative preview (P0)</p>
+        <div className="rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/10 p-3 space-y-2">
+          <div className="text-[11px] text-[var(--glass-text-tertiary)]">
+            {activeTemplate
+              ? `Template ${activeTemplate.sourceLayoutId} · ${activeTemplate.metadata.layoutFamily} · ${activeTemplate.metadata.panelSlotCount} panel slots`
+              : 'Chọn template để preview vertical flow theo panel rhythm.'}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {scrollPreview.map((item) => (
+              <div key={item.id} className="rounded-lg border border-[var(--glass-stroke-soft)] p-2 bg-[var(--glass-bg-muted)]/20">
+                <div className="flex items-center justify-between text-[11px] text-[var(--glass-text-secondary)]">
+                  <span>Panel {item.panelIndex}</span>
+                  <span>{item.emphasis}</span>
+                </div>
+                <div className="mt-1 h-2 rounded bg-[var(--glass-bg-muted)]/40 overflow-hidden">
+                  <div
+                    className="h-full rounded bg-[var(--glass-accent-from)]"
+                    style={{ width: `${Math.max(8, Math.round(item.relativeHeight * 100))}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

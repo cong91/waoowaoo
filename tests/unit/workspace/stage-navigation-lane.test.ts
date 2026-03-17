@@ -58,11 +58,13 @@ describe('useWorkspaceStageNavigation lane identity (VAT-132)', () => {
       projectCharacterCount: 1,
       episodeStoryboards: [{ panels: [makePanel({ videoUrl: 'https://example.com/video.mp4' })] }],
       journeyType: 'manga_webtoon',
+      promptMode: 'guided',
       t,
     })
 
     expect(items.map((item) => item.id)).toEqual(['config', 'script', 'storyboard', 'panels', 'editor'])
     expect(items[0]?.label).toBe('stages.mangaKickoff')
+    expect(items[1]?.label).toBe('stages.panelScript · Guided')
     expect(items[3]?.label).toBe('stages.webtoonPanels')
     expect(items[3]?.status).toBe('ready')
   })
@@ -74,11 +76,13 @@ describe('useWorkspaceStageNavigation lane identity (VAT-132)', () => {
       projectCharacterCount: 1,
       episodeStoryboards: [{ panels: [makePanel()] }],
       journeyType: 'film_video',
+      promptMode: 'advanced',
       t,
     })
 
     expect(items.map((item) => item.id)).toEqual(['config', 'script', 'storyboard', 'videos', 'editor'])
     expect(items[0]?.label).toBe('stages.story')
+    expect(items[1]?.label).toBe('stages.script · Advanced')
     expect(items[3]?.label).toBe('stages.video')
   })
 })

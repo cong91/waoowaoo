@@ -1,0 +1,20 @@
+{
+  "capturedAt": "2026-03-12T16:00:53.010Z",
+  "urlScript": "http://localhost:13000/zh/workspace/11895b41-c233-49f3-823f-c4d0894c1c20?episode=9a32f0f4-e57b-488c-9f95-cc1021b29148&stage=script&quickManga=1",
+  "urlStoryboard": "http://localhost:13000/zh/workspace/11895b41-c233-49f3-823f-c4d0894c1c20?episode=9a32f0f4-e57b-488c-9f95-cc1021b29148&stage=storyboard",
+  "domProbe": {
+    "scriptStage": {
+      "quickActionCount": 0,
+      "note": "No [aria-label^=\"quick-action-\"] nodes visible in hydrated DOM of this session path."
+    },
+    "storyboardStage": {
+      "quickActionCount": 0,
+      "note": "No quick-action nodes in storyboard stage; only storyboard mutate controls visible."
+    }
+  },
+  "artifactFiles": [
+    "01-script-stage-manga-controls.pdf",
+    "02-storyboard-stage-no-quick-actions.pdf"
+  ],
+  "conclusion": "Direct-click artifacts for 5 quick actions cannot be captured in this clean signed-in run because controls are absent in current UI tree."
+}
