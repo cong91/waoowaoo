@@ -21,7 +21,7 @@
   "projectTypeLabel": "Project type",
   "journeyLaneLabel": "Selected studio",
   "projectTypeStoryTitle": "Story Studio",
-  "projectTypeStoryDesc": "Default screenplay/video workflow",
+  "projectTypeStoryDesc": "Turn a short story idea into a guided screenplay/video workflow",
   "projectTypeMangaTitle": "Manga / Webtoon Studio",
   "projectTypeMangaDesc": "Build manga/webtoon scenes with chapter continuity and panel-first controls",
   "journeyCardFilmLabel": "Create Video / Film",
@@ -99,6 +99,14 @@
       "comedy4Koma": {
         "title": "Comedy 4-koma",
         "desc": "Compact gag structure for episodic four-panel storytelling."
+      }
+    }
+  }
+}
+    }
+  }
+}
+g."
       }
     }
   }

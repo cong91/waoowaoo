@@ -49,7 +49,7 @@
     "sourceContentLabel": "Nội dung nguồn",
     "sourceContentPlaceholder": "Dán nội dung truyện hoặc bản nháp script...",
     "sourceContentHint": "Vui lòng nhập tối thiểu 20 ký tự cho chế độ tạo theo nguồn.",
-    "readinessSummary": "Sẵn sàng tạo: {journey} · {template} · {sourceType}",
+    "readinessSummary": "Bạn đã sẵn sàng: {journey} → {template} → {sourceType}",
     "sourceType": {
       "blank": "Bắt đầu trống",
       "story_text": "Văn bản truyện",
@@ -99,6 +99,11 @@
       "comedy4Koma": {
         "title": "Manga Hài 4-koma",
         "desc": "Cấu trúc gag ngắn cho kể chuyện 4 khung theo tập."
+      }
+    }
+  }
+}
+úc gag ngắn cho kể chuyện 4 khung theo tập."
       }
     }
   }

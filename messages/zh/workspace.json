@@ -33,10 +33,10 @@
   "journeyKickoffFilm": "Film kickoff",
   "journeyKickoffManga": "Manga kickoff",
   "wizard": {
-    "modalIntro": "先选择工作室和基础信息，再继续设置模板与内容来源。",
-    "stepJourney": "选择工作室",
-    "stepTemplate": "选择模板",
-    "stepSource": "添加来源",
+    "modalIntro": "先选择你想创建的内容，再继续设置风格和故事起点。",
+    "stepJourney": "你想创建什么？",
+    "stepTemplate": "选择一个起始风格",
+    "stepSource": "选择故事从哪里开始",
     "next": "下一步",
     "nextToTemplate": "继续到模板设置",
     "nextToSource": "继续到来源设置",
@@ -100,6 +100,12 @@
         "title": "Manga 四格喜剧",
         "desc": "适合单集笑点驱动的四格叙事结构。"
       }
+    }
+  }
+}
+ }
+}
+     }
     }
   }
 }
