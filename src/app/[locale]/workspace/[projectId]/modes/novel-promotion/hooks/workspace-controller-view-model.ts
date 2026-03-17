@@ -32,6 +32,8 @@ interface ProjectSnapshotInput {
   artStyle: string | undefined
   selectedCharacterStrategy: 'consistency-first' | 'emotion-first' | 'dynamic-action'
   selectedEnvironmentId: 'city-night-neon' | 'forest-mist-dawn' | 'interior-cinematic'
+  promptMode: 'guided' | 'advanced'
+  referenceBoardSelections: string[]
   quickMangaEnabled: boolean
   quickMangaPreset: 'auto' | 'action-battle' | 'romance-drama' | 'slice-of-life' | 'comedy-4koma'
   quickMangaLayout: 'auto' | 'cinematic' | 'four-koma' | 'vertical-scroll' | 'splash-focus'

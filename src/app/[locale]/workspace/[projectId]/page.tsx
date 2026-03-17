@@ -33,6 +33,30 @@ type NovelPromotionData = {
   importStatus?: string
 }
 
+interface RuntimeReferenceBoardOption {
+  id: string
+  titleKey: string
+  descKey: string
+}
+
+const RUNTIME_REFERENCE_BOARD_OPTIONS: RuntimeReferenceBoardOption[] = [
+  {
+    id: 'character-sheet',
+    titleKey: 'visualFirst.referenceBoard.characterSheet.title',
+    descKey: 'visualFirst.referenceBoard.characterSheet.desc',
+  },
+  {
+    id: 'mood-lighting',
+    titleKey: 'visualFirst.referenceBoard.moodLighting.title',
+    descKey: 'visualFirst.referenceBoard.moodLighting.desc',
+  },
+  {
+    id: 'environment-anchor',
+    titleKey: 'visualFirst.referenceBoard.environmentAnchor.title',
+    descKey: 'visualFirst.referenceBoard.environmentAnchor.desc',
+  },
+]
+
 /**
  * 项目详情页 - 带侧边栏的剧集管理
  */
@@ -48,6 +72,7 @@ export default function ProjectDetailPage() {
   }
   const projectId = params.projectId
   const t = useTranslations('workspaceDetail')
+  const tw = useTranslations('workspace')
   const tc = useTranslations('common')
 
   // 从URL读取参数
@@ -91,6 +116,7 @@ export default function ProjectDetailPage() {
 
   // 获取剧集列表
   const novelPromotionData = project?.novelPromotionData as NovelPromotionData | undefined
+  const onboardingContext = project?.novelPromotionData?.onboardingContext ?? null
   const episodes = useMemo<Episode[]>(() => {
     const getNum = (name: string) => { const m = name.match(/\d+/); return m ? parseInt(m[0], 10) : Infinity }
     return [...(novelPromotionData?.episodes ?? [])].sort((a, b) => {
@@ -248,6 +274,53 @@ export default function ProjectDetailPage() {
     hasOutput: false,
   })
 
+  const visualFirstSummaryItems = useMemo(() => {
+    if (!onboardingContext) return []
+
+    const styleMap: Record<string, string> = {
+      'film-cinematic-short': tw('visualFirst.style.story.cinematicShort.title'),
+      'film-social-promo': tw('visualFirst.style.story.socialPromo.title'),
+      'film-dialogue-drama': tw('visualFirst.style.story.dialogueDrama.title'),
+      'manga-action-battle': tw('visualFirst.style.manga.actionBattle.title'),
+      'manga-romance-school': tw('visualFirst.style.manga.romanceSchool.title'),
+      'manga-fantasy-quest': tw('visualFirst.style.manga.fantasyQuest.title'),
+    }
+    const characterMap: Record<string, string> = {
+      'consistency-first': tw('visualFirst.character.consistencyFirst.title'),
+      'emotion-first': tw('visualFirst.character.emotionFirst.title'),
+      'dynamic-action': tw('visualFirst.character.dynamicAction.title'),
+    }
+    const environmentMap: Record<string, string> = {
+      'city-night-neon': tw('visualFirst.environment.cityNightNeon.title'),
+      'forest-mist-dawn': tw('visualFirst.environment.forestMistDawn.title'),
+      'interior-cinematic': tw('visualFirst.environment.interiorCinematic.title'),
+    }
+
+    return [
+      onboardingContext.stylePresetId ? { label: tw('visualFirst.summary.style'), value: styleMap[onboardingContext.stylePresetId] || onboardingContext.stylePresetId } : null,
+      onboardingContext.characterStrategyId ? { label: tw('visualFirst.summary.character'), value: characterMap[onboardingContext.characterStrategyId] || onboardingContext.characterStrategyId } : null,
+      onboardingContext.environmentPresetId ? { label: tw('visualFirst.summary.environment'), value: environmentMap[onboardingContext.environmentPresetId] || onboardingContext.environmentPresetId } : null,
+      onboardingContext.promptMode ? { label: tw('visualFirst.promptMode.title'), value: onboardingContext.promptMode === 'advanced' ? tw('visualFirst.promptMode.advanced.title') : tw('visualFirst.promptMode.guided.title') } : null,
+    ].filter((item): item is { label: string; value: string } => Boolean(item))
+  }, [onboardingContext, tw])
+
+  const handleUpdateReferenceBoardSelections = useCallback(async (nextSelections: string[]) => {
+    if (!projectId) return
+    await fetch(`/api/novel-promotion/${projectId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        onboardingContext: {
+          ...onboardingContext,
+          referenceBoardSelections: nextSelections,
+        },
+      }),
+    })
+    await queryClient.invalidateQueries({ queryKey: queryKeys.projectData(projectId) })
+  }, [onboardingContext, projectId, queryClient])
+
+  const referenceBoardSelections = onboardingContext?.referenceBoardSelections || []
+
   if (isInitializing) {
     return (
       <div className="glass-page min-h-screen">
@@ -288,6 +361,103 @@ export default function ProjectDetailPage() {
       {/* 主内容区 - 占满全部宽度 */}
       <main className="flex-1 overflow-y-auto">
         <div className="container mx-auto px-4 pt-28 pb-8 sm:pt-32">
+          {!isGlobalAssetsView && onboardingContext && visualFirstSummaryItems.length > 0 && (
+            <section className="glass-surface p-4 mb-4 space-y-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <div className="text-xs uppercase tracking-[0.12em] text-[var(--glass-text-tertiary)]">{tw('visualFirst.style.title')}</div>
+                  <h2 className="text-base font-semibold text-[var(--glass-text-primary)] mt-1">{tw('wizard.readinessSummary', {
+                    journey: onboardingContext.journeyType === 'manga_webtoon' ? tw('projectTypeMangaTitle') : tw('projectTypeStoryTitle'),
+                    template: visualFirstSummaryItems[0]?.value || '-',
+                    sourceType: tw(`wizard.sourceType.${onboardingContext.sourceType || 'blank'}`),
+                  })}</h2>
+                  {onboardingContext.referenceBoardSelections && onboardingContext.referenceBoardSelections.length > 0 && (
+                    <p className="text-xs text-[var(--glass-text-secondary)] mt-1">
+                      {tw('visualFirst.referenceBoard.selectionCount', { count: onboardingContext.referenceBoardSelections.length })}
+                    </p>
+                  )}
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs min-w-0">
+                  {visualFirstSummaryItems.map((item) => (
+                    <div key={item.label} className="rounded-lg bg-[var(--glass-bg-muted)]/60 px-3 py-2 min-w-0">
+                      <div className="text-[10px] uppercase tracking-[0.08em] text-[var(--glass-text-tertiary)] truncate">{item.label}</div>
+                      <div className="mt-1 text-[var(--glass-text-primary)] truncate">{item.value}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="border-t border-[var(--glass-border)]/40 pt-4">
+                <div className="flex items-center justify-between gap-3 mb-3">
+                  <div>
+                    <div className="text-xs uppercase tracking-[0.12em] text-[var(--glass-text-tertiary)]">{tw('visualFirst.referenceBoard.title')}</div>
+                    <div className="text-sm text-[var(--glass-text-secondary)] mt-1">{tw('visualFirst.referenceBoard.selectionCount', { count: referenceBoardSelections.length })}</div>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  {RUNTIME_REFERENCE_BOARD_OPTIONS.map((option) => {
+                    const isSelected = referenceBoardSelections.includes(option.id)
+                    const canMoveUp = isSelected && referenceBoardSelections.indexOf(option.id) > 0
+                    const canMoveDown = isSelected && referenceBoardSelections.indexOf(option.id) < referenceBoardSelections.length - 1
+                    return (
+                      <div key={option.id} className={`rounded-lg border px-3 py-3 ${isSelected ? 'border-[var(--glass-primary)]/40 bg-[var(--glass-primary)]/8' : 'border-[var(--glass-border)]/40 bg-[var(--glass-bg-muted)]/40'}`}>
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                          <div className="min-w-0">
+                            <div className="text-sm font-semibold text-[var(--glass-text-primary)]">{tw(option.titleKey)}</div>
+                            <div className="text-xs text-[var(--glass-text-secondary)] mt-1">{tw(option.descKey)}</div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const currentIndex = referenceBoardSelections.indexOf(option.id)
+                                if (currentIndex <= 0) return
+                                const nextSelections = [...referenceBoardSelections]
+                                ;[nextSelections[currentIndex - 1], nextSelections[currentIndex]] = [nextSelections[currentIndex], nextSelections[currentIndex - 1]]
+                                void handleUpdateReferenceBoardSelections(nextSelections)
+                              }}
+                              disabled={!canMoveUp}
+                              className="glass-btn-base glass-btn-secondary px-2 py-1 disabled:opacity-40"
+                            >↑</button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const currentIndex = referenceBoardSelections.indexOf(option.id)
+                                if (currentIndex === -1 || currentIndex >= referenceBoardSelections.length - 1) return
+                                const nextSelections = [...referenceBoardSelections]
+                                ;[nextSelections[currentIndex + 1], nextSelections[currentIndex]] = [nextSelections[currentIndex], nextSelections[currentIndex + 1]]
+                                void handleUpdateReferenceBoardSelections(nextSelections)
+                              }}
+                              disabled={!canMoveDown}
+                              className="glass-btn-base glass-btn-secondary px-2 py-1 disabled:opacity-40"
+                            >↓</button>
+                            {isSelected ? (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const nextSelections = referenceBoardSelections.filter((id) => id !== option.id)
+                                  void handleUpdateReferenceBoardSelections(nextSelections)
+                                }}
+                                className="glass-btn-base glass-btn-secondary px-3 py-1"
+                              >{tc('remove')}</button>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  void handleUpdateReferenceBoardSelections([...referenceBoardSelections, option.id])
+                                }}
+                                className="glass-btn-base glass-btn-primary px-3 py-1"
+                              >{tc('add')}</button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </section>
+          )}
           {isGlobalAssetsView && project.novelPromotionData ? (
             // 全局资产视图（确保数据准备好）
             <div>

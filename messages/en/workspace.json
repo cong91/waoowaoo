@@ -21,39 +21,173 @@
   "projectTypeLabel": "Project type",
   "journeyLaneLabel": "Selected studio",
   "projectTypeStoryTitle": "Story Studio",
-  "projectTypeStoryDesc": "Default screenplay/video workflow",
+  "projectTypeStoryDesc": "Turn a short story idea into a guided screenplay/video workflow",
   "projectTypeMangaTitle": "Manga / Webtoon Studio",
   "projectTypeMangaDesc": "Build manga/webtoon scenes with chapter continuity and panel-first controls",
   "journeyCardFilmLabel": "Create Video / Film",
   "journeyCardMangaLabel": "Create Manga / Webtoon",
   "journeyBadgeFilm": "Film / Video",
   "journeyBadgeManga": "Manga / Webtoon",
-  "journeyRuntimeSubtitleFilm": "Film/video runtime lane active for {projectName}",
-  "journeyRuntimeSubtitleManga": "Manga/webtoon runtime lane active for {projectName}",
+  "journeyRuntimeSubtitleFilm": "You're editing this project in the Film/Video flow.",
+  "journeyRuntimeSubtitleManga": "You're editing this project in the Manga/Webtoon flow.",
   "journeyKickoffFilm": "Film kickoff",
   "journeyKickoffManga": "Manga kickoff",
   "wizard": {
-    "modalIntro": "Choose your studio and basic info, then continue with template and source setup.",
-    "stepJourney": "Choose studio",
-    "stepTemplate": "Pick template",
-    "stepSource": "Add source",
+    "modalIntro": "Choose what you want to create, then continue with style and story setup.",
+    "stepJourney": "Choose what you want to create",
+    "stepTemplate": "Build visual direction first",
+    "stepSource": "Set prompt depth and story source",
     "next": "Next",
     "nextToTemplate": "Continue to templates",
     "nextToSource": "Continue to source",
     "back": "Back",
     "startCreating": "Start creating",
-    "studioChoiceLabel": "Studio",
+    "studioChoiceLabel": "What do you want to create?",
     "projectDetailsLabel": "Project details",
-    "projectDetailsHint": "These fields can be edited later. Pick studio first, then fill project info.",
-    "sourceTypeLabel": "Story source",
+    "projectDetailsHint": "These fields can be edited later. Start by choosing a creation path, then fill in the project details.",
+    "sourceTypeLabel": "How are we starting this story?",
     "sourceContentLabel": "Source content",
     "sourceContentPlaceholder": "Paste your story text or script draft...",
     "sourceContentHint": "Please provide at least 20 characters for source-based generation.",
-    "readinessSummary": "Ready to create: {journey} · {template} · {sourceType}",
+    "readinessSummary": "You're ready: {journey} → {template} → {sourceType}",
     "sourceType": {
       "blank": "Start blank",
       "story_text": "Story text",
       "import_script": "Import script"
+    }
+  },
+  "visualFirst": {
+    "style": {
+      "title": "Style gallery (visual-first)",
+      "badges": {
+        "guided": "Guided",
+        "fastHook": "Fast hook",
+        "characterDriven": "Character-led",
+        "dynamicPanels": "Dynamic panels",
+        "softEmotions": "Soft emotions",
+        "worldbuilding": "Worldbuilding"
+      },
+      "story": {
+        "cinematicShort": {
+          "title": "Cinematic short",
+          "desc": "Balanced cinematic look, safe default for first-time teams."
+        },
+        "socialPromo": {
+          "title": "Social promo",
+          "desc": "High-contrast opening, optimized for short social retention."
+        },
+        "dialogueDrama": {
+          "title": "Dialogue drama",
+          "desc": "Focus on facial beat and acting rhythm for character scenes."
+        }
+      },
+      "manga": {
+        "actionBattle": {
+          "title": "Action battle",
+          "desc": "Panel pacing for momentum, impact, and readable combat flow."
+        },
+        "romanceSchool": {
+          "title": "Romance school",
+          "desc": "Soft framing and emotional continuity for relationship arcs."
+        },
+        "fantasyQuest": {
+          "title": "Fantasy quest",
+          "desc": "Adventure-first composition with stronger world context cues."
+        }
+      }
+    },
+    "character": {
+      "title": "Character strategy",
+      "consistencyFirst": {
+        "title": "Consistency first",
+        "desc": "Keep appearance stable across shots and episodes."
+      },
+      "emotionFirst": {
+        "title": "Emotion first",
+        "desc": "Prioritize expression range and emotional clarity."
+      },
+      "dynamicAction": {
+        "title": "Dynamic action",
+        "desc": "Prioritize pose readability and action silhouettes."
+      }
+    },
+    "environment": {
+      "title": "Environment gallery",
+      "cityNightNeon": {
+        "title": "City / night neon",
+        "desc": "Urban contrast with high-energy color accents."
+      },
+      "forestMistDawn": {
+        "title": "Forest / mist dawn",
+        "desc": "Natural depth cues with gentle atmospheric layering."
+      },
+      "interiorCinematic": {
+        "title": "Interior / cinematic",
+        "desc": "Controlled lighting for dialogue and blocking clarity."
+      }
+    },
+    "promptMode": {
+      "title": "Prompt depth",
+      "guided": {
+        "title": "Guided (recommended)",
+        "desc": "Let visual choices drive generation. Prompt stays secondary."
+      },
+      "advanced": {
+        "title": "Advanced prompt",
+        "desc": "Expose deeper prompt controls for manual fine-tuning."
+      }
+    },
+    "referenceBoard": {
+      "title": "Reference board shell",
+      "selectionCount": "{count} board anchors selected",
+      "characterSheet": {
+        "title": "Character sheet",
+        "desc": "Keep one stable character anchor before deeper prompt edits."
+      },
+      "moodLighting": {
+        "title": "Mood & lighting",
+        "desc": "Collect color and lighting references for the opening tone."
+      },
+      "environmentAnchor": {
+        "title": "Environment anchor",
+        "desc": "Lock one location direction before storyboard generation."
+      }
+    },
+    "recommendation": {
+      "label": "Recommended next move",
+      "currentSelectionLabel": "Current selection",
+      "whyLabel": "Why recommended",
+      "compareLabel": "Compare presets",
+      "recommendedBadge": "Top pick",
+      "story": {
+        "default": {
+          "title": "Start guided with your visual picks",
+          "desc": "This combo is strong enough to create first results before opening advanced prompt controls."
+        },
+        "emotionFirst": {
+          "title": "Keep emotion-first and open prompt later",
+          "desc": "Your current choices favor acting and emotional readability, so guided mode should work well first."
+        }
+      },
+      "manga": {
+        "default": {
+          "title": "Use panel-first flow with guided prompt depth",
+          "desc": "Current selections fit a safe manga kickoff path with minimal prompt overhead."
+        },
+        "dynamicAction": {
+          "title": "Favor dynamic panel pacing next",
+          "desc": "Action-heavy character strategy pairs well with dynamic panel rhythm and guided prompt mode."
+        },
+        "forest": {
+          "title": "Lean into atmosphere and continuity",
+          "desc": "Forest dawn works best when you stabilize environment references before writing deeper prompt instructions."
+        }
+      }
+    },
+    "summary": {
+      "style": "Style",
+      "character": "Character",
+      "environment": "Environment"
     }
   },
   "creating": "Creating...",
@@ -109,5 +243,16 @@
         "desc": "Compact gag structure for episodic four-panel storytelling."
       }
     }
-  }
+  },
+  "newStoryProject": "Start Video from Story",
+  "newMangaProject": "Start Manga from Idea",
+  "projectTypeMangaHint": "Start with 1–3 sentences. No screenplay required.",
+  "showInternalProjects": "Show internal/test projects",
+  "hideInternalProjects": "Hide internal/test projects",
+  "internalProjectsHint": "Internal and test projects are hidden by default so the workspace stays cleaner for real production work.",
+  "internalProjectsCount": "{count} internal/test projects hidden",
+  "projectCardSourceDescription": "Project description",
+  "projectCardSourceStory": "First story preview",
+  "projectCardUpdated": "Updated",
+  "projectCardNoContent": "No episodes, images, or videos yet"
 }

@@ -414,6 +414,7 @@ export function useNovelPromotionWorkspaceController({
     projectCharacterCount: projectSnapshot.projectCharacters.length,
     episodeStoryboards,
     journeyType: projectSnapshot.journeyType,
+    promptMode: projectSnapshot.promptMode,
     t,
   })
 
@@ -437,6 +438,8 @@ export function useNovelPromotionWorkspaceController({
     quickMangaConflictPolicy: quickManga.controls.chapterContinuity.conflictPolicy,
     selectedCharacterStrategy,
     selectedEnvironmentId,
+    promptMode: projectSnapshot.promptMode,
+    referenceBoardSelections: projectSnapshot.referenceBoardSelections,
     videoModel: projectSnapshot.videoModel,
     journeyType: projectSnapshot.journeyType,
     projectName: projectSnapshot.projectName,

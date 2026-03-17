@@ -201,7 +201,20 @@ export const POST = apiHandler(async (request: NextRequest) => {
   if (isErrorResponse(authResult)) return authResult
   const { session } = authResult
 
-  const { name, description, projectMode, journeyType, entryIntent, sourceType, sourceContent } = await request.json() as {
+  const {
+    name,
+    description,
+    projectMode,
+    journeyType,
+    entryIntent,
+    sourceType,
+    sourceContent,
+    stylePresetId,
+    characterStrategyId,
+    environmentPresetId,
+    promptMode,
+    referenceBoardSelections,
+  } = await request.json() as {
     name?: string
     description?: string
     projectMode?: unknown
@@ -209,6 +222,11 @@ export const POST = apiHandler(async (request: NextRequest) => {
     entryIntent?: unknown
     sourceType?: unknown
     sourceContent?: unknown
+    stylePresetId?: unknown
+    characterStrategyId?: unknown
+    environmentPresetId?: unknown
+    promptMode?: unknown
+    referenceBoardSelections?: unknown
   }
 
   if (!name || name.trim().length === 0) {
@@ -262,6 +280,11 @@ export const POST = apiHandler(async (request: NextRequest) => {
     entryIntent: normalizedEntryIntent,
     sourceType,
     sourceContent,
+    stylePresetId,
+    characterStrategyId,
+    environmentPresetId,
+    promptMode,
+    referenceBoardSelections,
   })
 
   // 创建 novel-promotion 数据表，使用用户偏好作为默认值

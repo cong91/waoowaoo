@@ -63,6 +63,8 @@ export interface WorkspaceStageRuntimeValue {
   onArtStyleChange: (value: string) => Promise<void>
   selectedCharacterStrategy: 'consistency-first' | 'emotion-first' | 'dynamic-action'
   selectedEnvironmentId: 'city-night-neon' | 'forest-mist-dawn' | 'interior-cinematic'
+  promptMode: 'guided' | 'advanced'
+  referenceBoardSelections: string[]
   onCharacterStrategyChange: (value: 'consistency-first' | 'emotion-first' | 'dynamic-action') => Promise<void>
   onEnvironmentChange: (value: 'city-night-neon' | 'forest-mist-dawn' | 'interior-cinematic') => Promise<void>
   onGenerateDemoSampleAssets: () => Promise<{ mode: 'real' | 'fallback' | 'mixed'; realTriggered: number; fallbackApplied: number }>

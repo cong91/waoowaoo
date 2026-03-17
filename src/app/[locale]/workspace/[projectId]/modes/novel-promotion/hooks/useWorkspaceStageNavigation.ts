@@ -26,6 +26,7 @@ interface UseWorkspaceStageNavigationParams {
   projectCharacterCount: number
   episodeStoryboards: StoryboardLike[]
   journeyType: 'film_video' | 'manga_webtoon'
+  promptMode: 'guided' | 'advanced'
   t: (key: string) => string
 }
 
@@ -35,6 +36,7 @@ export function useWorkspaceStageNavigation({
   projectCharacterCount,
   episodeStoryboards,
   journeyType,
+  promptMode,
   t,
 }: UseWorkspaceStageNavigationParams): CapsuleNavItem[] {
   const getStageStatus = (stageId: string): 'empty' | 'active' | 'processing' | 'ready' => {
@@ -57,10 +59,14 @@ export function useWorkspaceStageNavigation({
     }
   }
 
+  const promptStageLabel = journeyType === 'manga_webtoon'
+    ? `${t('stages.panelScript')} · ${promptMode === 'advanced' ? 'Advanced' : 'Guided'}`
+    : `${t('stages.script')} · ${promptMode === 'advanced' ? 'Advanced' : 'Guided'}`
+
   if (journeyType === 'manga_webtoon') {
     return [
       { id: 'config', icon: 'M', label: t('stages.mangaKickoff'), status: getStageStatus('config') },
-      { id: 'script', icon: 'P', label: t('stages.panelScript'), status: getStageStatus('assets') },
+      { id: 'script', icon: 'P', label: promptStageLabel, status: getStageStatus('assets') },
       { id: 'storyboard', icon: 'B', label: t('stages.panelBoard'), status: getStageStatus('storyboard') },
       { id: 'panels', icon: 'W', label: t('stages.webtoonPanels'), status: getStageStatus('videos') },
       {
@@ -76,7 +82,7 @@ export function useWorkspaceStageNavigation({
 
   return [
     { id: 'config', icon: 'S', label: t('stages.story'), status: getStageStatus('config') },
-    { id: 'script', icon: 'A', label: t('stages.script'), status: getStageStatus('assets') },
+    { id: 'script', icon: 'A', label: promptStageLabel, status: getStageStatus('assets') },
     { id: 'storyboard', icon: 'B', label: t('stages.storyboard'), status: getStageStatus('storyboard') },
     { id: 'videos', icon: 'V', label: t('stages.video'), status: getStageStatus('videos') },
     {

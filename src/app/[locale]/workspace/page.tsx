@@ -32,6 +32,11 @@ import {
   resolveEntryIntentFromTemplate,
   type WorkspaceStarterTemplate,
 } from '@/lib/workspace/onboarding-templates'
+import type {
+  OnboardingCharacterStrategyId,
+  OnboardingEnvironmentPresetId,
+  OnboardingPromptMode,
+} from '@/lib/workspace/onboarding-context'
 
 interface ProjectStats {
   episodes: number
@@ -61,8 +66,145 @@ interface Pagination {
   totalPages: number
 }
 
+interface VisualFirstStylePreset {
+  id: string
+  templateId: string
+  badgeKey: string
+  titleKey: string
+  descKey: string
+}
+
+interface CharacterStrategyOption {
+  id: OnboardingCharacterStrategyId
+  titleKey: string
+  descKey: string
+}
+
+interface EnvironmentPresetOption {
+  id: OnboardingEnvironmentPresetId
+  titleKey: string
+  descKey: string
+  coverPath: string
+}
+
+interface ReferenceBoardOption {
+  id: string
+  titleKey: string
+  descKey: string
+  coverPath: string
+}
+
 const PAGE_SIZE = 7 // 加上新建项目按钮正好8个，4列布局下2行
 const DEFAULT_BILLING_CURRENCY = 'CNY'
+
+const VISUAL_FIRST_STYLE_PRESETS: Record<WorkspaceProjectEntryMode, VisualFirstStylePreset[]> = {
+  story: [
+    {
+      id: 'film-cinematic-short',
+      templateId: 'story-cinematic-short',
+      badgeKey: 'visualFirst.style.badges.guided',
+      titleKey: 'visualFirst.style.story.cinematicShort.title',
+      descKey: 'visualFirst.style.story.cinematicShort.desc',
+    },
+    {
+      id: 'film-social-promo',
+      templateId: 'story-social-ad',
+      badgeKey: 'visualFirst.style.badges.fastHook',
+      titleKey: 'visualFirst.style.story.socialPromo.title',
+      descKey: 'visualFirst.style.story.socialPromo.desc',
+    },
+    {
+      id: 'film-dialogue-drama',
+      templateId: 'story-dialogue-drama',
+      badgeKey: 'visualFirst.style.badges.characterDriven',
+      titleKey: 'visualFirst.style.story.dialogueDrama.title',
+      descKey: 'visualFirst.style.story.dialogueDrama.desc',
+    },
+  ],
+  manga: [
+    {
+      id: 'manga-action-battle',
+      templateId: 'manga-action-battle',
+      badgeKey: 'visualFirst.style.badges.dynamicPanels',
+      titleKey: 'visualFirst.style.manga.actionBattle.title',
+      descKey: 'visualFirst.style.manga.actionBattle.desc',
+    },
+    {
+      id: 'manga-romance-school',
+      templateId: 'manga-romance-school',
+      badgeKey: 'visualFirst.style.badges.softEmotions',
+      titleKey: 'visualFirst.style.manga.romanceSchool.title',
+      descKey: 'visualFirst.style.manga.romanceSchool.desc',
+    },
+    {
+      id: 'manga-fantasy-quest',
+      templateId: 'manga-fantasy-quest',
+      badgeKey: 'visualFirst.style.badges.worldbuilding',
+      titleKey: 'visualFirst.style.manga.fantasyQuest.title',
+      descKey: 'visualFirst.style.manga.fantasyQuest.desc',
+    },
+  ],
+}
+
+const VISUAL_FIRST_CHARACTER_STRATEGIES: CharacterStrategyOption[] = [
+  {
+    id: 'consistency-first',
+    titleKey: 'visualFirst.character.consistencyFirst.title',
+    descKey: 'visualFirst.character.consistencyFirst.desc',
+  },
+  {
+    id: 'emotion-first',
+    titleKey: 'visualFirst.character.emotionFirst.title',
+    descKey: 'visualFirst.character.emotionFirst.desc',
+  },
+  {
+    id: 'dynamic-action',
+    titleKey: 'visualFirst.character.dynamicAction.title',
+    descKey: 'visualFirst.character.dynamicAction.desc',
+  },
+]
+
+const VISUAL_FIRST_ENVIRONMENT_PRESETS: EnvironmentPresetOption[] = [
+  {
+    id: 'city-night-neon',
+    titleKey: 'visualFirst.environment.cityNightNeon.title',
+    descKey: 'visualFirst.environment.cityNightNeon.desc',
+    coverPath: '/demo/novel-input/neon-city.svg',
+  },
+  {
+    id: 'forest-mist-dawn',
+    titleKey: 'visualFirst.environment.forestMistDawn.title',
+    descKey: 'visualFirst.environment.forestMistDawn.desc',
+    coverPath: '/demo/novel-input/forest-dawn.svg',
+  },
+  {
+    id: 'interior-cinematic',
+    titleKey: 'visualFirst.environment.interiorCinematic.title',
+    descKey: 'visualFirst.environment.interiorCinematic.desc',
+    coverPath: '/demo/novel-input/interior-cinematic.svg',
+  },
+]
+
+const VISUAL_FIRST_REFERENCE_BOARD_OPTIONS: ReferenceBoardOption[] = [
+  {
+    id: 'character-sheet',
+    titleKey: 'visualFirst.referenceBoard.characterSheet.title',
+    descKey: 'visualFirst.referenceBoard.characterSheet.desc',
+    coverPath: '/demo/novel-input/interior-cinematic.svg',
+  },
+  {
+    id: 'mood-lighting',
+    titleKey: 'visualFirst.referenceBoard.moodLighting.title',
+    descKey: 'visualFirst.referenceBoard.moodLighting.desc',
+    coverPath: '/demo/novel-input/neon-city.svg',
+  },
+  {
+    id: 'environment-anchor',
+    titleKey: 'visualFirst.referenceBoard.environmentAnchor.title',
+    descKey: 'visualFirst.referenceBoard.environmentAnchor.desc',
+    coverPath: '/demo/novel-input/forest-dawn.svg',
+  },
+]
 
 function formatProjectCost(amount: number, currency = DEFAULT_BILLING_CURRENCY): string {
   if (currency === 'USD') return `$${amount.toFixed(2)}`
@@ -83,6 +225,11 @@ export default function WorkspacePage() {
     starterTemplateId: '',
     sourceType: 'blank' as JourneySourceType,
     sourceContent: '',
+    stylePresetId: 'film-cinematic-short',
+    characterStrategyId: 'consistency-first' as OnboardingCharacterStrategyId,
+    environmentPresetId: 'city-night-neon' as OnboardingEnvironmentPresetId,
+    promptMode: 'guided' as OnboardingPromptMode,
+    referenceBoardSelections: ['character-sheet'],
   })
   const [editingProject, setEditingProject] = useState<Project | null>(null)
   const [showEditModal, setShowEditModal] = useState(false)
@@ -109,10 +256,91 @@ export default function WorkspacePage() {
     [formData.entryMode],
   )
 
+  const visualStylePresets = useMemo(
+    () => VISUAL_FIRST_STYLE_PRESETS[formData.entryMode],
+    [formData.entryMode],
+  )
+
   const selectedStarterTemplate = useMemo<WorkspaceStarterTemplate | null>(() => {
     if (starterTemplates.length === 0) return null
     return starterTemplates.find((template) => template.id === formData.starterTemplateId) || starterTemplates[0]
   }, [formData.starterTemplateId, starterTemplates])
+
+  const selectedStylePreset = useMemo<VisualFirstStylePreset | null>(() => {
+    if (visualStylePresets.length === 0) return null
+    return visualStylePresets.find((preset) => preset.id === formData.stylePresetId) || visualStylePresets[0]
+  }, [formData.stylePresetId, visualStylePresets])
+
+  const selectedCharacterStrategy = useMemo<CharacterStrategyOption | null>(() => {
+    return VISUAL_FIRST_CHARACTER_STRATEGIES.find((strategy) => strategy.id === formData.characterStrategyId) || VISUAL_FIRST_CHARACTER_STRATEGIES[0]
+  }, [formData.characterStrategyId])
+
+  const selectedEnvironmentPreset = useMemo<EnvironmentPresetOption | null>(() => {
+    return VISUAL_FIRST_ENVIRONMENT_PRESETS.find((preset) => preset.id === formData.environmentPresetId) || VISUAL_FIRST_ENVIRONMENT_PRESETS[0]
+  }, [formData.environmentPresetId])
+
+  const recommendedStylePresetIds = useMemo(() => {
+    if (formData.entryMode === 'manga') {
+      if (formData.characterStrategyId === 'dynamic-action') {
+        return ['manga-action-battle', 'manga-fantasy-quest', 'manga-romance-school']
+      }
+      if (formData.environmentPresetId === 'forest-mist-dawn') {
+        return ['manga-fantasy-quest', 'manga-romance-school', 'manga-action-battle']
+      }
+      return ['manga-romance-school', 'manga-fantasy-quest', 'manga-action-battle']
+    }
+
+    if (formData.characterStrategyId === 'emotion-first') {
+      return ['film-dialogue-drama', 'film-cinematic-short', 'film-social-promo']
+    }
+
+    return ['film-cinematic-short', 'film-social-promo', 'film-dialogue-drama']
+  }, [formData.characterStrategyId, formData.entryMode, formData.environmentPresetId])
+
+  const comparePresetCandidates = useMemo(() => {
+    const ordered = recommendedStylePresetIds
+      .map((id) => visualStylePresets.find((preset) => preset.id === id))
+      .filter((preset): preset is VisualFirstStylePreset => Boolean(preset))
+
+    const current = selectedStylePreset && !ordered.some((preset) => preset.id === selectedStylePreset.id)
+      ? [selectedStylePreset, ...ordered]
+      : ordered
+
+    return current.slice(0, 3)
+  }, [recommendedStylePresetIds, selectedStylePreset, visualStylePresets])
+
+  const recommendedNextMove = useMemo(() => {
+    if (formData.entryMode === 'manga') {
+      if (formData.characterStrategyId === 'dynamic-action') {
+        return {
+          title: t('visualFirst.recommendation.manga.dynamicAction.title'),
+          description: t('visualFirst.recommendation.manga.dynamicAction.desc'),
+        }
+      }
+      if (formData.environmentPresetId === 'forest-mist-dawn') {
+        return {
+          title: t('visualFirst.recommendation.manga.forest.title'),
+          description: t('visualFirst.recommendation.manga.forest.desc'),
+        }
+      }
+      return {
+        title: t('visualFirst.recommendation.manga.default.title'),
+        description: t('visualFirst.recommendation.manga.default.desc'),
+      }
+    }
+
+    if (formData.characterStrategyId === 'emotion-first') {
+      return {
+        title: t('visualFirst.recommendation.story.emotionFirst.title'),
+        description: t('visualFirst.recommendation.story.emotionFirst.desc'),
+      }
+    }
+
+    return {
+      title: t('visualFirst.recommendation.story.default.title'),
+      description: t('visualFirst.recommendation.story.default.desc'),
+    }
+  }, [formData.characterStrategyId, formData.entryMode, formData.environmentPresetId, t])
 
   const selectedJourneyTitle = formData.entryMode === 'manga'
     ? t('projectTypeMangaTitle')
@@ -124,6 +352,7 @@ export default function WorkspacePage() {
 
   const [createWizardStep, setCreateWizardStep] = useState<1 | 2 | 3>(1)
   const selectedTemplateId = selectedStarterTemplate?.id
+  const selectedStylePresetId = selectedStylePreset?.id
 
   const trackWizardStepEvent = useCallback((
     event: 'workspace_wizard_step_view' | 'workspace_wizard_step_next' | 'workspace_wizard_step_back',
@@ -143,6 +372,11 @@ export default function WorkspacePage() {
       entryIntent,
       projectMode: formData.entryMode,
       templateId,
+      stylePresetId: selectedStylePresetId,
+      characterStrategyId: formData.characterStrategyId,
+      environmentPresetId: formData.environmentPresetId,
+      promptMode: formData.promptMode,
+      referenceBoardSelections: formData.referenceBoardSelections,
       sourceType: formData.sourceType,
       hasSourceContent: formData.sourceContent.trim().length > 0,
       wizardStep: createWizardStep,
@@ -150,10 +384,10 @@ export default function WorkspacePage() {
       surface: 'create_project_modal',
       ...extra,
     })
-  }, [createWizardStep, formData.entryMode, formData.sourceContent, formData.sourceType, locale, selectedTemplateId])
+  }, [createWizardStep, formData.characterStrategyId, formData.entryMode, formData.environmentPresetId, formData.promptMode, formData.referenceBoardSelections, formData.sourceContent, formData.sourceType, locale, selectedStylePresetId, selectedTemplateId])
 
   const canContinueToTemplateStep = formData.name.trim().length > 0
-  const canContinueToSourceStep = Boolean(selectedStarterTemplate)
+  const canContinueToSourceStep = Boolean(selectedStarterTemplate) && Boolean(selectedStylePreset) && Boolean(selectedCharacterStrategy) && Boolean(selectedEnvironmentPreset)
   const requiresSourceContent = formData.sourceType !== 'blank'
   const hasValidSourceContent = !requiresSourceContent || formData.sourceContent.trim().length >= 20
   const canSubmitJourney = canContinueToTemplateStep && canContinueToSourceStep && hasValidSourceContent
@@ -228,6 +462,7 @@ export default function WorkspacePage() {
 
   const resetCreateWizard = (entryMode: WorkspaceProjectEntryMode = 'story') => {
     const templates = getStarterTemplatesByMode(entryMode)
+    const stylePresets = VISUAL_FIRST_STYLE_PRESETS[entryMode]
     setFormData({
       name: '',
       description: '',
@@ -235,6 +470,11 @@ export default function WorkspacePage() {
       starterTemplateId: templates[0]?.id || '',
       sourceType: 'blank',
       sourceContent: '',
+      stylePresetId: stylePresets[0]?.id || '',
+      characterStrategyId: 'consistency-first',
+      environmentPresetId: 'city-night-neon',
+      promptMode: 'guided',
+      referenceBoardSelections: ['character-sheet'],
     })
     setCreateWizardStep(1)
   }
@@ -265,6 +505,7 @@ export default function WorkspacePage() {
 
   const handleEntryModeChange = (entryMode: WorkspaceProjectEntryMode) => {
     const templates = getStarterTemplatesByMode(entryMode)
+    const stylePresets = VISUAL_FIRST_STYLE_PRESETS[entryMode]
     const journeyType = mapEntryModeToJourneyType(entryMode)
     setFormData((prev) => ({
       ...prev,
@@ -272,6 +513,11 @@ export default function WorkspacePage() {
       starterTemplateId: templates[0]?.id || '',
       sourceType: 'blank',
       sourceContent: '',
+      stylePresetId: stylePresets[0]?.id || '',
+      characterStrategyId: 'consistency-first',
+      environmentPresetId: 'city-night-neon',
+      promptMode: 'guided',
+      referenceBoardSelections: ['character-sheet'],
     }))
     setCreateWizardStep(1)
     trackWorkspaceJourneyEvent('workspace_journey_selected', {
@@ -311,6 +557,11 @@ export default function WorkspacePage() {
         entryIntent,
         projectMode: formData.entryMode,
         templateId: selectedStarterTemplate?.id || null,
+        stylePresetId: selectedStylePreset?.id || null,
+        characterStrategyId: formData.characterStrategyId,
+        environmentPresetId: formData.environmentPresetId,
+        promptMode: formData.promptMode,
+        referenceBoardSelections: formData.referenceBoardSelections,
         locale,
         surface: 'create_project_modal',
       })
@@ -322,6 +573,12 @@ export default function WorkspacePage() {
         },
         body: JSON.stringify(toJourneyProjectCreatePayload({
           ...formData,
+          starterTemplateId: selectedStarterTemplate?.id,
+          stylePresetId: selectedStylePreset?.id,
+          characterStrategyId: formData.characterStrategyId,
+          environmentPresetId: formData.environmentPresetId,
+          promptMode: formData.promptMode,
+          referenceBoardSelections: formData.referenceBoardSelections,
           name: normalizedName,
         }))
       })
@@ -343,6 +600,11 @@ export default function WorkspacePage() {
           entryIntent,
           projectMode: formData.entryMode,
           templateId: selectedStarterTemplate?.id || null,
+          stylePresetId: selectedStylePreset?.id || null,
+          characterStrategyId: formData.characterStrategyId,
+          environmentPresetId: formData.environmentPresetId,
+          promptMode: formData.promptMode,
+          referenceBoardSelections: formData.referenceBoardSelections,
           locale,
           surface: 'create_project_modal',
           projectId: createdProjectId || null,
@@ -355,6 +617,11 @@ export default function WorkspacePage() {
           journeyType,
           entryIntent,
           templateId: selectedStarterTemplate?.id || null,
+          stylePresetId: selectedStylePreset?.id || null,
+          characterStrategyId: formData.characterStrategyId,
+          environmentPresetId: formData.environmentPresetId,
+          promptMode: formData.promptMode,
+          referenceBoardSelections: formData.referenceBoardSelections,
         })
 
         if (createdProjectId) {
@@ -468,6 +735,20 @@ export default function WorkspacePage() {
 
     trackWizardStepEvent('workspace_wizard_step_view')
   }, [createWizardStep, showCreateModal, trackWizardStepEvent])
+
+  useEffect(() => {
+    if (!showCreateModal || createWizardStep !== 2) return
+
+    trackWorkspaceJourneyEvent('workspace_recommendation_viewed', {
+      projectMode: formData.entryMode,
+      stylePresetId: selectedStylePreset?.id || null,
+      characterStrategyId: formData.characterStrategyId,
+      environmentPresetId: formData.environmentPresetId,
+      recommendationTitle: recommendedNextMove.title,
+      locale,
+      surface: 'create_project_modal',
+    })
+  }, [createWizardStep, formData.characterStrategyId, formData.entryMode, formData.environmentPresetId, locale, recommendedNextMove.description, recommendedNextMove.title, selectedStylePreset?.id, showCreateModal])
 
   if (status === 'loading' || !session) {
     return (
@@ -896,46 +1177,214 @@ export default function WorkspacePage() {
               )}
 
               {createWizardStep === 2 && (
-                <section className="space-y-3">
-                  <span className="glass-field-label block">{t('starterTemplates.title')}</span>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {starterTemplates.map((template) => {
-                      const isActive = selectedStarterTemplate?.id === template.id
-                      return (
-                        <button
-                          key={template.id}
-                          type="button"
-                          onClick={() => {
-                            const journeyType = mapEntryModeToJourneyType(formData.entryMode)
-                            trackWorkspaceJourneyEvent('workspace_template_selected', {
-                              journeyType,
-                              entryIntent: resolveEntryIntentFromTemplate({
-                                entryMode: formData.entryMode,
-                                templateId: template.id,
-                              }),
-                              projectMode: formData.entryMode,
-                              templateId: template.id,
-                              locale,
-                              surface: 'create_project_modal',
-                            })
-                            setFormData((prev) => ({
-                              ...prev,
-                              starterTemplateId: template.id,
-                              name: prev.name.trim() ? prev.name : buildStarterProjectName(t(template.titleKey)),
-                            }))
-                          }}
-                          className={`w-full glass-btn-base px-3 py-2.5 text-left ${isActive ? 'glass-btn-primary ring-2 ring-[var(--glass-primary)]/30' : 'glass-btn-secondary'}`}
-                        >
-                          <div className="text-sm font-semibold text-[var(--glass-text-primary)] truncate">{t(template.titleKey)}</div>
-                        </button>
-                      )
-                    })}
+                <section className="space-y-4">
+                  <div>
+                    <span className="glass-field-label block mb-2">{t('visualFirst.style.title')}</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      {visualStylePresets.map((preset) => {
+                        const isActive = selectedStylePreset?.id === preset.id
+                        return (
+                          <button
+                            key={preset.id}
+                            type="button"
+                            onClick={() => {
+                              const journeyType = mapEntryModeToJourneyType(formData.entryMode)
+                              trackWorkspaceJourneyEvent('workspace_template_selected', {
+                                journeyType,
+                                entryIntent: resolveEntryIntentFromTemplate({
+                                  entryMode: formData.entryMode,
+                                  templateId: preset.templateId,
+                                }),
+                                projectMode: formData.entryMode,
+                                templateId: preset.templateId,
+                                stylePresetId: preset.id,
+                                locale,
+                                surface: 'create_project_modal',
+                              })
+                              setFormData((prev) => ({
+                                ...prev,
+                                stylePresetId: preset.id,
+                                starterTemplateId: preset.templateId,
+                                name: prev.name.trim() ? prev.name : buildStarterProjectName(t(preset.titleKey)),
+                              }))
+                            }}
+                            className={`w-full glass-btn-base px-3 py-3 text-left ${isActive ? 'glass-btn-primary ring-2 ring-[var(--glass-primary)]/30' : 'glass-btn-secondary'}`}
+                          >
+                            <div className="text-[10px] uppercase tracking-[0.12em] text-[var(--glass-text-tertiary)]">{t(preset.badgeKey)}</div>
+                            <div className="text-sm font-semibold text-[var(--glass-text-primary)] mt-1">{t(preset.titleKey)}</div>
+                            <div className="text-xs text-[var(--glass-text-secondary)] mt-1 line-clamp-2">{t(preset.descKey)}</div>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="glass-field-label block mb-2">{t('visualFirst.character.title')}</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      {VISUAL_FIRST_CHARACTER_STRATEGIES.map((strategy) => {
+                        const isActive = formData.characterStrategyId === strategy.id
+                        return (
+                          <button
+                            key={strategy.id}
+                            type="button"
+                            onClick={() => setFormData((prev) => ({ ...prev, characterStrategyId: strategy.id }))}
+                            className={`w-full glass-btn-base px-3 py-3 text-left ${isActive ? 'glass-btn-primary ring-2 ring-[var(--glass-primary)]/30' : 'glass-btn-secondary'}`}
+                          >
+                            <div className="text-sm font-semibold text-[var(--glass-text-primary)]">{t(strategy.titleKey)}</div>
+                            <div className="text-xs text-[var(--glass-text-secondary)] mt-1 line-clamp-2">{t(strategy.descKey)}</div>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="glass-field-label block mb-2">{t('visualFirst.environment.title')}</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      {VISUAL_FIRST_ENVIRONMENT_PRESETS.map((preset) => {
+                        const isActive = formData.environmentPresetId === preset.id
+                        return (
+                          <button
+                            key={preset.id}
+                            type="button"
+                            onClick={() => setFormData((prev) => ({ ...prev, environmentPresetId: preset.id }))}
+                            className={`w-full glass-btn-base px-3 py-3 text-left ${isActive ? 'glass-btn-primary ring-2 ring-[var(--glass-primary)]/30' : 'glass-btn-secondary'}`}
+                          >
+                            <div className="text-xs text-[var(--glass-text-secondary)] truncate">{preset.coverPath.split('/').pop()}</div>
+                            <div className="text-sm font-semibold text-[var(--glass-text-primary)] mt-1">{t(preset.titleKey)}</div>
+                            <div className="text-xs text-[var(--glass-text-secondary)] mt-1 line-clamp-2">{t(preset.descKey)}</div>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="rounded-lg border border-[var(--glass-border)]/60 bg-[var(--glass-background-secondary)]/35 p-3">
+                    <div className="text-xs uppercase tracking-[0.12em] text-[var(--glass-text-tertiary)]">{t('visualFirst.recommendation.label')}</div>
+                    <div className="text-sm font-semibold text-[var(--glass-text-primary)] mt-1">{recommendedNextMove.title}</div>
+                    <div className="text-xs text-[var(--glass-text-secondary)] mt-1">{recommendedNextMove.description}</div>
+                    <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                      <div className="rounded-md bg-[var(--glass-bg-muted)]/60 px-3 py-2">
+                        <div className="text-[10px] uppercase tracking-[0.08em] text-[var(--glass-text-tertiary)]">{t('visualFirst.recommendation.currentSelectionLabel')}</div>
+                        <div className="mt-1 text-[var(--glass-text-primary)]">{selectedStylePreset ? t(selectedStylePreset.titleKey) : '-'}</div>
+                      </div>
+                      <div className="rounded-md bg-[var(--glass-bg-muted)]/60 px-3 py-2">
+                        <div className="text-[10px] uppercase tracking-[0.08em] text-[var(--glass-text-tertiary)]">{t('visualFirst.recommendation.whyLabel')}</div>
+                        <div className="mt-1 text-[var(--glass-text-primary)]">{recommendedNextMove.description}</div>
+                      </div>
+                    </div>
+                    <div className="mt-3">
+                      <div className="text-[10px] uppercase tracking-[0.08em] text-[var(--glass-text-tertiary)] mb-2">{t('visualFirst.recommendation.compareLabel')}</div>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        {comparePresetCandidates.map((preset, index) => {
+                          const isSelected = preset.id === selectedStylePreset?.id
+                          const isRecommended = index === 0
+                          return (
+                            <button
+                              key={preset.id}
+                              type="button"
+                              onClick={() => {
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  stylePresetId: preset.id,
+                                  starterTemplateId: preset.templateId,
+                                }))
+                              }}
+                              className={`rounded-md border px-3 py-3 text-left ${isSelected
+                                ? 'border-[var(--glass-primary)]/40 bg-[var(--glass-primary)]/10'
+                                : 'border-[var(--glass-border)]/40 bg-[var(--glass-bg-muted)]/40'
+                                }`}
+                            >
+                              <div className="flex items-center justify-between gap-2">
+                                <div className="text-sm font-semibold text-[var(--glass-text-primary)]">{t(preset.titleKey)}</div>
+                                {isRecommended && (
+                                  <span className="text-[10px] uppercase tracking-[0.08em] text-[var(--glass-tone-info-fg)]">{t('visualFirst.recommendation.recommendedBadge')}</span>
+                                )}
+                              </div>
+                              <div className="text-xs text-[var(--glass-text-secondary)] mt-1 line-clamp-3">{t(preset.descKey)}</div>
+                            </button>
+                          )
+                        })}
+                      </div>
+                    </div>
+                    <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-[var(--glass-text-secondary)]">
+                      <div className="rounded-md bg-[var(--glass-bg-muted)]/60 px-2 py-2">
+                        <div className="text-[10px] uppercase tracking-[0.08em] text-[var(--glass-text-tertiary)]">{t('visualFirst.summary.style')}</div>
+                        <div className="mt-1 text-[var(--glass-text-primary)]">{selectedStylePreset ? t(selectedStylePreset.titleKey) : '-'}</div>
+                      </div>
+                      <div className="rounded-md bg-[var(--glass-bg-muted)]/60 px-2 py-2">
+                        <div className="text-[10px] uppercase tracking-[0.08em] text-[var(--glass-text-tertiary)]">{t('visualFirst.summary.character')}</div>
+                        <div className="mt-1 text-[var(--glass-text-primary)]">{selectedCharacterStrategy ? t(selectedCharacterStrategy.titleKey) : '-'}</div>
+                      </div>
+                      <div className="rounded-md bg-[var(--glass-bg-muted)]/60 px-2 py-2">
+                        <div className="text-[10px] uppercase tracking-[0.08em] text-[var(--glass-text-tertiary)]">{t('visualFirst.summary.environment')}</div>
+                        <div className="mt-1 text-[var(--glass-text-primary)]">{selectedEnvironmentPreset ? t(selectedEnvironmentPreset.titleKey) : '-'}</div>
+                      </div>
+                    </div>
                   </div>
                 </section>
               )}
 
               {createWizardStep === 3 && (
                 <section className="space-y-4">
+                  <div>
+                    <span className="glass-field-label block mb-2">{t('visualFirst.referenceBoard.title')}</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      {VISUAL_FIRST_REFERENCE_BOARD_OPTIONS.map((option) => {
+                        const isActive = formData.referenceBoardSelections.includes(option.id)
+                        return (
+                          <button
+                            key={option.id}
+                            type="button"
+                            onClick={() => {
+                              trackWorkspaceJourneyEvent('workspace_reference_board_toggled', {
+                                projectMode: formData.entryMode,
+                                referenceBoardItemId: option.id,
+                                locale,
+                                surface: 'create_project_modal',
+                              })
+                              setFormData((prev) => {
+                                const nextSelections = prev.referenceBoardSelections.includes(option.id)
+                                  ? prev.referenceBoardSelections.filter((id) => id !== option.id)
+                                  : [...prev.referenceBoardSelections, option.id]
+                                return {
+                                  ...prev,
+                                  referenceBoardSelections: nextSelections.length > 0 ? nextSelections : [option.id],
+                                }
+                              })
+                            }}
+                            className={`w-full glass-btn-base px-3 py-3 text-left ${isActive ? 'glass-btn-primary ring-2 ring-[var(--glass-primary)]/30' : 'glass-btn-secondary'}`}
+                          >
+                            <div className="text-xs text-[var(--glass-text-secondary)] truncate">{option.coverPath.split('/').pop()}</div>
+                            <div className="text-sm font-semibold text-[var(--glass-text-primary)] mt-1">{t(option.titleKey)}</div>
+                            <div className="text-xs text-[var(--glass-text-secondary)] mt-1 line-clamp-2">{t(option.descKey)}</div>
+                          </button>
+                        )
+                      })}
+                    </div>
+                    <div className="mt-2 text-xs text-[var(--glass-text-tertiary)]">
+                      {t('visualFirst.referenceBoard.selectionCount', { count: formData.referenceBoardSelections.length })}
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="glass-field-label block mb-2">{t('visualFirst.promptMode.title')}</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {(['guided', 'advanced'] as OnboardingPromptMode[]).map((mode) => (
+                        <button
+                          key={mode}
+                          type="button"
+                          onClick={() => setFormData((prev) => ({ ...prev, promptMode: mode }))}
+                          className={`glass-btn-base px-3 py-3 text-left ${formData.promptMode === mode ? 'glass-btn-primary' : 'glass-btn-secondary'}`}
+                        >
+                          <div className="text-sm font-semibold text-[var(--glass-text-primary)]">{t(`visualFirst.promptMode.${mode}.title`)}</div>
+                          <div className="text-xs text-[var(--glass-text-secondary)] mt-1">{t(`visualFirst.promptMode.${mode}.desc`)}</div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   <div>
                     <span className="glass-field-label block mb-2">{t('wizard.sourceTypeLabel')}</span>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
@@ -973,7 +1422,7 @@ export default function WorkspacePage() {
                   <div className="rounded-lg border border-[var(--glass-border)]/60 bg-[var(--glass-background-secondary)]/35 px-3 py-2 text-xs text-[var(--glass-text-secondary)]">
                     {t('wizard.readinessSummary', {
                       journey: selectedJourneyTitle,
-                      template: selectedStarterTemplate ? t(selectedStarterTemplate.titleKey) : '-',
+                      template: selectedStylePreset ? t(selectedStylePreset.titleKey) : '-',
                       sourceType: t(`wizard.sourceType.${formData.sourceType}`),
                     })}
                   </div>

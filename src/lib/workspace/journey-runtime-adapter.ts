@@ -20,6 +20,11 @@ export interface JourneyWizardDraft {
   starterTemplateId?: string
   sourceType: JourneySourceType
   sourceContent?: string
+  stylePresetId?: string
+  characterStrategyId?: 'consistency-first' | 'emotion-first' | 'dynamic-action'
+  environmentPresetId?: 'city-night-neon' | 'forest-mist-dawn' | 'interior-cinematic'
+  promptMode?: 'guided' | 'advanced'
+  referenceBoardSelections?: string[]
 }
 
 export function resolveJourneyEntryIntent(input: {
@@ -49,15 +54,22 @@ export function toJourneyProjectCreatePayload(draft: JourneyWizardDraft): Projec
     sourceType: draft.sourceType,
   })
 
-  return toProjectCreatePayload({
-    name: draft.name,
-    description: draft.description,
-    entryMode: draft.entryMode,
-    journeyType,
-    entryIntent,
-    sourceType: draft.sourceType,
-    sourceContent: draft.sourceContent,
-  })
+  return {
+    ...toProjectCreatePayload({
+      name: draft.name,
+      description: draft.description,
+      entryMode: draft.entryMode,
+      journeyType,
+      entryIntent,
+      sourceType: draft.sourceType,
+      sourceContent: draft.sourceContent,
+    }),
+    stylePresetId: draft.stylePresetId,
+    characterStrategyId: draft.characterStrategyId,
+    environmentPresetId: draft.environmentPresetId,
+    promptMode: draft.promptMode,
+    referenceBoardSelections: draft.referenceBoardSelections,
+  }
 }
 
 export function buildJourneyRuntimeEntryUrl(input: {
