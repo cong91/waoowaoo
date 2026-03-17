@@ -33,10 +33,10 @@
   "journeyKickoffFilm": "Kickoff Film",
   "journeyKickoffManga": "Kickoff Manga",
   "wizard": {
-    "modalIntro": "Chọn studio và thông tin cơ bản trước, sau đó tiếp tục chọn mẫu và nguồn nội dung.",
-    "stepJourney": "Chọn studio",
-    "stepTemplate": "Chọn mẫu",
-    "stepSource": "Thêm nguồn",
+    "modalIntro": "Chọn điều bạn muốn tạo, sau đó tiếp tục với phong cách và điểm bắt đầu cho câu chuyện.",
+    "stepJourney": "Bạn muốn tạo gì?",
+    "stepTemplate": "Chọn phong cách khởi đầu",
+    "stepSource": "Chọn điểm bắt đầu cho câu chuyện",
     "next": "Tiếp theo",
     "nextToTemplate": "Tiếp tục tới chọn mẫu",
     "nextToSource": "Tiếp tục tới nguồn nội dung",
@@ -106,5 +106,8 @@
 úc gag ngắn cho kể chuyện 4 khung theo tập."
       }
     }
+  }
+}
+}
   }
 }

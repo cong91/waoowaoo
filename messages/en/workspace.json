@@ -33,10 +33,10 @@
   "journeyKickoffFilm": "Film kickoff",
   "journeyKickoffManga": "Manga kickoff",
   "wizard": {
-    "modalIntro": "Choose your studio and basic info, then continue with template and source setup.",
-    "stepJourney": "Choose studio",
-    "stepTemplate": "Pick template",
-    "stepSource": "Add source",
+    "modalIntro": "Choose what you want to create, then continue with style and story setup.",
+    "stepJourney": "Choose what you want to create",
+    "stepTemplate": "Choose a starting style",
+    "stepSource": "Choose your story starting point",
     "next": "Next",
     "nextToTemplate": "Continue to templates",
     "nextToSource": "Continue to source",
@@ -103,6 +103,11 @@
     }
   }
 }
+    }
+  }
+}
+g."
+      }
     }
   }
 }

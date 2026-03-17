@@ -42,14 +42,14 @@
     "nextToSource": "继续到来源设置",
     "back": "返回",
     "startCreating": "开始创作",
-    "studioChoiceLabel": "工作室",
+    "studioChoiceLabel": "你想创建什么？",
     "projectDetailsLabel": "项目信息",
-    "projectDetailsHint": "这些字段后续可修改。建议先选工作室，再填写项目信息。",
-    "sourceTypeLabel": "故事来源",
+    "projectDetailsHint": "这些字段后续都可以修改。建议先选要创建的内容，再填写项目信息。",
+    "sourceTypeLabel": "我们要从什么开始这个故事？",
     "sourceContentLabel": "来源内容",
     "sourceContentPlaceholder": "粘贴你的故事文本或脚本草稿...",
     "sourceContentHint": "来源模式下请至少提供 20 个字符。",
-    "readinessSummary": "准备创建：{journey} · {template} · {sourceType}",
+    "readinessSummary": "已准备好：{journey} → {template} → {sourceType}",
     "sourceType": {
       "blank": "空白开始",
       "story_text": "故事文本",
@@ -104,6 +104,19 @@
   }
 }
  }
+}
+     }
+    }
+  }
+}
+ }
+  }
+}
+ }
+}
+     }
+    }
+  }
 }
      }
     }
