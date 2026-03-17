@@ -28,8 +28,8 @@
   "journeyCardMangaLabel": "Tạo Manga / Webtoon",
   "journeyBadgeFilm": "Film / Video",
   "journeyBadgeManga": "Manga / Webtoon",
-  "journeyRuntimeSubtitleFilm": "Lane runtime Film/Video đang hoạt động cho {projectName}",
-  "journeyRuntimeSubtitleManga": "Lane runtime Manga/Webtoon đang hoạt động cho {projectName}",
+  "journeyRuntimeSubtitleFilm": "Bạn đang chỉnh dự án này trong flow Film/Video.",
+  "journeyRuntimeSubtitleManga": "Bạn đang chỉnh dự án này trong flow Manga/Webtoon.",
   "journeyKickoffFilm": "Kickoff Film",
   "journeyKickoffManga": "Kickoff Manga",
   "wizard": {

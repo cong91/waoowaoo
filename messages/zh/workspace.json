@@ -28,8 +28,8 @@
   "journeyCardMangaLabel": "创建 Manga / Webtoon",
   "journeyBadgeFilm": "Film / Video",
   "journeyBadgeManga": "Manga / Webtoon",
-  "journeyRuntimeSubtitleFilm": "{projectName} 当前处于 Film/Video 运行路径",
-  "journeyRuntimeSubtitleManga": "{projectName} 当前处于 Manga/Webtoon 运行路径",
+  "journeyRuntimeSubtitleFilm": "你当前正在用 Film/Video 流程编辑这个项目。",
+  "journeyRuntimeSubtitleManga": "你当前正在用 Manga/Webtoon 流程编辑这个项目。",
   "journeyKickoffFilm": "Film kickoff",
   "journeyKickoffManga": "Manga kickoff",
   "wizard": {

@@ -224,11 +224,11 @@ export function EpisodeSelector({
                 <div className="glass-surface-soft flex h-10 w-10 items-center justify-center rounded-xl text-xs font-bold text-[var(--glass-tone-info-fg)]">
                     {t('episode')}
                 </div>
-                <div className="flex flex-col items-start text-left mr-2">
-                    <span className="text-sm font-bold text-[var(--glass-text-primary)] line-clamp-1 max-w-[160px]">
+                <div className="flex min-w-0 flex-col items-start text-left mr-2">
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--glass-text-tertiary)] line-clamp-1 max-w-[200px]" title={projectName || t('project')}>
                         {projectName || t('project')}
                     </span>
-                    <span className="text-sm text-[var(--glass-text-secondary)] line-clamp-1 max-w-[160px]">
+                    <span className="text-sm font-bold text-[var(--glass-text-primary)] line-clamp-1 max-w-[200px]" title={currentEp.title}>
                         {currentEp.title}
                     </span>
                 </div>

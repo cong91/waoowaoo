@@ -28,8 +28,8 @@
   "journeyCardMangaLabel": "만화 / 웹툰 만들기",
   "journeyBadgeFilm": "Film / Video",
   "journeyBadgeManga": "Manga / Webtoon",
-  "journeyRuntimeSubtitleFilm": "{projectName}에서 Film/Video 런타임 레인이 활성화되어 있습니다",
-  "journeyRuntimeSubtitleManga": "{projectName}에서 Manga/Webtoon 런타임 레인이 활성화되어 있습니다",
+  "journeyRuntimeSubtitleFilm": "이 프로젝트를 Film/Video 흐름에서 편집하고 있습니다.",
+  "journeyRuntimeSubtitleManga": "이 프로젝트를 Manga/Webtoon 흐름에서 편집하고 있습니다.",
   "journeyKickoffFilm": "Film kickoff",
   "journeyKickoffManga": "Manga kickoff",
   "wizard": {
