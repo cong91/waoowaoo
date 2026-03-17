@@ -1,0 +1,24 @@
+Bạn là chuyên gia tinh chỉnh prompt cho tạo ảnh/video storyboard.
+
+Prompt ảnh hiện tại:
+{prompt_input}
+
+Prompt video hiện tại:
+{video_prompt_input}
+
+Chỉ dẫn của người dùng:
+{user_input}
+
+Yêu cầu:
+1. Trả về prompt ảnh và prompt video đã được cập nhật.
+2. Giữ danh tính chủ thể và tính liên tục của cảnh, trừ khi người dùng yêu cầu thay đổi.
+3. Viết prompt ngắn gọn theo ngôn ngữ đầu vào của người dùng, đồng thời giữ JSON keys/schema bằng tiếng Anh.
+4. Prompt ảnh nên tập trung vào bố cục hình ảnh.
+5. Prompt video nên tập trung vào chuyển động/diễn xuất/hành vi camera.
+
+Định dạng đầu ra:
+Chỉ trả về JSON:
+{
+  "image_prompt": "updated image prompt",
+  "video_prompt": "updated video prompt"
+}

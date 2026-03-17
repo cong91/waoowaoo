@@ -1,0 +1,49 @@
+당신은 시니어 스토리보드 디테일 개선 전문가입니다.
+패널 단위의 시각 디테일과 비디오 프롬프트를 개선하세요.
+
+패널 입력 JSON:
+{panels_json}
+
+캐릭터 정보:
+{characters_age_gender}
+
+로케이션 정보:
+{locations_description}
+
+작업:
+각 패널에 대해, 더 향상된 시네마틱 디테일을 반영한 완전한 패널 객체를 출력하세요.
+
+패널별 필수 필드:
+- panel_number
+- description
+- characters
+- location
+- scene_type (daily/emotion/action/epic/suspense)
+- source_text
+- shot_type
+- camera_move
+- video_prompt
+- duration (optional)
+
+출력 스키마 예시(필드명은 반드시 유지):
+[
+  {
+    "panel_number": 1,
+    "description": "panel description",
+    "characters": [{ "name": "Character", "appearance": "appearance" }],
+    "location": "location name",
+    "scene_type": "daily",
+    "source_text": "source text excerpt",
+    "shot_type": "medium shot",
+    "camera_move": "static",
+    "video_prompt": "motion-ready prompt",
+    "duration": 3
+  }
+]
+
+규칙:
+1. 패널 순서는 변경하지 마세요.
+2. source_text는 입력과 의미적으로 정렬되게 유지하고, 이야기의 의미를 다시 쓰지 마세요.
+3. video_prompt는 동작 생성에 바로 사용할 수 있도록 구체적으로 작성하세요.
+4. 카메라 지시에서 배우를 지칭할 때는 video_prompt에 나이+성별 표현을 우선 사용하세요.
+5. JSON 배열만 반환하세요.

@@ -1,0 +1,24 @@
+# Prompt Chuyển Ảnh Tham Chiếu Thành Character Sheet (img2img)
+
+Sử dụng ảnh tham chiếu được cung cấp để trích xuất đặc điểm khuôn mặt, kiểu tóc, dáng cơ thể và cấu trúc trang phục.
+
+## Nhất quán phong cách
+Giữ nguyên phong cách thị giác gốc:
+- Ảnh thật -> phong cách chân thực
+- Anime -> phong cách anime
+- Minh họa hiện thực -> phong cách minh họa hiện thực
+- Bất kỳ phong cách nào khác -> bảo toàn đúng phong cách đó
+
+## Quy tắc tạo ảnh
+1. Bỏ qua ám màu và lỗi ánh sáng của ảnh gốc
+2. Sử dụng ánh sáng studio sạch, mềm
+3. Giữ tỷ lệ cơ thể tự nhiên, thẩm mỹ và chính xác
+4. Không sao chép mờ nhòe, nhiễu, lỗi nén hoặc khuyết điểm
+5. Đầu ra phải rõ ràng, sắc nét và đạt chất lượng production
+6. Biểu cảm nhân vật nên trung tính và bình tĩnh, nhìn vào máy quay
+
+## Bổ sung phần bị thiếu
+Nếu chỉ nhìn thấy nửa người hoặc một phần cơ thể, hãy suy luận và hoàn thiện các phần bị che khuất một cách nhất quán:
+- Suy luận trang phục phần thân dưới phù hợp
+- Suy luận giày dép phù hợp
+- Suy luận phần tay/cánh tay bị thiếu theo cách tự nhiên

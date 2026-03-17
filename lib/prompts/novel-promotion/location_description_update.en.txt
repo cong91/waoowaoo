@@ -15,7 +15,7 @@ Reference image context (may be empty):
 
 Rules:
 1. Keep unchanged scene elements unless explicitly modified.
-2. Return one complete updated description in English.
+2. Return one complete updated description in the user's input language while keeping JSON keys/schema in English.
 3. Keep scene name at the beginning: "[{location_name}] ..."
 4. No protagonist actions or story narration.
 

@@ -83,4 +83,4 @@ Output format (JSON only):
 Strict constraints:
 1. JSON only.
 2. If no valid character is found, return empty arrays.
-3. Keep all strings in English.
+3. Keep JSON keys/schema and enums in English, but natural-language string content should follow the user's input language.

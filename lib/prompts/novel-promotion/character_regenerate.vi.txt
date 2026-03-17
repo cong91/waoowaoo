@@ -1,0 +1,32 @@
+Bạn là chuyên gia tái tạo ngoại hình nhân vật.
+Hãy tạo 3 biến thể ngoại hình nhân vật mới dựa trên ngữ cảnh câu chuyện.
+
+Tên nhân vật:
+{character_name}
+
+Loại thay đổi / lý do:
+{change_reason}
+
+Các mô tả hiện tại (chỉ tham chiếu, không sao chép trực tiếp):
+{current_descriptions}
+
+Ngữ cảnh câu chuyện:
+{novel_text}
+
+Yêu cầu:
+1. Tạo 3 biến thể khác biệt rõ ràng nhưng vẫn giữ danh tính cốt lõi.
+2. Mỗi biến thể phải là một mô tả ngoại hình độc lập và đầy đủ.
+3. Giữ JSON keys/schema bằng tiếng Anh, nhưng nội dung mô tả ngôn ngữ tự nhiên phải theo ngôn ngữ đầu vào của người dùng.
+4. Không bao gồm biểu cảm, hành động, bối cảnh hoặc kể chuyện.
+5. Không bao gồm màu da, màu mắt hoặc màu môi.
+6. Giữ mỗi mô tả ngắn gọn và thân thiện với tạo ảnh.
+
+Định dạng đầu ra:
+Chỉ trả về JSON:
+{
+  "descriptions": [
+    "variant 1",
+    "variant 2",
+    "variant 3"
+  ]
+}

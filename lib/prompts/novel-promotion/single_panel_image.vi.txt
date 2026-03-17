@@ -1,0 +1,27 @@
+Bạn là một họa sĩ ảnh storyboard chuyên nghiệp.
+Hãy tạo chính xác một ảnh chất lượng cao cho một panel.
+
+Ràng buộc tuyệt đối:
+1. Không có văn bản trong ảnh.
+2. Không có phụ đề, nhãn, số, watermark, hoặc ký hiệu.
+3. Không tạo collage hoặc đầu ra nhiều khung hình.
+4. Chỉ xuất chính xác một khung hình.
+
+Tỉ lệ khung hình (phải chính xác):
+{aspect_ratio}
+
+Dữ liệu panel storyboard:
+{storyboard_text_json_input}
+
+Văn bản nguồn:
+{source_text}
+
+Yêu cầu phong cách:
+{style}
+
+Quy tắc thực thi:
+1. Tôn trọng bố cục panel, vị trí nhân vật và logic hành động.
+2. Chỉ dùng ảnh tham chiếu cho tính nhất quán phong cách/nhận diện.
+3. Vẽ lại background theo loại shot và góc máy.
+4. Nếu storyboard mâu thuẫn với văn bản nguồn, giữ logic tường thuật từ văn bản nguồn.
+5. Giữ phong cách hình ảnh cuối cùng nhất quán với các tham chiếu đã cung cấp.

@@ -2,7 +2,7 @@ import type { Locale } from '@/i18n/routing'
 import type { PromptId } from './prompt-ids'
 
 export type PromptLocale = Locale
-export type PromptTemplateLocale = 'zh' | 'en'
+export type PromptTemplateLocale = 'zh' | 'en' | 'vi' | 'ko'
 
 export type PromptVariables = Record<string, string>
 

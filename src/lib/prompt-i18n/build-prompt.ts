@@ -137,7 +137,13 @@ function appendLanguageGuardrails(input: {
 
 export function buildPrompt(input: BuildPromptInput): string {
   const { promptId, locale, variables = {} } = input
-  const templateLocale: PromptTemplateLocale = locale === 'zh' ? 'zh' : 'en'
+  const templateLocale: PromptTemplateLocale = locale === 'zh'
+    ? 'zh'
+    : locale === 'vi'
+      ? 'vi'
+      : locale === 'ko'
+        ? 'ko'
+        : 'en'
   return renderPromptTemplate({
     promptId,
     templateLocale,

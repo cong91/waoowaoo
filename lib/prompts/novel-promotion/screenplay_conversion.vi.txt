@@ -1,0 +1,59 @@
+Bạn là một chuyên gia chuyển đổi kịch bản phân cảnh.
+Hãy chuyển nội dung clip thành JSON screenplay có cấu trúc mà không thêm dữ kiện truyện mới.
+
+Clip ID:
+{clip_id}
+
+Nội dung clip:
+{clip_content}
+
+Thư viện bối cảnh:
+{locations_lib_name}
+
+Thư viện nhân vật:
+{characters_lib_name}
+
+Giới thiệu nhân vật:
+{characters_introduction}
+
+Định dạng đầu ra (chỉ JSON object):
+{
+  "clip_id": "{clip_id}",
+  "original_text": "original clip text",
+  "scenes": [
+    {
+      "scene_number": 1,
+      "heading": {
+        "int_ext": "INT or EXT",
+        "location": "location name",
+        "time": "morning/day/evening/night"
+      },
+      "description": "scene setup",
+      "characters": ["Character A", "Character B"],
+      "content": [
+        {
+          "type": "action",
+          "text": "action description"
+        },
+        {
+          "type": "dialogue",
+          "character": "Character A",
+          "parenthetical": "optional performance cue",
+          "lines": "spoken line"
+        },
+        {
+          "type": "voiceover",
+          "character": "Narrator or Character",
+          "text": "voiceover content"
+        }
+      ]
+    }
+  ]
+}
+
+Quy tắc:
+1. Bảo toàn dữ kiện truyện gốc; không bịa thêm sự kiện mới.
+2. Giữ thứ tự scene/content khớp với văn bản nguồn.
+3. Chuẩn hóa bí danh nhân vật về tên canonical khi có thể.
+4. Dùng tên địa điểm khớp nhất từ thư viện; nếu không có mục nào phù hợp, dùng văn bản địa điểm từ nguồn.
+5. Chỉ trả về JSON nghiêm ngặt.

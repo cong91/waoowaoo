@@ -17,7 +17,7 @@ export interface ChatCompletionOptions {
     streamStepTotal?: number
     // Prompt routing telemetry (VAT-41 P0)
     promptTelemetry?: {
-      prompt_language: 'zh' | 'en'
+      prompt_language: 'zh' | 'en' | 'vi' | 'ko'
       output_language: 'zh' | 'en' | 'vi' | 'ko'
       contract_language: 'en'
       contract_valid: boolean

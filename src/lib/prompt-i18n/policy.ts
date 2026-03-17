@@ -6,13 +6,6 @@ import type {
   PromptTemplateLocale,
 } from './types'
 
-const EN_FIRST_PROMPT_IDS = new Set<PromptId>([
-  'np_episode_split',
-  'np_screenplay_conversion',
-  'np_agent_clip',
-  'np_voice_analysis',
-])
-
 const NON_CHINESE_PROVIDER_HINTS = ['openai', 'openrouter', 'anthropic', 'deepseek', 'xai', 'grok']
 const CHINESE_PROVIDER_HINTS = ['qwen', 'doubao', 'ark', 'baidu']
 
@@ -39,12 +32,19 @@ function mapOutputLocale(locale: PromptLocale): PromptLocale {
   return 'en'
 }
 
+function mapTemplateLocale(locale: PromptLocale): PromptTemplateLocale {
+  if (locale === 'zh') return 'zh'
+  if (locale === 'ko') return 'ko'
+  if (locale === 'vi') return 'vi'
+  return 'en'
+}
+
 export function resolvePromptLanguageRoute(input: {
   promptId: PromptId
   locale: PromptLocale
   context?: PromptPolicyContext
 }): PromptLanguageRoute {
-  const { promptId, locale, context } = input
+  const { locale, context } = input
   const preferredOutput = mapOutputLocale(locale)
   const provider = normalize(context?.provider)
   const modelKey = normalize(context?.modelKey)
@@ -70,18 +70,17 @@ export function resolvePromptLanguageRoute(input: {
   }
 
   const candidateText = `${provider}|${modelKey}|${action}|${taskType}`
-  const enFirstByPrompt = EN_FIRST_PROMPT_IDS.has(promptId)
 
   if (preferredOutput !== 'zh') {
     return {
-      templateLocale: 'en',
+      templateLocale: mapTemplateLocale(preferredOutput),
       outputLocale: preferredOutput,
-      routeReason: 'locale:non-zh',
+      routeReason: 'locale:preserve-non-zh',
       fallbackApplied: false,
     }
   }
 
-  if (includesAny(candidateText, CHINESE_PROVIDER_HINTS) && !enFirstByPrompt) {
+  if (includesAny(candidateText, CHINESE_PROVIDER_HINTS)) {
     return {
       templateLocale: 'zh',
       outputLocale: 'zh',
@@ -90,20 +89,19 @@ export function resolvePromptLanguageRoute(input: {
     }
   }
 
-  if (enFirstByPrompt || includesAny(candidateText, NON_CHINESE_PROVIDER_HINTS)) {
+  if (includesAny(candidateText, NON_CHINESE_PROVIDER_HINTS)) {
     return {
-      templateLocale: 'en',
+      templateLocale: 'zh',
       outputLocale: 'zh',
-      routeReason: enFirstByPrompt ? 'prompt:contract-heavy' : 'provider:non-zh-hint',
-      fallbackApplied: true,
-      fallbackReason: enFirstByPrompt ? 'contract_stability' : 'provider_locale_risk',
+      routeReason: 'provider:non-zh-use-zh-template',
+      fallbackApplied: false,
     }
   }
 
   return {
     templateLocale: 'zh',
     outputLocale: 'zh',
-    routeReason: 'default:balanced-zh',
+    routeReason: 'default:preserve-zh',
     fallbackApplied: false,
   }
 }

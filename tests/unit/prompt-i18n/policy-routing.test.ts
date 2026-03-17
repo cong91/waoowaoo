@@ -7,7 +7,7 @@ import {
 } from '@/lib/prompt-i18n'
 
 describe('prompt policy routing (VAT-41..45)', () => {
-  it('routes contract-heavy prompt to EN template for zh locale on non-zh provider', () => {
+  it('keeps zh template/output for zh locale even on non-zh provider', () => {
     const route = resolvePromptLanguageRoute({
       promptId: PROMPT_IDS.NP_SCREENPLAY_CONVERSION,
       locale: 'zh',
@@ -18,10 +18,9 @@ describe('prompt policy routing (VAT-41..45)', () => {
       },
     })
 
-    expect(route.templateLocale).toBe('en')
+    expect(route.templateLocale).toBe('zh')
     expect(route.outputLocale).toBe('zh')
-    expect(route.fallbackApplied).toBe(true)
-    expect(route.fallbackReason).toBe('contract_stability')
+    expect(route.fallbackApplied).toBe(false)
   })
 
   it('keeps zh template for zh-capable provider on non-contract-heavy prompt', () => {
@@ -40,7 +39,21 @@ describe('prompt policy routing (VAT-41..45)', () => {
     expect(route.fallbackApplied).toBe(false)
   })
 
-  it('uses EN template for non-zh output locale', () => {
+  it('preserves non-zh template locale intent for vi routing while falling back to existing template files', () => {
+    const route = resolvePromptLanguageRoute({
+      promptId: PROMPT_IDS.NP_EPISODE_SPLIT,
+      locale: 'vi',
+      context: {
+        provider: 'openai-compatible',
+        modelKey: 'openai-compatible::gpt-4.1-mini',
+        action: 'episode_split',
+      },
+    })
+
+    expect(route.templateLocale).toBe('vi')
+    expect(route.outputLocale).toBe('vi')
+    expect(route.fallbackApplied).toBe(false)
+
     const prompt = buildPrompt({
       promptId: PROMPT_IDS.NP_EPISODE_SPLIT,
       locale: 'vi',
@@ -49,7 +62,7 @@ describe('prompt policy routing (VAT-41..45)', () => {
       },
     })
 
-    expect(prompt).toContain('You are a long-text episode splitter.')
+    expect(prompt).toContain('Bạn là chuyên gia tách tập cho văn bản dài.')
   })
 
   it('returns telemetry with contract validity and language metadata', () => {
@@ -72,7 +85,7 @@ describe('prompt policy routing (VAT-41..45)', () => {
 
     expect(result.telemetry.contract_valid).toBe(true)
     expect(result.telemetry.contract_language).toBe('en')
-    expect(result.telemetry.prompt_language).toBe('en')
+    expect(result.telemetry.prompt_language).toBe('zh')
     expect(result.telemetry.output_language).toBe('zh')
     expect(result.prompt).toContain('[Prompt Policy]')
     expect(result.prompt).toContain('contract_valid must remain true')

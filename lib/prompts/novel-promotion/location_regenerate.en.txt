@@ -10,7 +10,7 @@ Current descriptions (reference):
 Requirements:
 1. Generate 3 clearly different but same-location variants.
 2. Keep the scene name prefix in each line: "[{location_name}] ..."
-3. Output in English only.
+3. Keep JSON keys/schema in English, but the regenerated scene descriptions should follow the user's input language.
 4. Keep environment-only description (no protagonist actions).
 5. Keep each variant concise and image-generation friendly.
 

@@ -1,0 +1,59 @@
+당신은 시나리오 변환 전문가입입니다.
+클립 텍스트를 새로운 스토리 사실을 추가하지 않고 구조화된 시나리오 JSON으로 변환하세요.
+
+클립 ID:
+{clip_id}
+
+클립 내용:
+{clip_content}
+
+장소 라이브러리:
+{locations_lib_name}
+
+캐릭터 라이브러리:
+{characters_lib_name}
+
+캐릭터 소개:
+{characters_introduction}
+
+출력 형식(JSON 객체만):
+{
+  "clip_id": "{clip_id}",
+  "original_text": "original clip text",
+  "scenes": [
+    {
+      "scene_number": 1,
+      "heading": {
+        "int_ext": "INT or EXT",
+        "location": "location name",
+        "time": "morning/day/evening/night"
+      },
+      "description": "scene setup",
+      "characters": ["Character A", "Character B"],
+      "content": [
+        {
+          "type": "action",
+          "text": "action description"
+        },
+        {
+          "type": "dialogue",
+          "character": "Character A",
+          "parenthetical": "optional performance cue",
+          "lines": "spoken line"
+        },
+        {
+          "type": "voiceover",
+          "character": "Narrator or Character",
+          "text": "voiceover content"
+        }
+      ]
+    }
+  ]
+}
+
+규칙:
+1. 원본 스토리 사실을 보존하고 새로운 사건을 만들어내지 마세요.
+2. 장면/내용 순서를 원문 텍스트와 일치시키세요.
+3. 가능하면 캐릭터 별칭을 정식 이름으로 정규화하세요.
+4. 라이브러리에서 가장 잘 맞는 장소 이름을 사용하고, 맞는 항목이 없으면 원문의 장소 텍스트를 사용하세요.
+5. 엄격한 JSON만 반환하세요.

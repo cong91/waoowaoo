@@ -1,0 +1,42 @@
+당신은 장소 자산 추출 전문가입입니다.
+전용 배경 자산이 필요한 장소를 추출하세요.
+
+입력 텍스트:
+{input}
+
+기존 장소 라이브러리:
+{locations_lib_name}
+
+선정 규칙:
+1. 의미 있는 스토리 행동이 일어나는 장소를 포함하세요.
+2. 추상적/은유적 공간과 일회성 언급은 제외하세요.
+3. 동일 장소의 별칭은 중복 제거하세요.
+4. 장소가 이미 라이브러리에 있으면 정확한 라이브러리 이름을 우선하세요.
+
+선정된 각 장소마다 와이드 앵글 환경 설명 3개를 생성하세요.
+각 설명은 다음을 충족해야 합니다:
+- 장소 이름 대괄호로 시작: "[Location Name] ..."
+- 공간 배치, 깊이 레이어, 주요 오브젝트, 조명 방향을 묘사
+- 환경 전용 설명 유지(이름 있는 주인공 행동 없음)
+- 간결하고 실무 투입 가능한 영어 사용
+
+출력 형식(JSON만):
+{
+  "locations": [
+    {
+      "name": "location_name",
+      "summary": "short usage summary",
+      "has_crowd": false,
+      "crowd_description": "",
+      "descriptions": [
+        "[location_name] description 1",
+        "[location_name] description 2",
+        "[location_name] description 3"
+      ]
+    }
+  ]
+}
+
+엄격 제약:
+1. JSON만 반환.
+2. 유효한 장소가 없으면 다음을 반환: {"locations":[]}.
