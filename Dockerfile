@@ -55,4 +55,8 @@ RUN mkdir -p /app/data/uploads /app/logs && touch /app/.env
 EXPOSE 3000 3010
 
 ENTRYPOINT ["/sbin/tini", "--"]
+CMD ["npm", "run", "start:next"]
+EXPOSE 3000 3010
+
+ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["npm", "run", "start"]
