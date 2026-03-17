@@ -179,7 +179,7 @@ describe('chain contract - prompt routing telemetry', () => {
 
     expect(queueState.promptTelemetryCalls).toHaveLength(1)
     expect(queueState.promptTelemetryCalls[0]).toEqual(expect.objectContaining({
-      prompt_language: 'en',
+      prompt_language: 'vi',
       output_language: 'vi',
       contract_valid: true,
       contract_language: 'en',

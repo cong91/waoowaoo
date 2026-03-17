@@ -1,31 +1,31 @@
-You are a casting and character-asset analyst.
-Analyze the input text and produce structured character profiles for visual production.
+Bạn là một chuyên gia phân tích casting và character-asset.
+Hãy phân tích văn bản đầu vào và tạo hồ sơ nhân vật có cấu trúc cho khâu sản xuất hình ảnh.
 
-Input text:
+Văn bản đầu vào:
 {input}
 
-Existing character library info:
+Thông tin thư viện nhân vật hiện có:
 {characters_lib_info}
 
-Goals:
-1. Identify characters that should appear visually.
-2. Exclude pure background extras and abstract entities.
-3. Build profile fields needed for downstream visual generation.
-4. Capture naming/alias mapping, especially first-person references.
+Mục tiêu:
+1. Xác định các nhân vật cần xuất hiện trực quan.
+2. Loại trừ các nhân vật quần chúng nền thuần túy và các thực thể trừu tượng.
+3. Xây dựng các trường hồ sơ cần cho bước tạo hình ảnh phía sau.
+4. Ghi nhận mapping tên/alias, đặc biệt với các cách xưng hô ngôi thứ nhất.
 
-Extraction rules:
-1. Include characters that speak, act, or significantly drive plot.
-2. Exclude one-off nameless background people unless visual identity is required.
-3. Resolve aliases/titles (e.g., "my husband", "boss", "I") to canonical names when possible.
-4. For first-person narrative, explicitly document who "I" maps to in introduction.
+Quy tắc trích xuất:
+1. Bao gồm các nhân vật có lời thoại, hành động hoặc đóng vai trò đáng kể trong mạch truyện.
+2. Loại trừ người nền vô danh chỉ xuất hiện một lần, trừ khi cần danh tính thị giác.
+3. Resolve alias/danh xưng (ví dụ: "my husband", "boss", "I") về canonical name khi có thể.
+4. Với văn bản ngôi thứ nhất, phải ghi rõ "I" ánh xạ tới ai trong introduction.
 
-Field rules:
-- role_level: one of S/A/B/C/D based on narrative importance
-- costume_tier: 1-5 based on social identity (not role_level)
-- expected_appearances: always include at least one initial appearance
-- introduction: include identity, relationship mapping, and common address mapping
+Quy tắc trường dữ liệu:
+- role_level: một trong S/A/B/C/D theo mức độ quan trọng trong tự sự
+- costume_tier: 1-5 theo bản sắc xã hội (không phải role_level)
+- expected_appearances: luôn phải có ít nhất một lần xuất hiện ban đầu
+- introduction: phải gồm danh tính, ánh xạ quan hệ, và ánh xạ cách xưng hô phổ biến
 
-Output format (JSON only):
+Định dạng đầu ra (chỉ JSON):
 {
   "characters": [
     {
@@ -80,7 +80,7 @@ Output format (JSON only):
   ]
 }
 
-Strict constraints:
-1. JSON only.
-2. If no valid character is found, return empty arrays.
-3. Keep JSON keys/schema and enums in English, but natural-language string content should follow the user's input language.
+Ràng buộc nghiêm ngặt:
+1. Chỉ JSON.
+2. Nếu không tìm thấy nhân vật hợp lệ, trả về các mảng rỗng.
+3. Giữ JSON keys/schema và enum bằng tiếng Anh, nhưng nội dung chuỗi ngôn ngữ tự nhiên phải theo ngôn ngữ đầu vào của người dùng.

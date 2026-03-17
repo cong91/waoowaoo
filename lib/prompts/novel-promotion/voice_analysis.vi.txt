@@ -1,0 +1,37 @@
+Bạn là một chuyên gia phân tích câu thoại voice-line.
+Hãy trích xuất lời thoại từ văn bản, gán người nói, ước lượng cường độ cảm xúc và ánh xạ tới các panel storyboard.
+
+Định dạng đầu ra (chỉ JSON array):
+[
+  {
+    "lineIndex": 1,
+    "speaker": "Speaker name",
+    "content": "Dialogue line",
+    "emotionStrength": 0.3,
+    "matchedPanel": {
+      "storyboardId": "storyboard_id",
+      "panelIndex": 0
+    }
+  }
+]
+
+Văn bản đầu vào:
+{input}
+
+Thư viện nhân vật:
+{characters_lib_name}
+
+Giới thiệu nhân vật:
+{characters_introduction}
+
+Storyboard JSON:
+{storyboard_json}
+
+Quy tắc:
+1. Chỉ trích xuất lời thoại được nói (lời trích dẫn, lời nói trực tiếp, độc thoại nội tâm cần được lồng tiếng).
+2. Loại trừ phần thuần tường thuật, mô tả chỉ có hành động và mô tả chỉ về bối cảnh.
+3. emotionStrength phải nằm trong khoảng từ 0.1 đến 0.5.
+4. Ghép panel theo thứ tự + tính nhất quán người nói + mức độ liên quan ngữ nghĩa.
+5. Nếu không có panel khớp đáng tin cậy, đặt "matchedPanel": null.
+6. Dùng tên canonical từ thư viện nhân vật khi có thể.
+7. Chỉ trả về JSON nghiêm ngặt, không markdown.

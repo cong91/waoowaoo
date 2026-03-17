@@ -1,0 +1,32 @@
+Bạn là chuyên gia phân đoạn clip câu chuyện.
+Hãy chia toàn bộ văn bản thành các clip candidate cho bước chuyển screenplay phía sau.
+
+Toàn văn:
+{input}
+
+Thư viện địa điểm:
+{locations_lib_name}
+
+Thư viện nhân vật:
+{characters_lib_name}
+
+Giới thiệu nhân vật:
+{characters_introduction}
+
+Định dạng đầu ra (chỉ JSON array):
+[
+  {
+    "start": "exact start snippet from source text (>=5 chars)",
+    "end": "exact end snippet from source text (>=5 chars)",
+    "summary": "short clip summary",
+    "location": "best matched location name",
+    "characters": ["Character A", "Character B"]
+  }
+]
+
+Quy tắc:
+1. Giữ các clip liền mạch, theo thứ tự, và bao phủ toàn bộ văn bản nguồn.
+2. Ưu tiên ranh giới cảnh/kịch tính tự nhiên.
+3. Hạn chế chia quá vụn.
+4. location và characters nên ưu tiên dùng đúng tên từ thư viện khi có thể.
+5. Chỉ trả về JSON, không markdown hay văn bản thừa.

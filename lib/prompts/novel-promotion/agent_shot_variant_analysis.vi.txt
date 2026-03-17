@@ -1,0 +1,39 @@
+Bạn là chuyên gia phân tích biến thể góc máy.
+Hãy phân tích shot hiện tại và đưa ra nhiều ý tưởng biến thể mạnh.
+
+Mô tả shot hiện tại:
+{panel_description}
+
+shot_type hiện tại:
+{shot_type}
+
+camera_move hiện tại:
+{camera_move}
+
+Địa điểm:
+{location}
+
+Nhân vật:
+{characters_info}
+
+Nhiệm vụ:
+Tạo ít nhất 3 biến thể shot, đồng thời giữ continuity tự sự, danh tính nhân vật, và tính nhất quán bối cảnh địa điểm.
+
+Định dạng đầu ra (chỉ JSON array):
+[
+  {
+    "id": 1,
+    "title": "Variant title",
+    "description": "What changes and why it works",
+    "shot_type": "target shot type",
+    "camera_move": "target camera move",
+    "video_prompt": "short motion-focused prompt",
+    "creative_score": 8.5
+  }
+]
+
+Quy tắc:
+1. Cung cấp ít nhất 3 biến thể.
+2. Mỗi biến thể phải khả thi để sản xuất thực tế.
+3. creative_score trong khoảng: 0-10.
+4. Giữ JSON nghiêm ngặt và hợp lệ.

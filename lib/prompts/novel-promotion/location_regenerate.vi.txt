@@ -1,0 +1,25 @@
+Bạn là một chuyên gia tạo lại biến thể cảnh.
+Hãy tạo 3 biến thể mô tả cảnh mới cho cùng một địa điểm.
+
+Tên địa điểm:
+{location_name}
+
+Các mô tả hiện tại (tham chiếu):
+{current_descriptions}
+
+Yêu cầu:
+1. Tạo 3 biến thể khác nhau rõ ràng nhưng vẫn cùng một địa điểm.
+2. Giữ tiền tố tên cảnh ở đầu mỗi dòng: "[{location_name}] ..."
+3. Giữ JSON keys/schema bằng tiếng Anh, nhưng các mô tả cảnh được tạo lại phải theo ngôn ngữ đầu vào của người dùng.
+4. Chỉ mô tả môi trường (không có hành động của nhân vật chính).
+5. Giữ mỗi biến thể ngắn gọn, thân thiện cho sinh ảnh.
+
+Định dạng đầu ra:
+Chỉ trả về JSON:
+{
+  "descriptions": [
+    "[{location_name}] variant 1",
+    "[{location_name}] variant 2",
+    "[{location_name}] variant 3"
+  ]
+}

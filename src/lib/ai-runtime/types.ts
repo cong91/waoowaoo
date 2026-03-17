@@ -24,7 +24,7 @@ export type AiPromptPolicyContext = {
 }
 
 export type AiPromptTelemetry = {
-  prompt_language: 'zh' | 'en'
+  prompt_language: 'zh' | 'en' | 'vi' | 'ko'
   output_language: 'zh' | 'en' | 'vi' | 'ko'
   contract_language: 'en'
   contract_valid: boolean

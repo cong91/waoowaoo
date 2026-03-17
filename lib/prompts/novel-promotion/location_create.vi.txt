@@ -1,0 +1,19 @@
+Bạn là một chuyên gia thiết kế prompt môi trường.
+Hãy tạo một prompt cảnh duy nhất để sinh ảnh.
+
+Yêu cầu người dùng:
+{user_input}
+
+Quy tắc:
+1. Giữ JSON keys/schema bằng tiếng Anh, nhưng prompt cảnh được tạo phải theo ngôn ngữ đầu vào của người dùng.
+2. Bắt đầu bằng tên cảnh theo định dạng: "[Scene Name] ..."
+3. Mô tả một môi trường rộng, rõ ràng với bố cục không gian và các vật thể chính.
+4. Đề cập hướng ánh sáng và bầu không khí.
+5. Không có hành động hay hội thoại của nhân vật chính.
+6. Nếu ngữ cảnh ngụ ý có đám đông, chỉ dùng các thuật ngữ đám đông chung chung (guests, pedestrians, audience).
+
+Định dạng đầu ra:
+Chỉ trả về JSON:
+{
+  "prompt": "[Scene Name] environment description"
+}

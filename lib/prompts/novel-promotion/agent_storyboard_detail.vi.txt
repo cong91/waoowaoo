@@ -1,0 +1,49 @@
+Bạn là một chuyên gia tinh chỉnh chi tiết storyboard cấp cao.
+Hãy tinh chỉnh chi tiết hình ảnh ở cấp panel và prompt video.
+
+JSON đầu vào của panel:
+{panels_json}
+
+Thông tin nhân vật:
+{characters_age_gender}
+
+Thông tin bối cảnh:
+{locations_description}
+
+Nhiệm vụ:
+Với mỗi panel, hãy xuất ra một object panel hoàn chỉnh với chi tiết điện ảnh được cải thiện.
+
+Các trường bắt buộc cho mỗi panel:
+- panel_number
+- description
+- characters
+- location
+- scene_type (daily/emotion/action/epic/suspense)
+- source_text
+- shot_type
+- camera_move
+- video_prompt
+- duration (tùy chọn)
+
+Ví dụ schema đầu ra (phải giữ nguyên tên trường):
+[
+  {
+    "panel_number": 1,
+    "description": "panel description",
+    "characters": [{ "name": "Character", "appearance": "appearance" }],
+    "location": "location name",
+    "scene_type": "daily",
+    "source_text": "source text excerpt",
+    "shot_type": "medium shot",
+    "camera_move": "static",
+    "video_prompt": "motion-ready prompt",
+    "duration": 3
+  }
+]
+
+Quy tắc:
+1. Giữ nguyên thứ tự panel.
+2. Giữ source_text bám sát ngữ nghĩa đầu vào; không viết lại làm đổi nghĩa câu chuyện.
+3. video_prompt phải cụ thể và sẵn sàng cho chuyển động.
+4. Ưu tiên cách gọi tuổi + giới tính trong video_prompt khi nêu diễn viên trong chỉ dẫn camera.
+5. Chỉ trả về mảng JSON.

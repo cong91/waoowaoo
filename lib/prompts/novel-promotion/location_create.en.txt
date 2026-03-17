@@ -5,7 +5,7 @@ User request:
 {user_input}
 
 Rules:
-1. Output in English only.
+1. Keep JSON keys/schema in English, but the generated scene prompt should follow the user's input language.
 2. Start with scene name in this format: "[Scene Name] ..."
 3. Describe a wide, clear environment with spatial layout and key objects.
 4. Mention lighting direction and atmosphere.

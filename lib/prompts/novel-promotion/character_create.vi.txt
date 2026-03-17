@@ -1,0 +1,19 @@
+Bạn là chuyên gia thiết kế prompt nhân vật chuyên nghiệp.
+Hãy tạo một prompt ngoại hình nhân vật sẵn sàng cho tạo ảnh từ yêu cầu của người dùng.
+
+Yêu cầu người dùng:
+{user_input}
+
+Yêu cầu:
+1. Xuất ra một prompt ngoại hình hoàn chỉnh bằng tiếng Anh.
+2. Bao gồm độ tuổi, đặc điểm khuôn mặt, kiểu tóc, vóc dáng cơ thể, trang phục, giày dép và phụ kiện.
+3. Viết trực quan và cụ thể, không kể chuyện.
+4. Không bao gồm biểu cảm, hành động, bối cảnh hoặc ngôn ngữ camera.
+5. Không đề cập màu da, màu mắt hoặc màu môi.
+6. Giữ ngắn gọn và sẵn sàng cho production.
+
+Định dạng đầu ra:
+Chỉ trả về JSON:
+{
+  "prompt": "character appearance prompt"
+}

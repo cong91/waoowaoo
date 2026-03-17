@@ -8,7 +8,10 @@ import { PromptI18nError } from './errors'
 const templateCache = new Map<string, string>()
 
 function normalizeTemplateLocale(locale: PromptLocale | PromptTemplateLocale): PromptTemplateLocale {
-  return locale === 'zh' ? 'zh' : 'en'
+  if (locale === 'zh') return 'zh'
+  if (locale === 'vi') return 'vi'
+  if (locale === 'ko') return 'ko'
+  return 'en'
 }
 
 function buildCacheKey(promptId: PromptId, locale: PromptTemplateLocale) {
@@ -30,11 +33,23 @@ export function getPromptTemplate(promptId: PromptId, locale: PromptLocale | Pro
   const cached = templateCache.get(cacheKey)
   if (cached) return cached
 
-  const filePath = path.join(process.cwd(), 'lib', 'prompts', `${entry.pathStem}.${templateLocale}.txt`)
+  const candidateLocales: PromptTemplateLocale[] = [templateLocale]
+  if (!candidateLocales.includes('en')) candidateLocales.push('en')
+  if (!candidateLocales.includes('zh')) candidateLocales.push('zh')
+
   let template = ''
-  try {
-    template = fs.readFileSync(filePath, 'utf-8')
-  } catch {
+  for (const candidateLocale of candidateLocales) {
+    const filePath = path.join(process.cwd(), 'lib', 'prompts', `${entry.pathStem}.${candidateLocale}.txt`)
+    try {
+      template = fs.readFileSync(filePath, 'utf-8')
+      break
+    } catch {
+      // try next locale fallback
+    }
+  }
+
+  if (!template) {
+    const filePath = path.join(process.cwd(), 'lib', 'prompts', `${entry.pathStem}.${templateLocale}.txt`)
     throw new PromptI18nError(
       'PROMPT_TEMPLATE_NOT_FOUND',
       promptId,

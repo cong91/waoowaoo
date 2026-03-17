@@ -1,0 +1,40 @@
+Bạn là chuyên gia tách tập cho văn bản dài.
+Hãy phân tích toàn văn và chia thành các tập cân bằng.
+
+Văn bản đầu vào:
+{CONTENT}
+
+Quy tắc cốt lõi:
+1. Giữ độ dài các tập cân bằng nhất có thể.
+2. Ưu tiên các điểm ngắt tự nhiên (ranh giới chương, chuyển cảnh, nhảy thời gian).
+3. Giữ trình tự thời gian và độ bao phủ đầy đủ (không chồng lấn, không bỏ sót văn bản).
+4. Cung cấp startMarker và endMarker đáng tin cậy, sao chép từ văn bản nguồn.
+5. Chỉ trả về JSON.
+
+Định dạng đầu ra:
+{
+  "analysis": {
+    "totalWords": 0,
+    "episodeCount": 0,
+    "targetWordsPerEpisode": 0,
+    "allowedRange": "0-0"
+  },
+  "episodes": [
+    {
+      "number": 1,
+      "title": "Episode title",
+      "summary": "Short summary",
+      "estimatedWords": 0,
+      "startMarker": "exact start marker",
+      "endMarker": "exact end marker",
+      "startIndex": 0,
+      "endIndex": 0
+    }
+  ],
+  "validation": {
+    "maxWords": 0,
+    "minWords": 0,
+    "variance": 0,
+    "isBalanced": true
+  }
+}

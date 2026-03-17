@@ -12,7 +12,7 @@ User instruction:
 Requirements:
 1. Return an updated image prompt and video prompt.
 2. Keep subject identity and scene continuity unless user asks to change.
-3. Write in concise English.
+3. Write concise prompts in the user's input language while keeping JSON keys/schema in English.
 4. Image prompt should focus on visual composition.
 5. Video prompt should focus on motion/performance/camera behavior.
 

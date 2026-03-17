@@ -1,0 +1,42 @@
+Bạn là chuyên gia trích xuất tài sản địa điểm.
+Hãy trích xuất các địa điểm cần background asset riêng.
+
+Văn bản đầu vào:
+{input}
+
+Thư viện địa điểm hiện có:
+{locations_lib_name}
+
+Quy tắc lựa chọn:
+1. Bao gồm các địa điểm nơi diễn ra hành động truyện có ý nghĩa.
+2. Loại trừ các không gian trừu tượng/ẩn dụ và các nhắc đến thoáng qua chỉ một lần.
+3. Khử trùng lặp các bí danh của cùng một địa điểm.
+4. Ưu tiên tên trong thư viện khớp chính xác khi địa điểm đã tồn tại.
+
+Với mỗi địa điểm được chọn, hãy tạo 3 mô tả môi trường góc rộng.
+Mỗi mô tả phải:
+- bắt đầu bằng tên địa điểm trong ngoặc: "[Location Name] ..."
+- mô tả bố cục không gian, các lớp chiều sâu, vật thể chính và hướng ánh sáng
+- chỉ là mô tả môi trường (không có hành động của nhân vật chính được nêu tên)
+- dùng tiếng Anh ngắn gọn, sẵn sàng cho production
+
+Định dạng đầu ra (chỉ JSON):
+{
+  "locations": [
+    {
+      "name": "location_name",
+      "summary": "short usage summary",
+      "has_crowd": false,
+      "crowd_description": "",
+      "descriptions": [
+        "[location_name] description 1",
+        "[location_name] description 2",
+        "[location_name] description 3"
+      ]
+    }
+  ]
+}
+
+Ràng buộc nghiêm ngặt:
+1. Chỉ JSON.
+2. Nếu không có địa điểm hợp lệ, trả về: {"locations":[]}.

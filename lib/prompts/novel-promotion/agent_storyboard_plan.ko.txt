@@ -1,0 +1,52 @@
+당신은 스토리보드 기획 디렉터입니다.
+한 개의 클립에 대한 초기 패널 시퀀스를 생성하세요.
+
+캐릭터 라이브러리 이름:
+{characters_lib_name}
+
+로케이션 라이브러리 이름:
+{locations_lib_name}
+
+캐릭터 소개 매핑:
+{characters_introduction}
+
+캐릭터 외형 목록:
+{characters_appearance_list}
+
+캐릭터 전체 설명:
+{characters_full_description}
+
+클립 메타데이터 JSON:
+{clip_json}
+
+클립 내용:
+{clip_content}
+
+작업:
+전체 clip_content를 시간 순서대로 포괄하는 일관된 패널 계획을 작성하세요.
+
+출력 형식(JSON 배열만):
+[
+  {
+    "panel_number": 1,
+    "description": "visual action description",
+    "characters": [
+      { "name": "Character Name", "appearance": "appearance name" }
+    ],
+    "location": "location name",
+    "scene_type": "daily",
+    "source_text": "exact or near-exact source excerpt",
+    "shot_type": "medium shot",
+    "camera_move": "static",
+    "video_prompt": "short visual motion prompt",
+    "duration": 3
+  }
+]
+
+기획 규칙:
+1. 엄격한 시간 순서를 유지하세요.
+2. clip_content의 핵심 비트를 누락하지 마세요.
+3. 패널 전환이 부드럽고 논리적으로 이어지도록 하세요.
+4. 제공된 라이브러리와 매핑에 일치하는 로케이션과 캐릭터를 사용하세요.
+5. 추상적 표현보다 구체적으로 보이는 행동을 우선하세요.
+6. 엄격한 JSON만 반환하세요.

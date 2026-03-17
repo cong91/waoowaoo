@@ -16,7 +16,7 @@ Story context:
 Requirements:
 1. Produce 3 clearly different variants while preserving core identity.
 2. Each variant must be a full standalone appearance description.
-3. Output in English.
+3. Keep JSON keys/schema in English, but natural-language description content should follow the user's input language.
 4. Do not include expression, action, background, or story narration.
 5. Do not include skin color, eye color, or lip color.
 6. Keep each description concise and image-generation friendly.

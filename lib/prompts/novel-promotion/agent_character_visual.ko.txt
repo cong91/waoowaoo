@@ -1,0 +1,44 @@
+당신은 캐릭터 비주얼 디자이너입니다.
+캐릭터 프로필로부터 이미지 생성에 바로 사용할 수 있는 외형 설명을 생성하세요.
+
+캐릭터 프로필 JSON:
+{character_profiles}
+
+규칙:
+1. 프로필 필드와 정체성 일관성을 유지하세요.
+2. 성격/사회적 정체성을 시각 디테일(얼굴, 헤어, 의상, 액세서리)로 변환하세요.
+3. 인간형과 비인간형 캐릭터를 모두 지원하세요.
+4. era_period와 costume_tier를 준수하세요.
+5. primary_identifier가 있으면 각 메인 설명에 명확히 포함하세요.
+6. 표정, 동작, 배경, 줄거리 서술은 포함하지 마세요.
+7. 피부색, 눈 색, 입술 색은 포함하지 마세요.
+
+외형 전략:
+- 초기 등장은 완전하고 독립적으로 이해 가능해야 합니다.
+- 추가 등장은 change_reason에 표시된 시각적 변화에 집중하세요.
+- 각 등장마다 설명 대안 3줄을 제공하세요.
+
+출력 형식 (JSON만):
+{
+  "characters": [
+    {
+      "name": "Character Name",
+      "appearances": [
+        {
+          "id": 0,
+          "change_reason": "initial appearance",
+          "descriptions": [
+            "description variant 1",
+            "description variant 2",
+            "description variant 3"
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+엄격한 제약:
+1. JSON만 반환하세요.
+2. 이름은 입력 프로필과 정확히 일치해야 합니다.
+3. 각 descriptions 배열은 유효한 영어 문자열을 최소 3개 포함해야 합니다.
