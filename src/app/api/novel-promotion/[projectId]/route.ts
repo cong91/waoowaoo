@@ -13,6 +13,11 @@ import {
   getCapabilityOptionFields,
   validateCapabilitySelectionsPayload,
   type CapabilityModelContext} from '@/lib/model-capabilities/lookup'
+import {
+  buildWorkspaceOnboardingContext,
+  mergeWorkspaceOnboardingContextIntoCapabilityOverrides,
+  readWorkspaceOnboardingContextFromCapabilityOverrides,
+} from '@/lib/workspace/onboarding-context'
 
 const MODEL_FIELDS = [
   'analysisModel',
@@ -261,7 +266,9 @@ export const PATCH = apiHandler(async (
       locationModel: true,
       storyboardModel: true,
       editModel: true,
-      videoModel: true}})
+      videoModel: true,
+      capabilityOverrides: true,
+    }})
   if (!currentProjectConfig) {
     throw new ApiError('NOT_FOUND')
   }
@@ -273,6 +280,24 @@ export const PATCH = apiHandler(async (
   ] as const
 
   const updateData: Record<string, unknown> = {}
+  if (body.onboardingContext !== undefined) {
+    const currentOnboardingContext = readWorkspaceOnboardingContextFromCapabilityOverrides(currentProjectConfig.capabilityOverrides)
+    const nextOnboardingContext = buildWorkspaceOnboardingContext({
+      journeyType: body.onboardingContext?.journeyType ?? currentOnboardingContext?.journeyType,
+      entryIntent: body.onboardingContext?.entryIntent ?? currentOnboardingContext?.entryIntent,
+      sourceType: body.onboardingContext?.sourceType ?? currentOnboardingContext?.sourceType,
+      sourceContent: body.onboardingContext?.sourceContent ?? currentOnboardingContext?.sourceContent,
+      stylePresetId: body.onboardingContext?.stylePresetId ?? currentOnboardingContext?.stylePresetId,
+      characterStrategyId: body.onboardingContext?.characterStrategyId ?? currentOnboardingContext?.characterStrategyId,
+      environmentPresetId: body.onboardingContext?.environmentPresetId ?? currentOnboardingContext?.environmentPresetId,
+      promptMode: body.onboardingContext?.promptMode ?? currentOnboardingContext?.promptMode,
+      referenceBoardSelections: body.onboardingContext?.referenceBoardSelections ?? currentOnboardingContext?.referenceBoardSelections,
+    })
+    updateData.capabilityOverrides = mergeWorkspaceOnboardingContextIntoCapabilityOverrides({
+      existingCapabilityOverrides: currentProjectConfig.capabilityOverrides,
+      onboardingContext: nextOnboardingContext,
+    })
+  }
   for (const field of allowedProjectFields) {
     if (body[field] === undefined) continue
 

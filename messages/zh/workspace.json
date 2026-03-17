@@ -35,8 +35,8 @@
   "wizard": {
     "modalIntro": "先选择你想创建的内容，再继续设置风格和故事起点。",
     "stepJourney": "你想创建什么？",
-    "stepTemplate": "选择一个起始风格",
-    "stepSource": "选择故事从哪里开始",
+    "stepTemplate": "先建立视觉方向",
+    "stepSource": "设置提示词深度与来源",
     "next": "下一步",
     "nextToTemplate": "继续到模板设置",
     "nextToSource": "继续到来源设置",
@@ -54,6 +54,140 @@
       "blank": "空白开始",
       "story_text": "故事文本",
       "import_script": "导入脚本"
+    }
+  },
+  "visualFirst": {
+    "style": {
+      "title": "风格画廊（视觉优先）",
+      "badges": {
+        "guided": "引导型",
+        "fastHook": "快速钩子",
+        "characterDriven": "角色驱动",
+        "dynamicPanels": "动态分镜",
+        "softEmotions": "柔和情绪",
+        "worldbuilding": "世界观"
+      },
+      "story": {
+        "cinematicShort": {
+          "title": "电影感短片",
+          "desc": "平衡稳妥的电影感风格，适合首次启动。"
+        },
+        "socialPromo": {
+          "title": "社媒推广",
+          "desc": "高对比开场，更适合短视频留存。"
+        },
+        "dialogueDrama": {
+          "title": "对白剧情",
+          "desc": "强调表情节奏与角色表演。"
+        }
+      },
+      "manga": {
+        "actionBattle": {
+          "title": "热血战斗",
+          "desc": "强调动势、冲击感与分镜可读性。"
+        },
+        "romanceSchool": {
+          "title": "校园恋爱",
+          "desc": "更柔和的镜头组织与情绪连续性。"
+        },
+        "fantasyQuest": {
+          "title": "奇幻冒险",
+          "desc": "以冒险推进和世界观信号为主。"
+        }
+      }
+    },
+    "character": {
+      "title": "角色策略",
+      "consistencyFirst": {
+        "title": "一致性优先",
+        "desc": "优先保持跨镜头/跨章节外观稳定。"
+      },
+      "emotionFirst": {
+        "title": "情绪优先",
+        "desc": "优先表情张力与情绪表达清晰度。"
+      },
+      "dynamicAction": {
+        "title": "动作优先",
+        "desc": "优先动作姿态与轮廓可读性。"
+      }
+    },
+    "environment": {
+      "title": "环境画廊",
+      "cityNightNeon": {
+        "title": "城市 / 霓虹夜",
+        "desc": "都市高对比与高能色彩点缀。"
+      },
+      "forestMistDawn": {
+        "title": "森林 / 清晨薄雾",
+        "desc": "自然纵深与轻雾氛围层次。"
+      },
+      "interiorCinematic": {
+        "title": "室内 / 电影感",
+        "desc": "适合对白与走位的受控光线。"
+      }
+    },
+    "promptMode": {
+      "title": "提示词深度",
+      "guided": {
+        "title": "引导模式（推荐）",
+        "desc": "由视觉选择主导生成，提示词保持次要层。"
+      },
+      "advanced": {
+        "title": "高级提示词",
+        "desc": "开放更深层提示词以进行手动微调。"
+      }
+    },
+    "referenceBoard": {
+      "title": "Reference Board 壳层",
+      "selectionCount": "已选择 {count} 个参考锚点",
+      "characterSheet": {
+        "title": "Character Sheet",
+        "desc": "在进入深层提示词前先固定一个稳定角色锚点。"
+      },
+      "moodLighting": {
+        "title": "Mood / Lighting",
+        "desc": "收集色调与光线参考，先锁定开场氛围。"
+      },
+      "environmentAnchor": {
+        "title": "Environment Anchor",
+        "desc": "在 storyboard 之前先锁定一个场景方向。"
+      }
+    },
+    "recommendation": {
+      "label": "推荐下一步",
+      "currentSelectionLabel": "当前选择",
+      "whyLabel": "推荐原因",
+      "compareLabel": "预设对比",
+      "recommendedBadge": "优先推荐",
+      "story": {
+        "default": {
+          "title": "先用当前视觉选择进入 guided 模式",
+          "desc": "这套组合已经足够产出第一版结果，无需立刻打开高级提示词。"
+        },
+        "emotionFirst": {
+          "title": "保持情绪优先，提示词稍后再开",
+          "desc": "当前选择更偏表演和情绪可读性，第一轮更适合 guided。"
+        }
+      },
+      "manga": {
+        "default": {
+          "title": "先走 panel-first + guided 流程",
+          "desc": "当前选择适合一个更稳的 manga kickoff，提示词负担较低。"
+        },
+        "dynamicAction": {
+          "title": "下一步优先强化动态分镜节奏",
+          "desc": "动作型角色策略与 dynamic panel rhythm + guided 模式更匹配。"
+        },
+        "forest": {
+          "title": "更强调氛围与 continuity",
+          "desc": "森林晨雾更适合先固定环境参考，再补更深层提示词。"
+        }
+      }
+    },
+    "summary": {
+      "style": "风格",
+      "character": "角色",
+      "environment": "环境"
     }
   },
   "creating": "创建中...",

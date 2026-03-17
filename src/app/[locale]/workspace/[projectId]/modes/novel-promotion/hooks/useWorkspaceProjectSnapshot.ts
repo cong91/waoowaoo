@@ -67,6 +67,10 @@ export function useWorkspaceProjectSnapshot({
       journeyType,
       entryIntent,
       sourceType,
+      promptMode: (projectData?.onboardingContext?.promptMode === 'advanced' ? 'advanced' : 'guided') as 'guided' | 'advanced',
+      referenceBoardSelections: Array.isArray(projectData?.onboardingContext?.referenceBoardSelections)
+        ? projectData.onboardingContext.referenceBoardSelections
+        : [],
       projectName: project.name,
       videoRatio: projectData?.videoRatio,
       capabilityOverrides,

@@ -35,8 +35,8 @@
   "wizard": {
     "modalIntro": "Chọn điều bạn muốn tạo, sau đó tiếp tục với phong cách và điểm bắt đầu cho câu chuyện.",
     "stepJourney": "Bạn muốn tạo gì?",
-    "stepTemplate": "Chọn phong cách khởi đầu",
-    "stepSource": "Chọn điểm bắt đầu cho câu chuyện",
+    "stepTemplate": "Xây hướng hình ảnh trước",
+    "stepSource": "Chọn độ sâu prompt và nguồn nội dung",
     "next": "Tiếp theo",
     "nextToTemplate": "Tiếp tục tới chọn mẫu",
     "nextToSource": "Tiếp tục tới nguồn nội dung",
@@ -54,6 +54,140 @@
       "blank": "Bắt đầu trống",
       "story_text": "Văn bản truyện",
       "import_script": "Import script"
+    }
+  },
+  "visualFirst": {
+    "style": {
+      "title": "Style gallery (ưu tiên hình ảnh)",
+      "badges": {
+        "guided": "Có hướng dẫn",
+        "fastHook": "Hook nhanh",
+        "characterDriven": "Theo nhân vật",
+        "dynamicPanels": "Panel động",
+        "softEmotions": "Cảm xúc mềm",
+        "worldbuilding": "Xây thế giới"
+      },
+      "story": {
+        "cinematicShort": {
+          "title": "Phim ngắn điện ảnh",
+          "desc": "Tông điện ảnh cân bằng, an toàn cho lần khởi tạo đầu tiên."
+        },
+        "socialPromo": {
+          "title": "Promo mạng xã hội",
+          "desc": "Mở đầu tương phản cao, tối ưu giữ chân cho clip ngắn."
+        },
+        "dialogueDrama": {
+          "title": "Kịch thoại cảm xúc",
+          "desc": "Ưu tiên biểu cảm và nhịp diễn cho cảnh theo nhân vật."
+        }
+      },
+      "manga": {
+        "actionBattle": {
+          "title": "Hành động đối kháng",
+          "desc": "Nhịp panel tập trung chuyển động, lực va chạm và dễ đọc."
+        },
+        "romanceSchool": {
+          "title": "Tình cảm học đường",
+          "desc": "Khung mềm và continuity cảm xúc cho tuyến quan hệ."
+        },
+        "fantasyQuest": {
+          "title": "Phiêu lưu giả tưởng",
+          "desc": "Ưu tiên bố cục phiêu lưu với tín hiệu bối cảnh rõ hơn."
+        }
+      }
+    },
+    "character": {
+      "title": "Chiến lược nhân vật",
+      "consistencyFirst": {
+        "title": "Ưu tiên nhất quán",
+        "desc": "Giữ ngoại hình ổn định qua nhiều cảnh và nhiều chương."
+      },
+      "emotionFirst": {
+        "title": "Ưu tiên cảm xúc",
+        "desc": "Ưu tiên dải biểu cảm và độ rõ của cảm xúc."
+      },
+      "dynamicAction": {
+        "title": "Ưu tiên hành động",
+        "desc": "Ưu tiên tư thế mạnh và silhouette rõ trong cảnh động."
+      }
+    },
+    "environment": {
+      "title": "Environment gallery",
+      "cityNightNeon": {
+        "title": "Đô thị / đêm neon",
+        "desc": "Tương phản mạnh, điểm nhấn màu năng lượng cao."
+      },
+      "forestMistDawn": {
+        "title": "Rừng / sương bình minh",
+        "desc": "Chiều sâu tự nhiên với lớp khí quyển nhẹ."
+      },
+      "interiorCinematic": {
+        "title": "Nội thất / cinematic",
+        "desc": "Ánh sáng kiểm soát tốt cho thoại và blocking."
+      }
+    },
+    "promptMode": {
+      "title": "Độ sâu prompt",
+      "guided": {
+        "title": "Có hướng dẫn (khuyên dùng)",
+        "desc": "Để lựa chọn hình ảnh dẫn luồng tạo. Prompt ở lớp phụ."
+      },
+      "advanced": {
+        "title": "Prompt nâng cao",
+        "desc": "Mở sâu phần prompt để tinh chỉnh thủ công."
+      }
+    },
+    "referenceBoard": {
+      "title": "Reference board shell",
+      "selectionCount": "Đã chọn {count} neo tham chiếu",
+      "characterSheet": {
+        "title": "Character sheet",
+        "desc": "Giữ một neo nhân vật ổn định trước khi đi vào prompt sâu hơn."
+      },
+      "moodLighting": {
+        "title": "Mood & lighting",
+        "desc": "Gom ảnh màu sắc và ánh sáng để khóa tông mở đầu."
+      },
+      "environmentAnchor": {
+        "title": "Environment anchor",
+        "desc": "Khóa một hướng bối cảnh trước khi sang bước storyboard."
+      }
+    },
+    "recommendation": {
+      "label": "Gợi ý bước tiếp theo",
+      "currentSelectionLabel": "Lựa chọn hiện tại",
+      "whyLabel": "Vì sao được gợi ý",
+      "compareLabel": "So sánh preset",
+      "recommendedBadge": "Ưu tiên",
+      "story": {
+        "default": {
+          "title": "Bắt đầu guided với bộ chọn hình ảnh hiện tại",
+          "desc": "Tổ hợp hiện tại đủ mạnh để tạo kết quả đầu tiên trước khi mở prompt nâng cao."
+        },
+        "emotionFirst": {
+          "title": "Giữ chiến lược cảm xúc trước, mở prompt sau",
+          "desc": "Bộ chọn hiện tại đang nghiêng về diễn xuất và cảm xúc nên guided mode sẽ phù hợp hơn ở lượt đầu."
+        }
+      },
+      "manga": {
+        "default": {
+          "title": "Đi theo flow panel-first với guided prompt",
+          "desc": "Các lựa chọn hiện tại phù hợp cho manga kickoff an toàn, ít gánh nặng prompt."
+        },
+        "dynamicAction": {
+          "title": "Ưu tiên nhịp panel động ở bước tiếp theo",
+          "desc": "Chiến lược hành động kết hợp tốt với nhịp panel động và prompt mode có hướng dẫn."
+        },
+        "forest": {
+          "title": "Nghiêng về khí quyển và continuity",
+          "desc": "Preset rừng lúc bình minh hiệu quả hơn khi chốt reference bối cảnh trước rồi mới viết prompt sâu."
+        }
+      }
+    },
+    "summary": {
+      "style": "Phong cách",
+      "character": "Nhân vật",
+      "environment": "Bối cảnh"
     }
   },
   "creating": "Đang tạo...",

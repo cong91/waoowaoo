@@ -5,6 +5,8 @@ export type WorkspaceJourneyAnalyticsEvent =
   | 'workspace_journey_card_view'
   | 'workspace_journey_selected'
   | 'workspace_template_selected'
+  | 'workspace_reference_board_toggled'
+  | 'workspace_recommendation_viewed'
   | 'workspace_wizard_step_view'
   | 'workspace_wizard_step_next'
   | 'workspace_wizard_step_back'

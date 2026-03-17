@@ -12,6 +12,11 @@ describe('workspace onboarding context helpers', () => {
       entryIntent: 'manga_story_to_panels',
       sourceType: 'story_text',
       sourceContent: '  sample story text  ',
+      stylePresetId: '  manga-action-battle  ',
+      characterStrategyId: 'emotion-first',
+      environmentPresetId: 'forest-mist-dawn',
+      promptMode: 'advanced',
+      referenceBoardSelections: ['character-sheet', 'mood-lighting'],
     })
 
     expect(context).toMatchObject({
@@ -19,6 +24,11 @@ describe('workspace onboarding context helpers', () => {
       entryIntent: 'manga_story_to_panels',
       sourceType: 'story_text',
       sourceContent: 'sample story text',
+      stylePresetId: 'manga-action-battle',
+      characterStrategyId: 'emotion-first',
+      environmentPresetId: 'forest-mist-dawn',
+      promptMode: 'advanced',
+      referenceBoardSelections: ['character-sheet', 'mood-lighting'],
     })
     expect(typeof context.capturedAt).toBe('string')
   })
@@ -29,10 +39,16 @@ describe('workspace onboarding context helpers', () => {
       entryIntent: 'film_story_studio',
       sourceType: 'blank',
       sourceContent: 'should be ignored',
+      promptMode: 'unsupported-mode',
+      characterStrategyId: 'unknown-strategy',
+      environmentPresetId: 'unknown-environment',
     })
 
     expect(context.sourceType).toBe('blank')
     expect(context.sourceContent).toBeUndefined()
+    expect(context.promptMode).toBe('guided')
+    expect(context.characterStrategyId).toBeUndefined()
+    expect(context.environmentPresetId).toBeUndefined()
   })
 
   it('merges context into capability overrides and reads it back', () => {

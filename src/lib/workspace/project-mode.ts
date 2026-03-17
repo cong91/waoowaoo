@@ -36,6 +36,11 @@ export interface ProjectCreatePayload extends ProductIntentContract {
    */
   sourceType?: 'blank' | 'story_text' | 'import_script'
   sourceContent?: string
+  stylePresetId?: string
+  characterStrategyId?: 'consistency-first' | 'emotion-first' | 'dynamic-action'
+  environmentPresetId?: 'city-night-neon' | 'forest-mist-dawn' | 'interior-cinematic'
+  promptMode?: 'guided' | 'advanced'
+  referenceBoardSelections?: string[]
 }
 
 export function mapJourneyTypeToProjectMode(journeyType: ProductJourneyType): WorkspaceProjectEntryMode {

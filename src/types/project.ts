@@ -236,6 +236,11 @@ export interface NovelPromotionProject {
     entryIntent?: 'film_story_studio' | 'video_ad_short' | 'cinematic_scene' | 'manga_quickstart' | 'manga_story_to_panels'
     sourceType?: 'blank' | 'story_text' | 'import_script'
     sourceContent?: string
+    stylePresetId?: string
+    characterStrategyId?: 'consistency-first' | 'emotion-first' | 'dynamic-action'
+    environmentPresetId?: 'city-night-neon' | 'forest-mist-dawn' | 'interior-cinematic'
+    promptMode?: 'guided' | 'advanced'
+    referenceBoardSelections?: string[]
     capturedAt?: string
   } | null
   globalAssetText: string | null

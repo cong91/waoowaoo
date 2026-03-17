@@ -35,8 +35,8 @@
   "wizard": {
     "modalIntro": "Choose what you want to create, then continue with style and story setup.",
     "stepJourney": "Choose what you want to create",
-    "stepTemplate": "Choose a starting style",
-    "stepSource": "Choose your story starting point",
+    "stepTemplate": "Build visual direction first",
+    "stepSource": "Set prompt depth and story source",
     "next": "Next",
     "nextToTemplate": "Continue to templates",
     "nextToSource": "Continue to source",
@@ -54,6 +54,140 @@
       "blank": "Start blank",
       "story_text": "Story text",
       "import_script": "Import script"
+    }
+  },
+  "visualFirst": {
+    "style": {
+      "title": "Style gallery (visual-first)",
+      "badges": {
+        "guided": "Guided",
+        "fastHook": "Fast hook",
+        "characterDriven": "Character-led",
+        "dynamicPanels": "Dynamic panels",
+        "softEmotions": "Soft emotions",
+        "worldbuilding": "Worldbuilding"
+      },
+      "story": {
+        "cinematicShort": {
+          "title": "Cinematic short",
+          "desc": "Balanced cinematic look, safe default for first-time teams."
+        },
+        "socialPromo": {
+          "title": "Social promo",
+          "desc": "High-contrast opening, optimized for short social retention."
+        },
+        "dialogueDrama": {
+          "title": "Dialogue drama",
+          "desc": "Focus on facial beat and acting rhythm for character scenes."
+        }
+      },
+      "manga": {
+        "actionBattle": {
+          "title": "Action battle",
+          "desc": "Panel pacing for momentum, impact, and readable combat flow."
+        },
+        "romanceSchool": {
+          "title": "Romance school",
+          "desc": "Soft framing and emotional continuity for relationship arcs."
+        },
+        "fantasyQuest": {
+          "title": "Fantasy quest",
+          "desc": "Adventure-first composition with stronger world context cues."
+        }
+      }
+    },
+    "character": {
+      "title": "Character strategy",
+      "consistencyFirst": {
+        "title": "Consistency first",
+        "desc": "Keep appearance stable across shots and episodes."
+      },
+      "emotionFirst": {
+        "title": "Emotion first",
+        "desc": "Prioritize expression range and emotional clarity."
+      },
+      "dynamicAction": {
+        "title": "Dynamic action",
+        "desc": "Prioritize pose readability and action silhouettes."
+      }
+    },
+    "environment": {
+      "title": "Environment gallery",
+      "cityNightNeon": {
+        "title": "City / night neon",
+        "desc": "Urban contrast with high-energy color accents."
+      },
+      "forestMistDawn": {
+        "title": "Forest / mist dawn",
+        "desc": "Natural depth cues with gentle atmospheric layering."
+      },
+      "interiorCinematic": {
+        "title": "Interior / cinematic",
+        "desc": "Controlled lighting for dialogue and blocking clarity."
+      }
+    },
+    "promptMode": {
+      "title": "Prompt depth",
+      "guided": {
+        "title": "Guided (recommended)",
+        "desc": "Let visual choices drive generation. Prompt stays secondary."
+      },
+      "advanced": {
+        "title": "Advanced prompt",
+        "desc": "Expose deeper prompt controls for manual fine-tuning."
+      }
+    },
+    "referenceBoard": {
+      "title": "Reference board shell",
+      "selectionCount": "{count} board anchors selected",
+      "characterSheet": {
+        "title": "Character sheet",
+        "desc": "Keep one stable character anchor before deeper prompt edits."
+      },
+      "moodLighting": {
+        "title": "Mood & lighting",
+        "desc": "Collect color and lighting references for the opening tone."
+      },
+      "environmentAnchor": {
+        "title": "Environment anchor",
+        "desc": "Lock one location direction before storyboard generation."
+      }
+    },
+    "recommendation": {
+      "label": "Recommended next move",
+      "currentSelectionLabel": "Current selection",
+      "whyLabel": "Why recommended",
+      "compareLabel": "Compare presets",
+      "recommendedBadge": "Top pick",
+      "story": {
+        "default": {
+          "title": "Start guided with your visual picks",
+          "desc": "This combo is strong enough to create first results before opening advanced prompt controls."
+        },
+        "emotionFirst": {
+          "title": "Keep emotion-first and open prompt later",
+          "desc": "Your current choices favor acting and emotional readability, so guided mode should work well first."
+        }
+      },
+      "manga": {
+        "default": {
+          "title": "Use panel-first flow with guided prompt depth",
+          "desc": "Current selections fit a safe manga kickoff path with minimal prompt overhead."
+        },
+        "dynamicAction": {
+          "title": "Favor dynamic panel pacing next",
+          "desc": "Action-heavy character strategy pairs well with dynamic panel rhythm and guided prompt mode."
+        },
+        "forest": {
+          "title": "Lean into atmosphere and continuity",
+          "desc": "Forest dawn works best when you stabilize environment references before writing deeper prompt instructions."
+        }
+      }
+    },
+    "summary": {
+      "style": "Style",
+      "character": "Character",
+      "environment": "Environment"
     }
   },
   "creating": "Creating...",

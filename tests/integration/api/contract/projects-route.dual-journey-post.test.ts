@@ -55,6 +55,11 @@ describe('api contract - /api/projects POST dual-journey onboarding payload', ()
         entryIntent: 'manga_story_to_panels',
         sourceType: 'import_script',
         sourceContent: 'EXT. CITY - NIGHT\nPanel sequence...',
+        stylePresetId: 'manga-action-battle',
+        characterStrategyId: 'dynamic-action',
+        environmentPresetId: 'forest-mist-dawn',
+        promptMode: 'advanced',
+        referenceBoardSelections: ['character-sheet', 'mood-lighting'],
       },
     })
 
@@ -85,6 +90,11 @@ describe('api contract - /api/projects POST dual-journey onboarding payload', ()
       entryIntent: 'manga_story_to_panels',
       sourceType: 'import_script',
       sourceContent: 'EXT. CITY - NIGHT\nPanel sequence...',
+      stylePresetId: 'manga-action-battle',
+      characterStrategyId: 'dynamic-action',
+      environmentPresetId: 'forest-mist-dawn',
+      promptMode: 'advanced',
+      referenceBoardSelections: ['character-sheet', 'mood-lighting'],
     })
   })
 })

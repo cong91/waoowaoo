@@ -36,6 +36,8 @@ interface UseWorkspaceStageRuntimeParams {
   quickMangaConflictPolicy: QuickMangaContinuityConflictPolicy
   selectedCharacterStrategy: 'consistency-first' | 'emotion-first' | 'dynamic-action'
   selectedEnvironmentId: 'city-night-neon' | 'forest-mist-dawn' | 'interior-cinematic'
+  promptMode: 'guided' | 'advanced'
+  referenceBoardSelections: string[]
   videoModel: string | undefined
   journeyType: 'film_video' | 'manga_webtoon'
   projectName: string
@@ -114,6 +116,8 @@ export function useWorkspaceStageRuntime({
   quickMangaConflictPolicy,
   selectedCharacterStrategy,
   selectedEnvironmentId,
+  promptMode,
+  referenceBoardSelections,
   videoModel,
   journeyType,
   projectName,
@@ -189,6 +193,8 @@ export function useWorkspaceStageRuntime({
     onQuickMangaConflictPolicyChange,
     selectedCharacterStrategy,
     selectedEnvironmentId,
+    promptMode,
+    referenceBoardSelections,
     onVideoRatioChange: (value) => handleUpdateConfig('videoRatio', value),
     onArtStyleChange: (value) => handleUpdateConfig('artStyle', value),
     onCharacterStrategyChange,
@@ -243,6 +249,8 @@ export function useWorkspaceStageRuntime({
     openAssetLibrary,
     journeyType,
     projectName,
+    promptMode,
+    referenceBoardSelections,
     quickMangaChapterContinuityMode,
     quickMangaChapterId,
     quickMangaColorMode,
