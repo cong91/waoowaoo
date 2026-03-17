@@ -42,14 +42,14 @@
     "nextToSource": "Continue to source",
     "back": "Back",
     "startCreating": "Start creating",
-    "studioChoiceLabel": "Studio",
+    "studioChoiceLabel": "What do you want to create?",
     "projectDetailsLabel": "Project details",
-    "projectDetailsHint": "These fields can be edited later. Pick studio first, then fill project info.",
-    "sourceTypeLabel": "Story source",
+    "projectDetailsHint": "These fields can be edited later. Start by choosing a creation path, then fill in the project details.",
+    "sourceTypeLabel": "How are we starting this story?",
     "sourceContentLabel": "Source content",
     "sourceContentPlaceholder": "Paste your story text or script draft...",
     "sourceContentHint": "Please provide at least 20 characters for source-based generation.",
-    "readinessSummary": "Ready to create: {journey} · {template} · {sourceType}",
+    "readinessSummary": "You're ready: {journey} → {template} → {sourceType}",
     "sourceType": {
       "blank": "Start blank",
       "story_text": "Story text",
@@ -101,18 +101,16 @@
         "desc": "Compact gag structure for episodic four-panel storytelling."
       }
     }
-  }
-}
-    }
-  }
-}
-g."
-      }
-    }
-  }
-}
-g."
-      }
-    }
-  }
+  },
+  "newStoryProject": "Start Video from Story",
+  "newMangaProject": "Start Manga from Idea",
+  "projectTypeMangaHint": "Start with 1–3 sentences. No screenplay required.",
+  "showInternalProjects": "Show internal/test projects",
+  "hideInternalProjects": "Hide internal/test projects",
+  "internalProjectsHint": "Internal and test projects are hidden by default so the workspace stays cleaner for real production work.",
+  "internalProjectsCount": "{count} internal/test projects hidden",
+  "projectCardSourceDescription": "Project description",
+  "projectCardSourceStory": "First story preview",
+  "projectCardUpdated": "Updated",
+  "projectCardNoContent": "No episodes, images, or videos yet"
 }
