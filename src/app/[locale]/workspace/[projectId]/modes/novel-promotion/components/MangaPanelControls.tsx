@@ -15,7 +15,14 @@ import {
   useCreateProjectPanel,
   useDeleteProjectPanel,
 } from '@/lib/query/hooks'
-import { MANGA_PANEL_TEMPLATE_SPECS } from '@/lib/workspace/manga-webtoon-layout-map'
+import {
+  buildMangaPanelTemplateNarrativeBeats,
+  getMangaPanelTemplateProductSemantics,
+  getMangaPanelTemplateSelectorLabel,
+  getMangaPanelTemplateSelectorSummary,
+  getMangaPanelTemplateSemanticSummary,
+  MANGA_PANEL_TEMPLATE_SPECS,
+} from '@/lib/workspace/manga-webtoon-layout-map'
 import {
   buildWebtoonScrollNarrativePreview,
   planWebtoonQuickActionMutation,
@@ -390,7 +397,7 @@ export default function MangaPanelControls({
       </div>
 
       <div className="space-y-2">
-        <p className="text-xs font-semibold text-[var(--glass-text-secondary)] uppercase tracking-wide">Panel template</p>
+        <p className="text-xs font-semibold text-[var(--glass-text-secondary)] uppercase tracking-wide">Manga page layout template</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {PANEL_TEMPLATES.map((template) => {
             const active = isTemplateActive(template)
@@ -406,11 +413,11 @@ export default function MangaPanelControls({
                   : 'border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/15 hover:bg-[var(--glass-bg-muted)]/30'
                   }`}
               >
-                <div className="relative h-24 rounded-lg overflow-hidden border border-[var(--glass-stroke-soft)] bg-gradient-to-br from-[#111827] via-[#1f2937] to-[#0f172a]">
+                <div className="relative aspect-[2/3] rounded-lg overflow-hidden border border-[var(--glass-stroke-soft)] bg-gradient-to-br from-[#111827] via-[#1f2937] to-[#0f172a]">
                   <img
                     src={template.metadata.imagePath}
                     alt={template.title}
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-contain p-1.5"
                     loading="lazy"
                     onError={handleImageLoadError(template.metadata.imagePath, template.id)}
                   />
@@ -422,10 +429,16 @@ export default function MangaPanelControls({
                   </div>
                 </div>
 
-                <div className="mt-2.5 text-sm font-semibold text-[var(--glass-text-primary)]">{template.title}</div>
+                <div className="mt-2.5 text-sm font-semibold text-[var(--glass-text-primary)]">{getMangaPanelTemplateSelectorLabel(template)}</div>
                 <p className="text-xs text-[var(--glass-text-tertiary)] mt-1">{template.description}</p>
                 <p className="text-[11px] text-[var(--glass-text-secondary)] mt-2">
-                  {template.values.layout} · {template.values.colorMode}
+                  {getMangaPanelTemplateSelectorSummary(template)}
+                </p>
+                <p className="text-[11px] text-[var(--glass-text-secondary)] mt-1">
+                  {getMangaPanelTemplateSemanticSummary(template)}
+                </p>
+                <p className="text-[11px] text-[var(--glass-text-tertiary)] mt-1">
+                  {getMangaPanelTemplateProductSemantics(template)}
                 </p>
                 {active && (
                   <p className="mt-1 text-[11px] font-medium text-[var(--glass-tone-info-fg)]">Đang active</p>
@@ -554,24 +567,36 @@ export default function MangaPanelControls({
         <div className="rounded-xl border border-[var(--glass-stroke-soft)] bg-[var(--glass-bg-muted)]/10 p-3 space-y-2">
           <div className="text-[11px] text-[var(--glass-text-tertiary)]">
             {activeTemplate
-              ? `Template ${activeTemplate.sourceLayoutId} · ${activeTemplate.metadata.layoutFamily} · ${activeTemplate.metadata.panelSlotCount} panel slots`
-              : 'Chọn template để preview vertical flow theo panel rhythm.'}
+              ? `Template ${activeTemplate.sourceLayoutId} · ${getMangaPanelTemplateSelectorSummary(activeTemplate)} · ${getMangaPanelTemplateSemanticSummary(activeTemplate)}`
+              : 'Chọn manga page layout template để preview panel rhythm theo bố cục trang dọc.'}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            {scrollPreview.map((item) => (
-              <div key={item.id} className="rounded-lg border border-[var(--glass-stroke-soft)] p-2 bg-[var(--glass-bg-muted)]/20">
-                <div className="flex items-center justify-between text-[11px] text-[var(--glass-text-secondary)]">
-                  <span>Panel {item.panelIndex}</span>
-                  <span>{item.emphasis}</span>
+            {scrollPreview.map((item) => {
+              const narrativeBeat = activeTemplate
+                ? buildMangaPanelTemplateNarrativeBeats(activeTemplate).find((beat) => beat.slot === item.panelIndex) ?? null
+                : null
+
+              return (
+                <div key={item.id} className="rounded-lg border border-[var(--glass-stroke-soft)] p-2 bg-[var(--glass-bg-muted)]/20">
+                  <div className="flex items-center justify-between text-[11px] text-[var(--glass-text-secondary)]">
+                    <span>Panel {item.panelIndex}</span>
+                    <span>{item.emphasis}</span>
+                  </div>
+                  <div className="mt-1 h-2 rounded bg-[var(--glass-bg-muted)]/40 overflow-hidden">
+                    <div
+                      className="h-full rounded bg-[var(--glass-accent-from)]"
+                      style={{ width: `${Math.max(8, Math.round(item.relativeHeight * 100))}%` }}
+                    />
+                  </div>
+                  {narrativeBeat ? (
+                    <div className="mt-2 text-[11px] text-[var(--glass-text-tertiary)]">
+                      <span className="font-medium text-[var(--glass-text-secondary)]">{narrativeBeat.beat}</span>
+                      {' '}· {narrativeBeat.purpose}
+                    </div>
+                  ) : null}
                 </div>
-                <div className="mt-1 h-2 rounded bg-[var(--glass-bg-muted)]/40 overflow-hidden">
-                  <div
-                    className="h-full rounded bg-[var(--glass-accent-from)]"
-                    style={{ width: `${Math.max(8, Math.round(item.relativeHeight * 100))}%` }}
-                  />
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </div>

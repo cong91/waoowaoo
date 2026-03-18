@@ -20,13 +20,30 @@ describe('quick manga story input builder', () => {
     })
 
     expect(merged).toContain('[QUICK_MANGA_ENTRY]')
-    expect(merged).toContain('Preset: Comedy 4-koma')
+    expect(merged).toContain('Preset Input: Comedy 4-koma')
     expect(merged).toContain('Panel Layout Input: 4-koma Rhythm')
     expect(merged).toContain('Panel Layout Resolved: 4-koma Rhythm')
-    expect(merged).toContain('Color Mode: Black & White')
+    expect(merged).toContain('Color Mode Input: Black & White')
     expect(merged).toContain('Visual Style: american-comic')
     expect(merged).toContain('[LAYOUT_INTELLIGENCE_V1]')
     expect(merged).toContain('A student wakes up late and runs to school.')
+  })
+
+  it('injects template semantics and narrative beats when panel template is selected', () => {
+    const merged = buildQuickMangaStoryInput({
+      storyContent: 'The hero reveals a clue, tension rises, then the chapter ends on a sharp reaction.',
+      options: {
+        ...baseOptions,
+        panelTemplateId: 'anifun-t10-dense-six-panel',
+      },
+      artStyle: 'manga-ink',
+    })
+
+    expect(merged).toContain('[PANEL_TEMPLATE_V1]')
+    expect(merged).toContain('Template Product Semantics: Manga page layout template')
+    expect(merged).toContain('Template Selector Summary: montage-investigation')
+    expect(merged).toContain('Narrative Beat 1: opening')
+    expect(merged).toContain('Narrative Beat 6: payoff')
   })
 
   it('returns trimmed base content when quick manga is disabled', () => {

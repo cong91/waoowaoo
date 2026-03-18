@@ -3,6 +3,9 @@ import {
   type LayoutIntelligenceDecision,
 } from '@/lib/novel-promotion/layout-intelligence'
 import {
+  buildMangaPanelTemplateNarrativeBeats,
+  getMangaPanelTemplateProductSemantics,
+  getMangaPanelTemplateSelectorSummary,
   getMangaPanelTemplateSpecById,
   type MangaPanelTemplateSpec,
 } from '@/lib/workspace/manga-webtoon-layout-map'
@@ -65,14 +68,23 @@ function buildLayoutIntelligenceBlock(decision: LayoutIntelligenceDecision) {
 function buildPanelTemplateDirectiveBlock(spec: MangaPanelTemplateSpec | null): string[] {
   if (!spec) return []
 
+  const beats = buildMangaPanelTemplateNarrativeBeats(spec)
+
   return [
     '[PANEL_TEMPLATE_V1]',
     `Template Id: ${spec.id}`,
     `Panel Layout Id: ${spec.metadata.panelLayoutId}`,
+    `Template Product Semantics: ${getMangaPanelTemplateProductSemantics(spec)}`,
+    `Template Selector Summary: ${getMangaPanelTemplateSelectorSummary(spec)}`,
     `Layout Family: ${spec.metadata.layoutFamily}`,
     `Panel Slot Count: ${spec.metadata.panelSlotCount}`,
     `Narrative Intent: ${spec.metadata.narrativeIntent}`,
+    `Template Category: ${spec.metadata.category}`,
+    `Orientation: ${spec.metadata.orientation}`,
+    `Aspect Ratio: ${spec.metadata.aspectRatio}`,
+    `Preview Fit: ${spec.metadata.previewFit}`,
     `Reading Flow: ${spec.metadata.readingFlow}`,
+    `Emphasis Pattern: ${spec.metadata.emphasisPattern}`,
     `Suggested Color Mode: ${spec.metadata.suggestedColorMode}`,
     `Suggested Style Preset: ${spec.metadata.suggestedStylePreset}`,
     `Prompt Hint: ${spec.metadata.promptHint}`,
@@ -81,6 +93,8 @@ function buildPanelTemplateDirectiveBlock(spec: MangaPanelTemplateSpec | null): 
     `Dialogue Density: ${spec.metadata.dialogueDensity}`,
     `Use Case: ${spec.metadata.useCase}`,
     `Template Image Path: ${spec.metadata.imagePath}`,
+    `Source Dimensions: ${spec.metadata.sourceWidth}x${spec.metadata.sourceHeight}`,
+    ...beats.map((beat) => `Narrative Beat ${beat.slot}: ${beat.beat} :: ${beat.purpose}`),
     `Traceability: ${spec.traceability.layoutMapPath} :: ${spec.traceability.sourceTemplateFile}`,
   ]
 }
