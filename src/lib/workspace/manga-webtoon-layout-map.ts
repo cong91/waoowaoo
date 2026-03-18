@@ -5,15 +5,25 @@ import type {
 } from '@/lib/novel-promotion/quick-manga'
 import type { QuickMangaStyleLockProfile } from '@/lib/novel-promotion/quick-manga-contract'
 
-export type MangaTemplateReadingFlow = 'right-to-left' | 'left-to-right' | 'vertical-scroll'
+export type MangaTemplateCategory = 'manga-page-layout-template'
+export type MangaTemplateOrientation = 'portrait'
+export type MangaTemplatePreviewFit = 'contain'
+export type MangaTemplateReadingFlow = 'top-to-bottom' | 'top-left-to-bottom-right' | 'top-right-to-bottom-left'
 export type MangaTemplateTransitionStyle = 'hard-cut' | 'match-cut' | 'beat-to-beat' | 'slow-pan'
 export type MangaTemplateDialogueDensity = 'low' | 'medium' | 'high'
 
 export interface MangaPanelTemplateMetadata {
   panelLayoutId: string
   imagePath: string
+  category: MangaTemplateCategory
+  orientation: MangaTemplateOrientation
+  previewFit: MangaTemplatePreviewFit
+  aspectRatio: '2:3'
+  sourceWidth: number
+  sourceHeight: number
   layoutFamily: string
   panelSlotCount: number
+  emphasisPattern: string
   narrativeIntent: string
   readingFlow: MangaTemplateReadingFlow
   suggestedColorMode: QuickMangaColorMode
@@ -47,13 +57,19 @@ export interface MangaPanelTemplateSpec {
   }
 }
 
+export interface MangaPanelTemplateNarrativeBeat {
+  slot: number
+  beat: string
+  purpose: string
+}
+
 function createSpec(input: {
   id: string
   sourceLayoutId: string
   sourceReferencePresetId: string
   title: string
   description: string
-  metadata: Omit<MangaPanelTemplateMetadata, 'panelLayoutId' | 'imagePath'>
+  metadata: Omit<MangaPanelTemplateMetadata, 'panelLayoutId' | 'imagePath' | 'category' | 'orientation' | 'previewFit' | 'aspectRatio'>
   sourceTemplateFile: string
   values: MangaPanelTemplateSpec['values']
 }): MangaPanelTemplateSpec {
@@ -66,6 +82,10 @@ function createSpec(input: {
     metadata: {
       panelLayoutId: input.sourceLayoutId,
       imagePath: `/images/anifun/panel-templates/${input.sourceTemplateFile}`,
+      category: 'manga-page-layout-template',
+      orientation: 'portrait',
+      previewFit: 'contain',
+      aspectRatio: '2:3',
       ...input.metadata,
     },
     traceability: {
@@ -90,10 +110,13 @@ export const MANGA_PANEL_TEMPLATE_SPECS: MangaPanelTemplateSpec[] = [
     description: 'Trang mở cảnh động, nhịp nhanh với panel điểm nhấn.',
     sourceTemplateFile: '01_52519e234bbf8a4801bfd86a361aae95.png',
     metadata: {
+      sourceWidth: 350,
+      sourceHeight: 525,
       layoutFamily: 'cinematic-complex',
       panelSlotCount: 5,
+      emphasisPattern: 'hero-top with supporting cuts',
       narrativeIntent: 'Trang mở cảnh động, nhịp nhanh với điểm nhấn nhân vật.',
-      readingFlow: 'left-to-right',
+      readingFlow: 'top-to-bottom',
       suggestedColorMode: 'auto',
       suggestedStylePreset: 'action-battle',
       promptHint: 'Mở cảnh với chuyển động mạnh, panel chính đặt điểm rơi cảm xúc.',
@@ -119,10 +142,13 @@ export const MANGA_PANEL_TEMPLATE_SPECS: MangaPanelTemplateSpec[] = [
     description: 'Nhịp zigzag xen kẽ đối thoại và hành động.',
     sourceTemplateFile: '02_abce6785736850b48b21d38f0fb017cf.webp',
     metadata: {
+      sourceWidth: 350,
+      sourceHeight: 525,
       layoutFamily: 'cinematic-zigzag',
       panelSlotCount: 6,
+      emphasisPattern: 'alternating wide-narrow zigzag',
       narrativeIntent: 'Đối thoại xen kẽ hành động, phân nhịp theo beat dọc.',
-      readingFlow: 'vertical-scroll',
+      readingFlow: 'top-to-bottom',
       suggestedColorMode: 'limited-palette',
       suggestedStylePreset: 'romance-drama',
       promptHint: 'Đi theo nhịp zigzag, mỗi panel kế tiếp đẩy conflict lên một nấc.',
@@ -148,10 +174,13 @@ export const MANGA_PANEL_TEMPLATE_SPECS: MangaPanelTemplateSpec[] = [
     description: 'Panel nhấn lớn + panel phụ build tension.',
     sourceTemplateFile: '03_df5a41e5d7e137c696b9094c5fe4aa30.webp',
     metadata: {
+      sourceWidth: 350,
+      sourceHeight: 525,
       layoutFamily: 'cinematic-diagonal-focus',
       panelSlotCount: 5,
+      emphasisPattern: 'diagonal focal anchor',
       narrativeIntent: 'Trang chuyển cảnh có panel nhấn lớn + các panel phụ build tension.',
-      readingFlow: 'left-to-right',
+      readingFlow: 'top-to-bottom',
       suggestedColorMode: 'black-white',
       suggestedStylePreset: 'action-battle',
       promptHint: 'Giữ trục chéo làm lực dẫn mắt đọc, panel nhấn chốt cảm xúc chuyển cảnh.',
@@ -177,10 +206,13 @@ export const MANGA_PANEL_TEMPLATE_SPECS: MangaPanelTemplateSpec[] = [
     description: 'Hero shot / cover reveal toàn trang.',
     sourceTemplateFile: '04_temp_a7f9e68e1e8aed6e019da3eeb572f8fb.png',
     metadata: {
+      sourceWidth: 200,
+      sourceHeight: 282,
       layoutFamily: 'single-splash',
       panelSlotCount: 1,
+      emphasisPattern: 'single full-page hero',
       narrativeIntent: 'Cover/hero shot, reveal nhân vật hoặc key visual.',
-      readingFlow: 'left-to-right',
+      readingFlow: 'top-to-bottom',
       suggestedColorMode: 'full-color',
       suggestedStylePreset: 'action-battle',
       promptHint: 'Tạo một khung hình hero rõ silhouette, hậu cảnh hỗ trợ mood nhân vật.',
@@ -206,10 +238,13 @@ export const MANGA_PANEL_TEMPLATE_SPECS: MangaPanelTemplateSpec[] = [
     description: 'Before/after hoặc đối thoại song song 2 panel.',
     sourceTemplateFile: '05_temp_4423e55dcad38c07d6782dda3b064499.png',
     metadata: {
+      sourceWidth: 200,
+      sourceHeight: 282,
       layoutFamily: 'dual-split',
       panelSlotCount: 2,
+      emphasisPattern: 'balanced dual beats',
       narrativeIntent: 'Before/after, setup/payoff hoặc đối thoại song song.',
-      readingFlow: 'right-to-left',
+      readingFlow: 'top-to-bottom',
       suggestedColorMode: 'black-white',
       suggestedStylePreset: 'romance-drama',
       promptHint: 'Panel 1 setup rõ ngữ cảnh, panel 2 payoff cảm xúc hoặc hành động.',
@@ -235,10 +270,13 @@ export const MANGA_PANEL_TEMPLATE_SPECS: MangaPanelTemplateSpec[] = [
     description: '3-beat progression setup → escalation → payoff.',
     sourceTemplateFile: '06_temp_10f2cc27bb7aa1b6413d12a1f6765bf7.png',
     metadata: {
+      sourceWidth: 200,
+      sourceHeight: 282,
       layoutFamily: 'triple-strip',
       panelSlotCount: 3,
+      emphasisPattern: 'stacked equal progression',
       narrativeIntent: '3-beat progression: setup -> escalation -> payoff.',
-      readingFlow: 'left-to-right',
+      readingFlow: 'top-to-bottom',
       suggestedColorMode: 'limited-palette',
       suggestedStylePreset: 'slice-of-life',
       promptHint: 'Giữ nhịp ba bước rõ ràng, mỗi panel tăng stakes một chút.',
@@ -264,10 +302,13 @@ export const MANGA_PANEL_TEMPLATE_SPECS: MangaPanelTemplateSpec[] = [
     description: 'Nhịp đều 4 panel cho thoại/hài.',
     sourceTemplateFile: '07_temp_5344e7516616eeec1f6548c42106dfa8.webp',
     metadata: {
+      sourceWidth: 200,
+      sourceHeight: 282,
       layoutFamily: 'quad-grid-equal',
       panelSlotCount: 4,
+      emphasisPattern: 'balanced 2x2 grid',
       narrativeIntent: 'Nhịp đều cho hội thoại/nhịp hài 4-beat.',
-      readingFlow: 'right-to-left',
+      readingFlow: 'top-to-bottom',
       suggestedColorMode: 'black-white',
       suggestedStylePreset: 'comedy-4koma',
       promptHint: 'Bám nhịp 4-beat: setup, build, turn, punchline.',
@@ -293,10 +334,13 @@ export const MANGA_PANEL_TEMPLATE_SPECS: MangaPanelTemplateSpec[] = [
     description: '4 panel thiên biểu cảm gương mặt.',
     sourceTemplateFile: '08_temp_a5cfbc301b677668d03238a124def56e.png',
     metadata: {
+      sourceWidth: 200,
+      sourceHeight: 282,
       layoutFamily: 'quad-grid-portrait',
       panelSlotCount: 4,
+      emphasisPattern: 'portrait 2x2 close-up grid',
       narrativeIntent: '4 panel ưu tiên cận cảnh nhân vật, cảm xúc liên tục.',
-      readingFlow: 'right-to-left',
+      readingFlow: 'top-to-bottom',
       suggestedColorMode: 'limited-palette',
       suggestedStylePreset: 'romance-drama',
       promptHint: 'Ưu tiên close-up và micro-expression liên tục giữa các panel.',
@@ -322,10 +366,13 @@ export const MANGA_PANEL_TEMPLATE_SPECS: MangaPanelTemplateSpec[] = [
     description: '1 panel lớn + 3 panel phụ cho twist/reaction.',
     sourceTemplateFile: '09_temp_f6f04f53b320e956d1402edf0b07fc29.png',
     metadata: {
+      sourceWidth: 200,
+      sourceHeight: 282,
       layoutFamily: 'quad-mixed-focus',
       panelSlotCount: 4,
+      emphasisPattern: 'hero beat with support reactions',
       narrativeIntent: '1 panel lớn + 3 panel phụ để nhấn twist hoặc reaction.',
-      readingFlow: 'left-to-right',
+      readingFlow: 'top-to-bottom',
       suggestedColorMode: 'auto',
       suggestedStylePreset: 'action-battle',
       promptHint: 'Dùng panel lớn làm điểm nổ, 3 panel còn lại làm nhịp dẫn/echo.',
@@ -351,10 +398,13 @@ export const MANGA_PANEL_TEMPLATE_SPECS: MangaPanelTemplateSpec[] = [
     description: 'Trang dày thông tin, phù hợp montage/điều tra.',
     sourceTemplateFile: '10_temp_6ad28cc3e8e2ef052db60e2d204f6290.png',
     metadata: {
+      sourceWidth: 200,
+      sourceHeight: 282,
       layoutFamily: 'dense-six-panel',
       panelSlotCount: 6,
+      emphasisPattern: 'alternating asymmetric rhythm',
       narrativeIntent: 'Trang dày thông tin (điều tra, hành động nhanh, montage).',
-      readingFlow: 'right-to-left',
+      readingFlow: 'top-to-bottom',
       suggestedColorMode: 'black-white',
       suggestedStylePreset: 'action-battle',
       promptHint: 'Giữ thông tin cô đọng từng panel, chuyển cảnh nhanh nhưng vẫn đọc rõ.',
@@ -380,10 +430,13 @@ export const MANGA_PANEL_TEMPLATE_SPECS: MangaPanelTemplateSpec[] = [
     description: 'Build-up phía trên, payoff mạnh ở panel dưới.',
     sourceTemplateFile: '11_temp_ba7ccdcb68bfd98af4a180f5adfc5df6.webp',
     metadata: {
+      sourceWidth: 200,
+      sourceHeight: 282,
       layoutFamily: 'quad-hero-bottom',
       panelSlotCount: 4,
+      emphasisPattern: 'small setup, hero payoff bottom',
       narrativeIntent: 'Nhịp buildup ở trên, payoff mạnh ở panel dưới cùng.',
-      readingFlow: 'vertical-scroll',
+      readingFlow: 'top-to-bottom',
       suggestedColorMode: 'full-color',
       suggestedStylePreset: 'romance-drama',
       promptHint: 'Tăng dần cảm xúc ở 3 panel đầu, panel cuối chốt bằng hero reaction.',
@@ -409,10 +462,13 @@ export const MANGA_PANEL_TEMPLATE_SPECS: MangaPanelTemplateSpec[] = [
     description: '1 panel chính + 1 panel hỗ trợ ngữ cảnh.',
     sourceTemplateFile: '12_temp_96e97b1ac042c5fc7231d5824d7bb1b1.webp',
     metadata: {
+      sourceWidth: 200,
+      sourceHeight: 282,
       layoutFamily: 'dual-hero-support',
       panelSlotCount: 2,
+      emphasisPattern: 'small setup, larger support payoff',
       narrativeIntent: '1 panel chính + 1 panel ngữ cảnh để nhấn cảm xúc/chuyển cảnh.',
-      readingFlow: 'left-to-right',
+      readingFlow: 'top-to-bottom',
       suggestedColorMode: 'full-color',
       suggestedStylePreset: 'slice-of-life',
       promptHint: 'Panel hero giữ trọng tâm nhân vật, panel còn lại cung cấp context rõ.',
@@ -438,10 +494,13 @@ export const MANGA_PANEL_TEMPLATE_SPECS: MangaPanelTemplateSpec[] = [
     description: '3 panel gọn cho mini-arc cảm xúc.',
     sourceTemplateFile: '13_temp_6892573eae1c2d46ef550e25c75c973a.webp',
     metadata: {
+      sourceWidth: 200,
+      sourceHeight: 282,
       layoutFamily: 'triple-focus',
       panelSlotCount: 3,
+      emphasisPattern: 'hero top with dual follow-up',
       narrativeIntent: '3 panel tập trung nhịp cảm xúc hoặc mini-arc gọn.',
-      readingFlow: 'right-to-left',
+      readingFlow: 'top-to-bottom',
       suggestedColorMode: 'limited-palette',
       suggestedStylePreset: 'slice-of-life',
       promptHint: 'Thiết kế mini-arc ngắn gọn: mở cảm xúc, phát triển, chốt dư âm.',
@@ -460,6 +519,79 @@ export const MANGA_PANEL_TEMPLATE_SPECS: MangaPanelTemplateSpec[] = [
     },
   }),
 ]
+
+export function getMangaPanelTemplateSemanticSummary(spec: MangaPanelTemplateSpec): string {
+  return `${spec.metadata.panelSlotCount} panels · ${spec.metadata.layoutFamily} · ${spec.metadata.emphasisPattern}`
+}
+
+export function getMangaPanelTemplateReadingLabel(spec: MangaPanelTemplateSpec): string {
+  if (spec.metadata.readingFlow === 'top-to-bottom') return 'Top-to-bottom'
+  if (spec.metadata.readingFlow === 'top-left-to-bottom-right') return 'Top-left to bottom-right'
+  return 'Top-right to bottom-left'
+}
+
+export function getMangaPanelTemplateSelectorLabel(spec: MangaPanelTemplateSpec): string {
+  return `${spec.title} · ${spec.metadata.panelSlotCount} panels`
+}
+
+export function getMangaPanelTemplateSelectorSummary(spec: MangaPanelTemplateSpec): string {
+  return `${spec.metadata.useCase} · ${getMangaPanelTemplateReadingLabel(spec)} · ${spec.metadata.previewFit}`
+}
+
+export function getMangaPanelTemplateProductSemantics(spec: MangaPanelTemplateSpec): string {
+  return `Manga page layout template for ${spec.metadata.useCase}, optimized for ${spec.metadata.narrativeIntent.toLowerCase()}`
+}
+
+export function buildMangaPanelTemplateNarrativeBeats(spec: MangaPanelTemplateSpec): MangaPanelTemplateNarrativeBeat[] {
+  const slotCount = Math.max(1, spec.metadata.panelSlotCount)
+
+  if (slotCount === 1) {
+    return [{ slot: 1, beat: 'hero reveal', purpose: 'Deliver a single dominant emotional or visual beat.' }]
+  }
+
+  if (slotCount === 2) {
+    return [
+      { slot: 1, beat: 'setup', purpose: 'Establish context, framing, or contrast.' },
+      { slot: 2, beat: 'payoff', purpose: 'Land the reaction, reveal, or emotional answer.' },
+    ]
+  }
+
+  if (slotCount === 3) {
+    return [
+      { slot: 1, beat: 'setup', purpose: 'Introduce the moment and visual context.' },
+      { slot: 2, beat: 'escalation', purpose: 'Raise tension or deepen character focus.' },
+      { slot: 3, beat: 'payoff', purpose: 'Close the mini-arc with a clear outcome.' },
+    ]
+  }
+
+  if (slotCount === 4) {
+    return [
+      { slot: 1, beat: 'opening', purpose: 'Hook the reader into the page beat.' },
+      { slot: 2, beat: 'development', purpose: 'Develop action, emotion, or dialogue.' },
+      { slot: 3, beat: 'turn', purpose: 'Shift the rhythm with a reveal or reaction.' },
+      { slot: 4, beat: 'payoff', purpose: 'Resolve the page beat or land the punchline.' },
+    ]
+  }
+
+  if (slotCount === 5) {
+    return [
+      { slot: 1, beat: 'opening', purpose: 'Open with a strong framing beat.' },
+      { slot: 2, beat: 'setup', purpose: 'Clarify the scene or emotional direction.' },
+      { slot: 3, beat: 'escalation', purpose: 'Increase movement, pressure, or tension.' },
+      { slot: 4, beat: 'reaction', purpose: 'Show consequence or character response.' },
+      { slot: 5, beat: 'payoff', purpose: 'Finish on the strongest page-level note.' },
+    ]
+  }
+
+  return [
+    { slot: 1, beat: 'opening', purpose: 'Start the page with a readable hook.' },
+    { slot: 2, beat: 'setup', purpose: 'Anchor the scene and the key actors.' },
+    { slot: 3, beat: 'build', purpose: 'Advance the action or dialogue progression.' },
+    { slot: 4, beat: 'turn', purpose: 'Introduce a shift, surprise, or emphasis.' },
+    { slot: 5, beat: 'reaction', purpose: 'Show consequence, response, or echo.' },
+    { slot: 6, beat: 'payoff', purpose: 'Close the page with a concise final beat.' },
+  ].slice(0, slotCount)
+}
 
 export function getMangaPanelTemplateSpecById(id: string | null | undefined): MangaPanelTemplateSpec | null {
   if (!id) return null
