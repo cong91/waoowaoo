@@ -33,16 +33,13 @@ export default function WorkspaceWorkflowSidebar({
 
   return (
     <aside className="hidden xl:block xl:w-[18rem] xl:shrink-0">
-      <div className="sticky top-[calc(env(safe-area-inset-top,0px)+4.75rem)]">
+      <div className="sticky top-[calc(env(safe-area-inset-top,0px)+4.25rem)] max-h-[calc(100vh-(env(safe-area-inset-top,0px)+5rem))] overflow-y-auto pr-1">
         <div className="glass-surface-soft rounded-[1.75rem] border border-[var(--glass-stroke-soft)] px-3 py-3 sm:px-4 sm:py-4">
           <div className="space-y-3">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--glass-text-tertiary)]">
                   {tWorkspace('workflowRail.title')}
-                </div>
-                <div className="mt-1 text-xs text-[var(--glass-text-secondary)]">
-                  {tWorkspace('workflowRail.subtitle')}
                 </div>
               </div>
               <button

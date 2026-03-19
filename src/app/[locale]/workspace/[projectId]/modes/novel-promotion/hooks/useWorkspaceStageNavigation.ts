@@ -36,7 +36,7 @@ export function useWorkspaceStageNavigation({
   projectCharacterCount,
   episodeStoryboards,
   journeyType,
-  promptMode,
+  promptMode: _promptMode,
   t,
 }: UseWorkspaceStageNavigationParams): CapsuleNavItem[] {
   const getStageStatus = (stageId: string): 'empty' | 'active' | 'processing' | 'ready' => {
@@ -60,8 +60,8 @@ export function useWorkspaceStageNavigation({
   }
 
   const promptStageLabel = journeyType === 'manga_webtoon'
-    ? `${t('stages.panelScript')} · ${promptMode === 'advanced' ? 'Advanced' : 'Guided'}`
-    : `${t('stages.script')} · ${promptMode === 'advanced' ? 'Advanced' : 'Guided'}`
+    ? t('stages.panelScript')
+    : t('stages.script')
 
   if (journeyType === 'manga_webtoon') {
     return [

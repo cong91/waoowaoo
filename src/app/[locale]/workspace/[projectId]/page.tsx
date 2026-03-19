@@ -360,7 +360,7 @@ export default function ProjectDetailPage() {
 
       {/* 主内容区 - 占满全部宽度 */}
       <main className="flex-1 overflow-y-auto">
-        <div className="container mx-auto px-4 pt-28 pb-8 sm:pt-32">
+        <div className="container mx-auto px-4 pt-18 pb-8 sm:pt-20">
           {!isGlobalAssetsView && onboardingContext && visualFirstSummaryItems.length > 0 && (
             <section className="glass-surface p-4 mb-4 space-y-4">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">

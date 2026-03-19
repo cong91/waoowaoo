@@ -2,14 +2,14 @@
   "stages": {
     "story": "Câu chuyện",
     "script": "Kịch bản",
-    "storyboard": "Bảng phân cảnh",
-    "video": "Băng hình",
-    "editor": "Trình chỉnh sửa AI",
+    "storyboard": "Phân cảnh",
+    "video": "Hình ảnh",
+    "editor": "Biên tập AI",
     "editorComingSoon": "Sắp có, hãy theo dõi chúng tôi để cập nhật",
-    "mangaKickoff": "Khởi tạo Manga",
-    "panelScript": "Kịch bản phân khung",
-    "panelBoard": "Bảng phân khung",
-    "webtoonPanels": "Khung Webtoon"
+    "mangaKickoff": "Khởi tạo",
+    "panelScript": "Kịch bản",
+    "panelBoard": "Phân cảnh",
+    "webtoonPanels": "Khung hình"
   },
   "buttons": {
     "assetLibrary": "Thư viện nội dung",

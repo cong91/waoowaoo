@@ -1,0 +1,155 @@
+name: vat-live
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: waoowaoo-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: waoowaoo123
+      MYSQL_DATABASE: waoowaoo
+      MYSQL_ROOT_HOST: "%"
+    command:
+      - "--default-authentication-plugin=mysql_native_password"
+      - "--sql_mode=STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION"
+    volumes:
+      - vat_mysql_data_final:/var/lib/mysql
+    networks:
+      vat-live-net:
+        aliases:
+          - waoowaoo-mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -pwaoowaoo123"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 15s
+
+  redis:
+    image: redis:7-alpine
+    container_name: waoowaoo-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - vat_redis_data_final:/data
+    networks:
+      vat-live-net:
+        aliases:
+          - waoowaoo-redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 5s
+
+  minio:
+    image: minio/minio:RELEASE.2025-02-28T09-55-16Z
+    container_name: waoowaoo-minio
+    restart: unless-stopped
+    command: ["server", "/data", "--console-address", ":9001"]
+    ports:
+      - "19000:9000"
+      - "19001:9001"
+    volumes:
+      - vat_minio_data_final:/data
+    networks:
+      vat-live-net:
+        aliases:
+          - waoowaoo-minio
+
+  app:
+    image: vat-app
+    container_name: waoowaoo-app
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: "mysql://root:waoowaoo123@waoowaoo-mysql:3306/waoowaoo"
+      REDIS_HOST: waoowaoo-redis
+      REDIS_PORT: "6379"
+      REDIS_USERNAME: ""
+      REDIS_PASSWORD: ""
+      REDIS_TLS: ""
+      STORAGE_TYPE: local
+      NEXTAUTH_URL: "https://videoai.linkto.com.vn"
+      NEXTAUTH_SECRET: "waoowaoo-default-secret-2026"
+      CRON_SECRET: "waoowaoo-docker-cron-secret"
+      INTERNAL_TASK_TOKEN: "waoowaoo-docker-task-token"
+      API_ENCRYPTION_KEY: "waoowaoo-opensource-fixed-key-2026"
+      WATCHDOG_INTERVAL_MS: "30000"
+      TASK_HEARTBEAT_TIMEOUT_MS: "90000"
+      QUEUE_CONCURRENCY_IMAGE: "50"
+      QUEUE_CONCURRENCY_VIDEO: "50"
+      QUEUE_CONCURRENCY_VOICE: "20"
+      QUEUE_CONCURRENCY_TEXT: "50"
+      BULL_BOARD_HOST: "0.0.0.0"
+      BULL_BOARD_PORT: "3010"
+      BULL_BOARD_BASE_PATH: "/admin/queues"
+      BULL_BOARD_USER: ""
+      BULL_BOARD_PASSWORD: ""
+      LOG_UNIFIED_ENABLED: "true"
+      LOG_LEVEL: "INFO"
+      LOG_FORMAT: "json"
+      LOG_DEBUG_ENABLED: "false"
+      LOG_AUDIT_ENABLED: "true"
+      LOG_SERVICE: "waoowaoo"
+      LOG_REDACT_KEYS: "password,token,apiKey,apikey,authorization,cookie,secret,access_token,refresh_token"
+      BILLING_MODE: "OFF"
+      LLM_STREAM_EPHEMERAL_ENABLED: "true"
+      NODE_ENV: production
+    ports:
+      - "13000:3000"
+      - "13010:3010"
+    volumes:
+      - /Users/mrcagents/Work/projects/VAT/data:/app/data
+      - /Users/mrcagents/Work/projects/VAT/docker-logs:/app/logs
+    command: >
+      sh -c "
+        npx prisma db push --skip-generate &&
+        npm run start
+      "
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      vat-live-net:
+        aliases:
+          - waoowaoo-app
+
+  cloudflared-vat:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared-vat
+    restart: unless-stopped
+    command:
+      - tunnel
+      - --no-autoupdate
+      - run
+      - --token
+      - ${CLOUDFLARE_TUNNEL_TOKEN}
+    env_file:
+      - .env.tunnel
+    depends_on:
+      app:
+        condition: service_started
+    networks:
+      vat-live-net:
+        aliases:
+          - cloudflared-vat
+    healthcheck:
+      test: ["CMD", "cloudflared", "--version"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  vat_mysql_data_final:
+    external: true
+  vat_redis_data_final:
+    external: true
+  vat_minio_data_final:
+    external: true
+
+networks:
+  vat-live-net:
+    external: true

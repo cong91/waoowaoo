@@ -33,8 +33,7 @@
   "journeyKickoffFilm": "开始 Film",
   "journeyKickoffManga": "开始 Manga",
   "workflowRail": {
-    "title": "工作流步骤",
-    "subtitle": "用于切换 workspace 的执行步骤。"
+    "title": "工作流"
   },
   "wizard": {
     "modalIntro": "先选择你想创建的内容，再继续设置风格和故事起点。",

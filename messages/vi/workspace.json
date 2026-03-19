@@ -33,8 +33,7 @@
   "journeyKickoffFilm": "Khởi tạo Film",
   "journeyKickoffManga": "Khởi tạo Manga",
   "workflowRail": {
-    "title": "Các bước workflow",
-    "subtitle": "Điều hướng các bước thực thi của workspace."
+    "title": "Quy trình làm việc"
   },
   "wizard": {
     "modalIntro": "Chọn điều bạn muốn tạo, sau đó tiếp tục với phong cách và điểm bắt đầu cho câu chuyện.",

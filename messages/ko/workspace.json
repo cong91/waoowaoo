@@ -33,8 +33,7 @@
   "journeyKickoffFilm": "필름 시작",
   "journeyKickoffManga": "만화 시작",
   "workflowRail": {
-    "title": "워크플로 단계",
-    "subtitle": "워크스페이스 실행 단계를 이동합니다."
+    "title": "워크플로"
   },
   "wizard": {
     "modalIntro": "먼저 무엇을 만들지 선택한 뒤, 스타일과 이야기 시작점을 설정하세요.",

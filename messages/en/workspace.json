@@ -33,8 +33,7 @@
   "journeyKickoffFilm": "Start film",
   "journeyKickoffManga": "Start manga",
   "workflowRail": {
-    "title": "Workflow steps",
-    "subtitle": "Navigate the workspace execution flow."
+    "title": "Workflow"
   },
   "wizard": {
     "modalIntro": "Choose what you want to create, then continue with style and story setup.",
