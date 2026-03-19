@@ -22,6 +22,7 @@ interface CapsuleNavProps {
     onItemClick: (id: string) => void
     projectId?: string  // 用于构建链接
     episodeId?: string  // 用于构建链接
+    orientation?: 'horizontal' | 'vertical'
 }
 
 /**
@@ -35,7 +36,8 @@ function NavItem({
     status,
     href,
     disabled,
-    disabledLabel
+    disabledLabel,
+    orientation = 'horizontal'
 }: {
     active: boolean
     onClick: () => void
@@ -44,6 +46,7 @@ function NavItem({
     href?: string
     disabled?: boolean
     disabledLabel?: string
+    orientation?: 'horizontal' | 'vertical'
 }) {
     const handleClick = (e: React.MouseEvent) => {
         if (disabled) return
@@ -71,7 +74,10 @@ function NavItem({
                 onAuxClick={handleAuxClick}
                 disabled={disabled}
                 className={`
-                    relative flex min-h-[46px] sm:min-h-[52px] items-center gap-1 px-3 sm:px-6 pt-2.5 sm:pt-3.5 pb-3 sm:pb-4 transition-all duration-300 ease-out
+                    relative flex transition-all duration-300 ease-out
+                    ${orientation === 'vertical'
+                        ? 'w-full min-h-[54px] items-start justify-center rounded-2xl px-4 py-3 text-left'
+                        : 'min-h-[46px] sm:min-h-[52px] items-center gap-1 px-3 sm:px-6 pt-2.5 sm:pt-3.5 pb-3 sm:pb-4'}
                     ${disabled
                         ? 'cursor-not-allowed'
                         : active
@@ -85,22 +91,28 @@ function NavItem({
                         {label}
                     </span>
                 ) : (
-                    <span className="text-sm sm:text-base font-semibold">{label}</span>
+                    <span className={`${orientation === 'vertical' ? 'text-sm leading-tight' : 'text-sm sm:text-base'} font-semibold`}>
+                        {label}
+                    </span>
                 )}
-                {/* 底部指示条 */}
-                <span className={`absolute bottom-1.5 left-1/2 -translate-x-1/2 h-[3px] rounded-full transition-all duration-300 ease-out
-                    ${active
-                        ? 'w-6 bg-gradient-to-r from-[var(--glass-accent-from)] to-[var(--glass-accent-to)] shadow-[0_2px_8px_var(--glass-accent-shadow-soft)]'
-                        : 'w-0 bg-transparent'
+                {/* 指示条 */}
+                <span className={`absolute transition-all duration-300 ease-out
+                    ${orientation === 'vertical'
+                        ? `left-1.5 top-1/2 h-8 -translate-y-1/2 rounded-full ${active
+                            ? 'w-[3px] bg-gradient-to-b from-[var(--glass-accent-from)] to-[var(--glass-accent-to)] shadow-[0_2px_8px_var(--glass-accent-shadow-soft)]'
+                            : 'w-0 bg-transparent'}`
+                        : `bottom-1.5 left-1/2 h-[3px] -translate-x-1/2 rounded-full ${active
+                            ? 'w-6 bg-gradient-to-r from-[var(--glass-accent-from)] to-[var(--glass-accent-to)] shadow-[0_2px_8px_var(--glass-accent-shadow-soft)]'
+                            : 'w-0 bg-transparent'}`
                     }`}
                 />
                 {status === 'ready' && !disabled && (
-                    <span className={`absolute top-2 right-2 w-1.5 h-1.5 rounded-full transition-colors
+                    <span className={`absolute ${orientation === 'vertical' ? 'top-1/2 right-3 -translate-y-1/2' : 'top-2 right-2'} w-1.5 h-1.5 rounded-full transition-colors
                         ${active ? 'bg-[var(--glass-tone-info-fg)]' : 'bg-[var(--glass-tone-success-fg)]'}`}
                     />
                 )}
                 {status === 'processing' && !disabled && (
-                    <span className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-[var(--glass-accent-from)] animate-pulse" />
+                    <span className={`absolute ${orientation === 'vertical' ? 'top-1/2 right-3 -translate-y-1/2' : 'top-2 right-2'} w-1.5 h-1.5 rounded-full bg-[var(--glass-accent-from)] animate-pulse`} />
                 )}
             </button>
             {disabled && disabledLabel && (
@@ -120,7 +132,7 @@ function NavItem({
  * CapsuleNav - 胶囊形态悬浮导航
  * 支持中键和Ctrl+点击在新标签页打开
  */
-export function CapsuleNav({ items, activeId, onItemClick, projectId, episodeId }: CapsuleNavProps) {
+export function CapsuleNav({ items, activeId, onItemClick, projectId, episodeId, orientation = 'horizontal' }: CapsuleNavProps) {
     // 构建每个导航项的链接地址
     const buildHref = (stageId: string): string | undefined => {
         if (!projectId) return undefined
@@ -133,9 +145,11 @@ export function CapsuleNav({ items, activeId, onItemClick, projectId, episodeId 
     }
 
     return (
-        <nav className="fixed top-[calc(env(safe-area-inset-top,0px)+8.75rem)] sm:top-[calc(env(safe-area-inset-top,0px)+8rem)] left-1/2 -translate-x-1/2 z-[55] w-[calc(100vw-1rem)] sm:w-auto animate-fadeInDown">
+        <nav className="w-full animate-fadeInDown">
             <div
-                className="flex overflow-x-auto rounded-full px-1.5 sm:px-2 py-1 no-scrollbar"
+                className={`${orientation === 'vertical'
+                    ? 'flex w-full flex-col gap-1.5 rounded-[1.5rem] p-2'
+                    : 'flex w-full overflow-x-auto rounded-[1.75rem] px-1.5 sm:px-2 py-1 no-scrollbar justify-start xl:justify-center'}`}
                 style={{
                     background: 'rgba(255,255,255,0.55)',
                     backdropFilter: 'blur(24px) saturate(1.6)',
@@ -154,6 +168,7 @@ export function CapsuleNav({ items, activeId, onItemClick, projectId, episodeId 
                         href={buildHref(item.id)}
                         disabled={item.disabled}
                         disabledLabel={item.disabledLabel}
+                        orientation={orientation}
                     />
                 ))}
             </div>
@@ -215,10 +230,10 @@ export function EpisodeSelector({
     if (!currentEp) return null
 
     return (
-        <div className="fixed top-[calc(env(safe-area-inset-top,0px)+8.75rem)] sm:top-[calc(env(safe-area-inset-top,0px)+8rem)] left-3 sm:left-6 z-[56] max-w-[calc(100vw-0.75rem)] sm:max-w-none" ref={menuRef}>
+        <div className="w-full max-w-full sm:max-w-none" ref={menuRef}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="glass-btn-base glass-btn-secondary flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 transition-all group w-full sm:w-auto"
+                className="glass-btn-base glass-btn-secondary flex w-full items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 transition-all group"
                 style={{ borderRadius: '1.5rem' }}
             >
                 <div className="glass-surface-soft flex h-10 w-10 items-center justify-center rounded-xl text-xs font-bold text-[var(--glass-tone-info-fg)]">
@@ -236,7 +251,7 @@ export function EpisodeSelector({
             </button>
 
             {isOpen && (
-                <div className="glass-surface-modal absolute left-0 top-full mt-2 w-72 origin-top-left p-2 animate-fadeIn">
+                <div className="glass-surface-modal absolute left-0 top-full mt-2 w-full min-w-[18rem] sm:w-72 origin-top-left p-2 animate-fadeIn">
                     <div className="max-h-[300px] overflow-y-auto custom-scrollbar space-y-1">
                         {episodes.map(ep => {
                             const statusColor = ep.status?.visual === 'ready'

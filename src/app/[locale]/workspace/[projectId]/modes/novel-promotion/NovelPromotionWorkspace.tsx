@@ -8,6 +8,7 @@ import WorkspaceRunStreamConsoles from './components/WorkspaceRunStreamConsoles'
 import WorkspaceStageContent from './components/WorkspaceStageContent'
 import WorkspaceAssetLibraryModal from './components/WorkspaceAssetLibraryModal'
 import WorkspaceHeaderShell from './components/WorkspaceHeaderShell'
+import WorkspaceWorkflowSidebar from './components/WorkspaceWorkflowSidebar'
 import { WorkspaceStageRuntimeProvider } from './WorkspaceStageRuntimeContext'
 import { useNovelPromotionWorkspaceController } from './hooks/useNovelPromotionWorkspaceController'
 import type { NovelPromotionWorkspaceProps } from './types'
@@ -64,8 +65,6 @@ function NovelPromotionWorkspaceContent(props: NovelPromotionWorkspaceProps) {
         capsuleNavItems={vm.stageNav.capsuleNavItems}
         currentStage={vm.stageNav.currentStage}
         onStageChange={vm.stageNav.handleStageChange}
-        projectId={projectId}
-        episodeId={episodeId}
         onOpenAssetLibrary={() => vm.ui.openAssetLibrary()}
         onOpenSettingsModal={() => vm.ui.setIsSettingsModalOpen(true)}
         onRefresh={() => vm.ui.onRefresh({ mode: 'full' })}
@@ -75,10 +74,22 @@ function NovelPromotionWorkspaceContent(props: NovelPromotionWorkspaceProps) {
         journeyType={vm.runtime.stageRuntime.journeyType}
       />
 
-      <div className="pt-36 sm:pt-32">
-        <WorkspaceStageRuntimeProvider value={vm.runtime.stageRuntime}>
-          <WorkspaceStageContent currentStage={vm.stageNav.currentStage} />
-        </WorkspaceStageRuntimeProvider>
+      <div className="pt-4 sm:pt-5 xl:grid xl:grid-cols-[minmax(0,1fr)_18rem] xl:gap-5 xl:items-start">
+        <div className="min-w-0">
+          <WorkspaceStageRuntimeProvider value={vm.runtime.stageRuntime}>
+            <WorkspaceStageContent currentStage={vm.stageNav.currentStage} />
+          </WorkspaceStageRuntimeProvider>
+        </div>
+
+        <WorkspaceWorkflowSidebar
+          items={vm.stageNav.capsuleNavItems}
+          activeId={vm.stageNav.currentStage}
+          onItemClick={vm.stageNav.handleStageChange}
+          projectId={projectId}
+          episodeId={episodeId}
+          kickoffLabel={vm.runtime.stageRuntime.journeyType === 'manga_webtoon' ? vm.i18n.t('journeyKickoffManga') : vm.i18n.t('journeyKickoffFilm')}
+          onKickoff={() => vm.stageNav.handleStageChange('config')}
+        />
 
         <WorkspaceAssetLibraryModal
           isOpen={vm.ui.isAssetLibraryOpen}

@@ -30,8 +30,12 @@
   "journeyBadgeManga": "Manga / Webtoon",
   "journeyRuntimeSubtitleFilm": "이 프로젝트를 Film/Video 흐름에서 편집하고 있습니다.",
   "journeyRuntimeSubtitleManga": "이 프로젝트를 Manga/Webtoon 흐름에서 편집하고 있습니다.",
-  "journeyKickoffFilm": "Film kickoff",
-  "journeyKickoffManga": "Manga kickoff",
+  "journeyKickoffFilm": "필름 시작",
+  "journeyKickoffManga": "만화 시작",
+  "workflowRail": {
+    "title": "워크플로 단계",
+    "subtitle": "워크스페이스 실행 단계를 이동합니다."
+  },
   "wizard": {
     "modalIntro": "먼저 무엇을 만들지 선택한 뒤, 스타일과 이야기 시작점을 설정하세요.",
     "stepJourney": "무엇을 만들고 싶나요?",
@@ -54,7 +58,17 @@
       "blank": "빈 상태로 시작",
       "story_text": "스토리 텍스트",
       "import_script": "스크립트 가져오기"
-    }
+    },
+    "modalIntroStory": "현재 비디오 프로젝트를 생성 중입니다. Story Studio에 맞는 스타일과 소스 설정으로 계속 진행하세요.",
+    "modalIntroManga": "현재 만화/웹툰 프로젝트를 생성 중입니다. Manga Studio에 맞는 스타일과 소스 설정으로 계속 진행하세요.",
+    "stepProjectDetailsStory": "프로젝트 정보 (비디오)",
+    "stepProjectDetailsManga": "프로젝트 정보 (만화)",
+    "projectDetailsHintStory": "이 흐름은 비디오 제작용입니다. 프로젝트 정보를 입력한 뒤 스타일/소스 단계로 진행하세요.",
+    "projectDetailsHintManga": "이 흐름은 만화/웹툰 제작용입니다. 프로젝트 정보를 입력한 뒤 패널 중심 스타일/소스 단계로 진행하세요.",
+    "nextToTemplateStory": "비디오 템플릿으로 이동",
+    "nextToTemplateManga": "만화 템플릿으로 이동",
+    "startCreatingStory": "비디오 프로젝트 시작",
+    "startCreatingManga": "만화 프로젝트 시작"
   },
   "visualFirst": {
     "style": {

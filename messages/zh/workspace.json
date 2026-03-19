@@ -30,8 +30,12 @@
   "journeyBadgeManga": "Manga / Webtoon",
   "journeyRuntimeSubtitleFilm": "你当前正在用 Film/Video 流程编辑这个项目。",
   "journeyRuntimeSubtitleManga": "你当前正在用 Manga/Webtoon 流程编辑这个项目。",
-  "journeyKickoffFilm": "Film kickoff",
-  "journeyKickoffManga": "Manga kickoff",
+  "journeyKickoffFilm": "开始 Film",
+  "journeyKickoffManga": "开始 Manga",
+  "workflowRail": {
+    "title": "工作流步骤",
+    "subtitle": "用于切换 workspace 的执行步骤。"
+  },
   "wizard": {
     "modalIntro": "先选择你想创建的内容，再继续设置风格和故事起点。",
     "stepJourney": "你想创建什么？",
@@ -54,7 +58,17 @@
       "blank": "空白开始",
       "story_text": "故事文本",
       "import_script": "导入脚本"
-    }
+    },
+    "modalIntroStory": "你正在创建视频项目。请继续完成 Story Studio 的风格与内容来源设置。",
+    "modalIntroManga": "你正在创建漫画/条漫项目。请继续完成 Manga Studio 的风格与内容来源设置。",
+    "stepProjectDetailsStory": "项目信息（视频）",
+    "stepProjectDetailsManga": "项目信息（漫画）",
+    "projectDetailsHintStory": "当前是视频工作流。先填写项目信息，再继续选择风格与内容来源。",
+    "projectDetailsHintManga": "当前是漫画/条漫工作流。先填写项目信息，再继续选择面板优先风格与内容来源。",
+    "nextToTemplateStory": "继续到视频模板",
+    "nextToTemplateManga": "继续到漫画模板",
+    "startCreatingStory": "开始创建视频项目",
+    "startCreatingManga": "开始创建漫画项目"
   },
   "visualFirst": {
     "style": {

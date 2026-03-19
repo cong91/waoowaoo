@@ -30,8 +30,12 @@
   "journeyBadgeManga": "Manga / Webtoon",
   "journeyRuntimeSubtitleFilm": "You're editing this project in the Film/Video flow.",
   "journeyRuntimeSubtitleManga": "You're editing this project in the Manga/Webtoon flow.",
-  "journeyKickoffFilm": "Film kickoff",
-  "journeyKickoffManga": "Manga kickoff",
+  "journeyKickoffFilm": "Start film",
+  "journeyKickoffManga": "Start manga",
+  "workflowRail": {
+    "title": "Workflow steps",
+    "subtitle": "Navigate the workspace execution flow."
+  },
   "wizard": {
     "modalIntro": "Choose what you want to create, then continue with style and story setup.",
     "stepJourney": "Choose what you want to create",
@@ -54,7 +58,17 @@
       "blank": "Start blank",
       "story_text": "Story text",
       "import_script": "Import script"
-    }
+    },
+    "modalIntroStory": "You are creating a video project. Continue with style and source setup for Story Studio.",
+    "modalIntroManga": "You are creating a manga/webtoon project. Continue with style and source setup for Manga Studio.",
+    "stepProjectDetailsStory": "Project details (Video)",
+    "stepProjectDetailsManga": "Project details (Manga)",
+    "projectDetailsHintStory": "This is a video workflow. Add project details, then continue to visual style and source setup.",
+    "projectDetailsHintManga": "This is a manga/webtoon workflow. Add project details, then continue to panel-first style and source setup.",
+    "nextToTemplateStory": "Continue to video templates",
+    "nextToTemplateManga": "Continue to manga templates",
+    "startCreatingStory": "Start video project",
+    "startCreatingManga": "Start manga project"
   },
   "visualFirst": {
     "style": {
@@ -246,13 +260,5 @@
   },
   "newStoryProject": "Start Video from Story",
   "newMangaProject": "Start Manga from Idea",
-  "projectTypeMangaHint": "Start with 1–3 sentences. No screenplay required.",
-  "showInternalProjects": "Show internal/test projects",
-  "hideInternalProjects": "Hide internal/test projects",
-  "internalProjectsHint": "Internal and test projects are hidden by default so the workspace stays cleaner for real production work.",
-  "internalProjectsCount": "{count} internal/test projects hidden",
-  "projectCardSourceDescription": "Project description",
-  "projectCardSourceStory": "First story preview",
-  "projectCardUpdated": "Updated",
-  "projectCardNoContent": "No episodes, images, or videos yet"
+  "projectTypeMangaHint": "Start with 1–3 sentences. No screenplay required."
 }

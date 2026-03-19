@@ -30,8 +30,12 @@
   "journeyBadgeManga": "Manga / Webtoon",
   "journeyRuntimeSubtitleFilm": "Bạn đang chỉnh dự án này trong flow Film/Video.",
   "journeyRuntimeSubtitleManga": "Bạn đang chỉnh dự án này trong flow Manga/Webtoon.",
-  "journeyKickoffFilm": "Kickoff Film",
-  "journeyKickoffManga": "Kickoff Manga",
+  "journeyKickoffFilm": "Khởi tạo Film",
+  "journeyKickoffManga": "Khởi tạo Manga",
+  "workflowRail": {
+    "title": "Các bước workflow",
+    "subtitle": "Điều hướng các bước thực thi của workspace."
+  },
   "wizard": {
     "modalIntro": "Chọn điều bạn muốn tạo, sau đó tiếp tục với phong cách và điểm bắt đầu cho câu chuyện.",
     "stepJourney": "Bạn muốn tạo gì?",
@@ -54,7 +58,17 @@
       "blank": "Bắt đầu trống",
       "story_text": "Văn bản truyện",
       "import_script": "Import script"
-    }
+    },
+    "modalIntroStory": "Bạn đang tạo dự án video. Tiếp tục với phần style và nguồn nội dung cho Story Studio.",
+    "modalIntroManga": "Bạn đang tạo dự án manga/webtoon. Tiếp tục với phần style và nguồn nội dung cho Manga Studio.",
+    "stepProjectDetailsStory": "Thông tin dự án (Video)",
+    "stepProjectDetailsManga": "Thông tin dự án (Manga)",
+    "projectDetailsHintStory": "Đây là flow video. Nhập thông tin dự án rồi chuyển sang bước style và nguồn nội dung.",
+    "projectDetailsHintManga": "Đây là flow manga/webtoon. Nhập thông tin dự án rồi chuyển sang bước style panel-first và nguồn nội dung.",
+    "nextToTemplateStory": "Tiếp tục tới template video",
+    "nextToTemplateManga": "Tiếp tục tới template manga",
+    "startCreatingStory": "Bắt đầu dự án video",
+    "startCreatingManga": "Bắt đầu dự án manga"
   },
   "visualFirst": {
     "style": {
