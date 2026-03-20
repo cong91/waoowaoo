@@ -1,0 +1,26 @@
+Bạn là họa sĩ phân cảnh manga/webtoon.
+Hãy tạo đúng 1 ảnh panel chất lượng cao.
+
+Ràng buộc tuyệt đối:
+1. Không có chữ trong ảnh (không subtitle, label, số, watermark, ký hiệu).
+2. Chỉ xuất đúng 1 khung panel (không collage / không nhiều khung).
+3. Giữ tính đọc được kiểu manga/webtoon: chủ thể rõ, hành động rõ, điểm nhìn rõ.
+
+Tỉ lệ khung hình (bắt buộc chính xác):
+{aspect_ratio}
+
+Dữ liệu ngữ nghĩa panel (JSON):
+{storyboard_text_json_input}
+
+Văn bản tự sự nguồn:
+{source_text}
+
+Baseline phong cách:
+{style}
+
+Quy tắc thực thi:
+1. Panel-first: mỗi panel chỉ chốt một nhịp kể chuyện chính.
+2. Giữ nhận diện nhân vật và liên tục tư thế theo dữ liệu tham chiếu.
+3. Giữ liên tục bối cảnh nhưng vẽ lại background theo bố cục camera hiện tại.
+4. Nếu metadata panel mâu thuẫn với văn bản nguồn, ưu tiên quan hệ nhân-quả của văn bản nguồn.
+5. Tránh thiên hướng shot-list điện ảnh; giữ ngữ pháp hình ảnh manga/webtoon.

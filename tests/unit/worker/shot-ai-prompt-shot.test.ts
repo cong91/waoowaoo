@@ -12,6 +12,10 @@ const runtimeMock = vi.hoisted(() => ({
   assertTaskActive: vi.fn(async () => undefined),
 }))
 
+const promptI18nMock = vi.hoisted(() => ({
+  buildPrompt: vi.fn(() => 'shot-final-prompt'),
+}))
+
 vi.mock('@/lib/workers/handlers/shot-ai-persist', () => persistMock)
 vi.mock('@/lib/workers/handlers/shot-ai-prompt-runtime', () => ({
   runShotPromptCompletion: runtimeMock.runShotPromptCompletion,
@@ -22,9 +26,22 @@ vi.mock('@/lib/workers/shared', () => ({
 vi.mock('@/lib/workers/utils', () => ({
   assertTaskActive: runtimeMock.assertTaskActive,
 }))
+vi.mock('@/lib/novel-promotion/lane-orchestration-policy', () => ({
+  resolveLaneOrchestrationMetadata: vi.fn((payload: Record<string, unknown>) => ({
+    runtimeLane: payload.runtimeLane === 'manga_webtoon' ? 'manga_webtoon' : 'film_video',
+  })),
+  resolveLanePromptId: vi.fn((input: {
+    metadata: { runtimeLane: 'film_video' | 'manga_webtoon' }
+    filmPromptId: string
+    mangaPromptId: string
+  }) => (input.metadata.runtimeLane === 'manga_webtoon' ? input.mangaPromptId : input.filmPromptId)),
+}))
 vi.mock('@/lib/prompt-i18n', () => ({
-  PROMPT_IDS: { NP_IMAGE_PROMPT_MODIFY: 'np_image_prompt_modify' },
-  buildPrompt: vi.fn(() => 'shot-final-prompt'),
+  PROMPT_IDS: {
+    NP_IMAGE_PROMPT_MODIFY: 'np_image_prompt_modify',
+    MW_IMAGE_PROMPT_MODIFY: 'mw_image_prompt_modify',
+  },
+  buildPrompt: promptI18nMock.buildPrompt,
 }))
 
 import { handleModifyShotPromptTask } from '@/lib/workers/handlers/shot-ai-prompt-shot'
@@ -59,17 +76,24 @@ describe('worker shot-ai-prompt-shot behavior', () => {
     await expect(handleModifyShotPromptTask(job, payload)).rejects.toThrow('currentPrompt is required')
   })
 
-  it('success -> returns modified image/video prompts and passes referencedAssets', async () => {
+  it('film lane -> uses NP modify prompt id', async () => {
     const payload = {
       currentPrompt: 'old image prompt',
       currentVideoPrompt: 'old video prompt',
       modifyInstruction: 'new camera movement',
       referencedAssets: [{ name: 'Hero', description: 'black coat' }],
+      runtimeLane: 'film_video' as const,
     }
     const job = buildJob(payload)
 
     const result = await handleModifyShotPromptTask(job, payload)
 
+    expect(promptI18nMock.buildPrompt).toHaveBeenCalledWith(expect.objectContaining({
+      promptId: 'np_image_prompt_modify',
+    }))
+    expect(promptI18nMock.buildPrompt).not.toHaveBeenCalledWith(expect.objectContaining({
+      promptId: 'mw_image_prompt_modify',
+    }))
     expect(runtimeMock.runShotPromptCompletion).toHaveBeenCalledWith(expect.objectContaining({
       action: 'ai_modify_shot_prompt',
       prompt: 'shot-final-prompt',
@@ -80,5 +104,25 @@ describe('worker shot-ai-prompt-shot behavior', () => {
       modifiedVideoPrompt: 'updated video prompt',
       referencedAssets: [{ name: 'Hero', description: 'black coat' }],
     })
+  })
+
+  it('manga lane -> uses MW modify prompt id', async () => {
+    const payload = {
+      currentPrompt: 'old image prompt',
+      currentVideoPrompt: 'old video prompt',
+      modifyInstruction: 'switch to panel pacing',
+      referencedAssets: [],
+      runtimeLane: 'manga_webtoon' as const,
+    }
+    const job = buildJob(payload)
+
+    await handleModifyShotPromptTask(job, payload)
+
+    expect(promptI18nMock.buildPrompt).toHaveBeenCalledWith(expect.objectContaining({
+      promptId: 'mw_image_prompt_modify',
+    }))
+    expect(promptI18nMock.buildPrompt).not.toHaveBeenCalledWith(expect.objectContaining({
+      promptId: 'np_image_prompt_modify',
+    }))
   })
 })

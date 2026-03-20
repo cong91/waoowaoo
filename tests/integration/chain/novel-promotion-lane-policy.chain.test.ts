@@ -106,8 +106,10 @@ vi.mock('@/lib/prompt-i18n', () => ({
     NP_AGENT_CHARACTER_PROFILE: 'a',
     NP_SELECT_LOCATION: 'b',
     NP_AGENT_CLIP: 'c',
+    MW_AGENT_CLIP: 'mw-c',
     NP_SCREENPLAY_CONVERSION: 'd',
     NP_AGENT_STORYBOARD_PLAN: 'plan',
+    MW_AGENT_STORYBOARD_PLAN: 'mw-plan',
     NP_AGENT_CINEMATOGRAPHER: 'cin',
     NP_AGENT_ACTING_DIRECTION: 'act',
     NP_AGENT_STORYBOARD_DETAIL: 'detail',
@@ -290,6 +292,7 @@ describe('chain contract - lane metadata propagates API -> queue -> worker/orche
   it('story_to_script run propagates lane metadata and applies manga prompt directive', async () => {
     const { addTaskJob, QUEUE_NAME } = await import('@/lib/task/queues')
     const { handleStoryToScriptTask } = await import('@/lib/workers/handlers/story-to-script')
+    const { getPromptTemplate } = await import('@/lib/prompt-i18n')
 
     await addTaskJob({
       taskId: 'task-story-chain-1',
@@ -330,6 +333,10 @@ describe('chain contract - lane metadata propagates API -> queue -> worker/orche
     }))
 
     expect(orchestratorStoryState.lastInput?.promptDirective).toEqual(expect.stringContaining('Lane=manga_webtoon'))
+    expect(orchestratorStoryState.lastInput?.promptDirective).toEqual(
+      expect.stringContaining('avoid film/video shot-list bias'),
+    )
+    expect(getPromptTemplate).toHaveBeenCalledWith('mw-c', 'vi')
   })
 
   it('script_to_storyboard run propagates lane metadata and applies film prompt directive', async () => {
@@ -350,6 +357,7 @@ describe('chain contract - lane metadata propagates API -> queue -> worker/orche
 
     const { addTaskJob, QUEUE_NAME } = await import('@/lib/task/queues')
     const { handleScriptToStoryboardTask } = await import('@/lib/workers/handlers/script-to-storyboard')
+    const { getPromptTemplate } = await import('@/lib/prompt-i18n')
 
     await addTaskJob({
       taskId: 'task-storyboard-chain-1',
@@ -389,5 +397,6 @@ describe('chain contract - lane metadata propagates API -> queue -> worker/orche
     }))
 
     expect(orchestratorStoryboardState.lastInput?.promptDirective).toEqual(expect.stringContaining('Lane=film_video'))
+    expect(getPromptTemplate).toHaveBeenCalledWith('plan', 'vi')
   })
 })

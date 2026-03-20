@@ -1,6 +1,7 @@
 import type { ProductEntryIntent, ProductJourneyType } from '@/lib/workspace/project-mode'
 import type { OnboardingSourceType } from '@/lib/workspace/onboarding-context'
 import type { GenerationStage } from '@/lib/workspace/journey-generation-runtime'
+import { PROMPT_IDS, type PromptId } from '@/lib/prompt-i18n'
 
 type AnyObj = Record<string, unknown>
 
@@ -126,6 +127,58 @@ export function resolveLaneModelPolicyAdjustments(input: LaneOrchestrationMetada
     reasoning: true,
     reasoningEffort: 'medium',
   }
+}
+
+const MANGA_PROMPT_ID_SET = new Set<PromptId>([
+  PROMPT_IDS.MW_AGENT_CLIP,
+  PROMPT_IDS.MW_AGENT_STORYBOARD_PLAN,
+  PROMPT_IDS.MW_PANEL_IMAGE_PROMPT,
+  PROMPT_IDS.MW_IMAGE_PROMPT_MODIFY,
+])
+
+const FILM_PROMPT_ID_SET = new Set<PromptId>([
+  PROMPT_IDS.NP_AGENT_CLIP,
+  PROMPT_IDS.NP_AGENT_STORYBOARD_PLAN,
+  PROMPT_IDS.NP_SINGLE_PANEL_IMAGE,
+  PROMPT_IDS.NP_IMAGE_PROMPT_MODIFY,
+])
+
+export function assertLanePromptInvariant(input: {
+  runtimeLane: ProductJourneyType
+  promptId: PromptId
+  stage: string
+}) {
+  const { runtimeLane, promptId, stage } = input
+  if (runtimeLane === 'manga_webtoon' && !MANGA_PROMPT_ID_SET.has(promptId)) {
+    throw new Error(
+      `LANE_PROMPT_INVARIANT_VIOLATION: lane=${runtimeLane} stage=${stage} promptId=${promptId} is not manga-webtoon scoped`,
+    )
+  }
+
+  if (runtimeLane === 'film_video' && !FILM_PROMPT_ID_SET.has(promptId)) {
+    throw new Error(
+      `LANE_PROMPT_INVARIANT_VIOLATION: lane=${runtimeLane} stage=${stage} promptId=${promptId} is not film-video scoped`,
+    )
+  }
+}
+
+export function resolveLanePromptId(input: {
+  metadata: LaneOrchestrationMetadata
+  filmPromptId: PromptId
+  mangaPromptId: PromptId
+  stage: string
+}): PromptId {
+  const promptId = input.metadata.runtimeLane === 'manga_webtoon'
+    ? input.mangaPromptId
+    : input.filmPromptId
+
+  assertLanePromptInvariant({
+    runtimeLane: input.metadata.runtimeLane,
+    promptId,
+    stage: input.stage,
+  })
+
+  return promptId
 }
 
 export function buildLanePromptDirective(input: LaneOrchestrationMetadata): string {

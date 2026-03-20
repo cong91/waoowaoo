@@ -155,6 +155,7 @@ vi.mock('@/lib/workers/handlers/llm-stream', () => ({
 vi.mock('@/lib/prompt-i18n', () => ({
   PROMPT_IDS: {
     NP_AGENT_STORYBOARD_PLAN: 'plan',
+    MW_AGENT_STORYBOARD_PLAN: 'mw-plan',
     NP_AGENT_CINEMATOGRAPHER: 'cinematographer',
     NP_AGENT_ACTING_DIRECTION: 'acting',
     NP_AGENT_STORYBOARD_DETAIL: 'detail',
@@ -321,6 +322,22 @@ describe('worker script-to-storyboard behavior', () => {
       matchedStoryboardId: 'storyboard-1',
       matchedPanelIndex: 1,
     }))
+  })
+
+  it('manga_webtoon lane uses manga storyboard plan prompt id', async () => {
+    const { getPromptTemplate } = await import('@/lib/prompt-i18n')
+    const job = buildJob({
+      episodeId: 'episode-1',
+      runtimeLane: 'manga_webtoon',
+      stageProfile: 'script_to_storyboard',
+      entryIntent: 'manga_story_to_panels',
+      sourceType: 'story_text',
+    })
+
+    await handleScriptToStoryboardTask(job)
+
+    expect(getPromptTemplate).toHaveBeenCalledWith('mw-plan', 'zh')
+    expect(getPromptTemplate).not.toHaveBeenCalledWith('plan', 'zh')
   })
 
   it('voice 解析失败后会重试一次再成功', async () => {

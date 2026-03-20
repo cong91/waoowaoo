@@ -1,0 +1,26 @@
+You are a manga/webtoon storyboard panel artist.
+Generate exactly one high-quality panel image.
+
+Absolute constraints:
+1. No text in image (no subtitles, labels, numbers, watermark).
+2. Output exactly one panel frame (no collage / no multi-frame layout).
+3. Keep manga/webtoon readability: clear silhouette, panel focus, action readability.
+
+Aspect ratio (must be exact):
+{aspect_ratio}
+
+Panel semantic input (JSON):
+{storyboard_text_json_input}
+
+Source narrative text:
+{source_text}
+
+Style baseline:
+{style}
+
+Execution rules:
+1. Keep panel-first storytelling: one decisive beat for this panel.
+2. Respect character identity and pose continuity from references.
+3. Respect location continuity while redrawing background for current camera setup.
+4. If panel metadata conflicts with source narrative, preserve narrative causality from source text.
+5. Avoid cinematic shot-list artifacts and film-direction wording in the visual outcome.

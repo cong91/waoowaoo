@@ -30,6 +30,10 @@ export const PROMPT_CATALOG: Record<PromptId, PromptCatalogEntry> = {
     pathStem: 'novel-promotion/agent_clip',
     variableKeys: ['input', 'locations_lib_name', 'characters_lib_name', 'characters_introduction'],
   },
+  [PROMPT_IDS.MW_AGENT_CLIP]: {
+    pathStem: 'manga-webtoon/agent_clip',
+    variableKeys: ['input', 'locations_lib_name', 'characters_lib_name', 'characters_introduction'],
+  },
   [PROMPT_IDS.NP_AGENT_SHOT_VARIANT_ANALYSIS]: {
     pathStem: 'novel-promotion/agent_shot_variant_analysis',
     variableKeys: ['panel_description', 'shot_type', 'camera_move', 'location', 'characters_info'],
@@ -79,6 +83,18 @@ export const PROMPT_CATALOG: Record<PromptId, PromptCatalogEntry> = {
       'clip_content',
     ],
   },
+  [PROMPT_IDS.MW_AGENT_STORYBOARD_PLAN]: {
+    pathStem: 'manga-webtoon/agent_storyboard_plan',
+    variableKeys: [
+      'characters_lib_name',
+      'locations_lib_name',
+      'characters_introduction',
+      'characters_appearance_list',
+      'characters_full_description',
+      'clip_json',
+      'clip_content',
+    ],
+  },
   [PROMPT_IDS.NP_CHARACTER_CREATE]: {
     pathStem: 'novel-promotion/character_create',
     variableKeys: ['user_input'],
@@ -101,6 +117,10 @@ export const PROMPT_CATALOG: Record<PromptId, PromptCatalogEntry> = {
   },
   [PROMPT_IDS.NP_IMAGE_PROMPT_MODIFY]: {
     pathStem: 'novel-promotion/image_prompt_modify',
+    variableKeys: ['prompt_input', 'user_input', 'video_prompt_input'],
+  },
+  [PROMPT_IDS.MW_IMAGE_PROMPT_MODIFY]: {
+    pathStem: 'manga-webtoon/image_prompt_modify',
     variableKeys: ['prompt_input', 'user_input', 'video_prompt_input'],
   },
   [PROMPT_IDS.NP_LOCATION_CREATE]: {
@@ -129,6 +149,10 @@ export const PROMPT_CATALOG: Record<PromptId, PromptCatalogEntry> = {
   },
   [PROMPT_IDS.NP_SINGLE_PANEL_IMAGE]: {
     pathStem: 'novel-promotion/single_panel_image',
+    variableKeys: ['storyboard_text_json_input', 'source_text', 'aspect_ratio', 'style'],
+  },
+  [PROMPT_IDS.MW_PANEL_IMAGE_PROMPT]: {
+    pathStem: 'manga-webtoon/panel_image_prompt',
     variableKeys: ['storyboard_text_json_input', 'source_text', 'aspect_ratio', 'style'],
   },
   [PROMPT_IDS.NP_STORYBOARD_EDIT]: {

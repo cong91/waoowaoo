@@ -11,6 +11,7 @@ import {
   type AnyObj,
 } from './shot-ai-prompt-utils'
 import { buildPrompt, PROMPT_IDS } from '@/lib/prompt-i18n'
+import { resolveLaneOrchestrationMetadata, resolveLanePromptId } from '@/lib/novel-promotion/lane-orchestration-policy'
 
 export async function handleModifyShotPromptTask(job: Job<TaskJobData>, payload: AnyObj) {
   const currentPrompt = readRequiredString(payload.currentPrompt, 'currentPrompt')
@@ -33,8 +34,16 @@ export async function handleModifyShotPromptTask(job: Job<TaskJobData>, payload:
   const userInput = assetDescriptions
     ? `${modifyInstruction}\n\n引用的资产描述：${assetDescriptions}`
     : modifyInstruction
+  const lanePolicy = resolveLaneOrchestrationMetadata(payload)
+  const promptId = resolveLanePromptId({
+    metadata: lanePolicy,
+    filmPromptId: PROMPT_IDS.NP_IMAGE_PROMPT_MODIFY,
+    mangaPromptId: PROMPT_IDS.MW_IMAGE_PROMPT_MODIFY,
+    stage: 'shot_prompt_modify',
+  })
+
   const finalPrompt = buildPrompt({
-    promptId: PROMPT_IDS.NP_IMAGE_PROMPT_MODIFY,
+    promptId,
     locale: job.data.locale,
     variables: {
       prompt_input: currentPrompt,

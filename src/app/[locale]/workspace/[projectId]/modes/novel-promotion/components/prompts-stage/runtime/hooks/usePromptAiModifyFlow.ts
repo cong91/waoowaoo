@@ -15,6 +15,7 @@ export interface PromptAiModifier {
     currentVideoPrompt: string
     modifyInstruction: string
     referencedAssets: PromptAssetReference[]
+    runtimeLane?: 'film_video' | 'manga_webtoon'
   }) => Promise<ModifyShotPromptResult>
 }
 
@@ -24,6 +25,7 @@ interface UsePromptAiModifyFlowParams {
   onUpdatePrompt: (shotId: string, field: 'imagePrompt', value: string) => Promise<void>
   onGenerateImage: (shotId: string, extraReferenceAssetIds?: string[]) => Promise<void> | void
   aiModifyShotPrompt: PromptAiModifier
+  journeyType: 'film_video' | 'manga_webtoon'
   setShotExtraAssets: React.Dispatch<React.SetStateAction<Record<string, string[]>>>
   setEditingPrompt: React.Dispatch<React.SetStateAction<{ shotId: string; field: 'imagePrompt' } | null>>
   setShotEditStates: React.Dispatch<React.SetStateAction<Record<string, PromptShotEditState>>>
@@ -36,6 +38,7 @@ export function usePromptAiModifyFlow({
   onUpdatePrompt,
   onGenerateImage,
   aiModifyShotPrompt,
+  journeyType,
   setShotExtraAssets,
   setEditingPrompt,
   setShotEditStates,
@@ -63,6 +66,7 @@ export function usePromptAiModifyFlow({
         currentVideoPrompt: '',
         modifyInstruction: snapshotAiInstruction,
         referencedAssets: snapshotSelectedAssets,
+        runtimeLane: journeyType,
       })
       await onUpdatePrompt(shotId, 'imagePrompt', data.modifiedImagePrompt)
 

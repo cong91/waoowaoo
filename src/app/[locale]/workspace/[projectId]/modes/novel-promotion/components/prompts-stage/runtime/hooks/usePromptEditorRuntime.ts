@@ -13,6 +13,7 @@ interface UsePromptEditorRuntimeParams {
   onGenerateImage: (shotId: string, extraReferenceAssetIds?: string[]) => Promise<void> | void
   t: (key: string, values?: Record<string, string | number>) => string
   aiModifyShotPrompt: PromptAiModifier
+  journeyType: 'film_video' | 'manga_webtoon'
 }
 
 export function usePromptEditorRuntime({
@@ -20,6 +21,7 @@ export function usePromptEditorRuntime({
   onGenerateImage,
   t,
   aiModifyShotPrompt,
+  journeyType,
 }: UsePromptEditorRuntimeParams) {
   const draftByShot = usePromptDraftByShot()
   const [shotExtraAssets, setShotExtraAssets] = useState<Record<string, string[]>>({})
@@ -31,6 +33,7 @@ export function usePromptEditorRuntime({
     onUpdatePrompt,
     onGenerateImage,
     aiModifyShotPrompt,
+    journeyType,
     setShotExtraAssets,
     setEditingPrompt: draftByShot.setEditingPrompt,
     setShotEditStates: draftByShot.setShotEditStates,

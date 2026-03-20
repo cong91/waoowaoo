@@ -51,6 +51,7 @@ export function usePromptStageActions({
     onUpdatePrompt,
     onGenerateImage,
     aiModifyShotPrompt,
+    journeyType,
     t: (key, values) => t(key as never, values as never),
   })
 

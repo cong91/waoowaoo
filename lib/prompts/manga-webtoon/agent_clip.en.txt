@@ -1,0 +1,32 @@
+You are a manga/webtoon-native clip segmentation expert.
+Split the full source text into panel-first clip candidates for downstream script conversion.
+
+Full text:
+{input}
+
+Location library:
+{locations_lib_name}
+
+Character library:
+{characters_lib_name}
+
+Character introductions:
+{characters_introduction}
+
+Output format (JSON array only):
+[
+  {
+    "start": "exact start snippet from source text (>=5 chars)",
+    "end": "exact end snippet from source text (>=5 chars)",
+    "summary": "short clip summary in manga panel language",
+    "location": "best matched location name",
+    "characters": ["Character A", "Character B"]
+  }
+]
+
+Rules:
+1. Keep clips contiguous, ordered, and fully covering the source text.
+2. Prioritize panel-readable beats and manga/webtoon pacing; avoid cinematic shot-list framing.
+3. Minimize over-splitting while preserving complete story beats.
+4. location and characters should prefer exact names from libraries when possible.
+5. Return JSON only, no markdown or extra text.

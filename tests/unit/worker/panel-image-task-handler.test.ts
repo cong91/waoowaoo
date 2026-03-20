@@ -20,6 +20,7 @@ const sharedMock = vi.hoisted(() => ({
   collectPanelReferenceImages: vi.fn(async () => ['https://signed.example/ref-1.png']),
   resolveNovelData: vi.fn(async () => ({
     videoRatio: '16:9',
+    capabilityOverrides: null,
     characters: [],
     locations: [],
   })),
@@ -54,9 +55,16 @@ vi.mock('@/lib/workers/handlers/image-task-handler-shared', async () => {
     resolveNovelData: sharedMock.resolveNovelData,
   }
 })
-vi.mock('@/lib/prompt-i18n', () => ({
-  PROMPT_IDS: { NP_SINGLE_PANEL_IMAGE: 'np_single_panel_image' },
+const promptI18nMock = vi.hoisted(() => ({
   buildPrompt: vi.fn(() => 'panel-image-prompt'),
+}))
+
+vi.mock('@/lib/prompt-i18n', () => ({
+  PROMPT_IDS: {
+    NP_SINGLE_PANEL_IMAGE: 'np_single_panel_image',
+    MW_PANEL_IMAGE_PROMPT: 'mw_panel_image_prompt',
+  },
+  buildPrompt: promptI18nMock.buildPrompt,
 }))
 
 import { handlePanelImageTask } from '@/lib/workers/handlers/panel-image-task-handler'
@@ -122,6 +130,12 @@ describe('worker panel-image-task-handler behavior', () => {
       imageUrl: 'cos/panel-candidate-1.png',
     })
 
+    expect(promptI18nMock.buildPrompt).toHaveBeenCalledWith(
+      expect.objectContaining({
+        promptId: 'np_single_panel_image',
+      }),
+    )
+
     expect(utilsMock.resolveImageSourceFromGeneration).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({
@@ -141,6 +155,35 @@ describe('worker panel-image-task-handler behavior', () => {
         candidateImages: JSON.stringify(['cos/panel-candidate-1.png', 'cos/panel-candidate-2.png']),
       },
     })
+  })
+
+  it('manga lane -> uses MW panel image prompt id', async () => {
+    sharedMock.resolveNovelData.mockResolvedValueOnce({
+      videoRatio: '16:9',
+      capabilityOverrides: JSON.stringify({
+        __workspaceOnboardingContext: {
+          sourceType: 'story_text',
+          journeyType: 'manga_webtoon',
+          capturedAt: '2026-03-20T00:00:00.000Z',
+        },
+      }),
+      characters: [],
+      locations: [],
+    })
+
+    const job = buildJob({ candidateCount: 1 })
+    await handlePanelImageTask(job)
+
+    expect(promptI18nMock.buildPrompt).toHaveBeenCalledWith(
+      expect.objectContaining({
+        promptId: 'mw_panel_image_prompt',
+      }),
+    )
+    expect(promptI18nMock.buildPrompt).not.toHaveBeenCalledWith(
+      expect.objectContaining({
+        promptId: 'np_single_panel_image',
+      }),
+    )
   })
 
   it('regeneration branch -> keeps old image in previousImageUrl and stores candidates only', async () => {

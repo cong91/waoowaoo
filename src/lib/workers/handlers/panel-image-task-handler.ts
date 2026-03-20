@@ -21,6 +21,8 @@ import {
   resolveNovelData,
 } from './image-task-handler-shared'
 import { buildPrompt, PROMPT_IDS } from '@/lib/prompt-i18n'
+import { readWorkspaceOnboardingContextFromCapabilityOverrides } from '@/lib/workspace/onboarding-context'
+import { resolveLanePromptId } from '@/lib/novel-promotion/lane-orchestration-policy'
 
 function parseJsonUnknown(raw: string | null | undefined): unknown | null {
   if (!raw) return null
@@ -131,15 +133,30 @@ function buildPanelPromptContext(params: {
   }
 }
 
+function resolvePanelPromptId(capabilityOverrides?: string | null) {
+  const onboardingContext = readWorkspaceOnboardingContextFromCapabilityOverrides(capabilityOverrides)
+  return resolveLanePromptId({
+    metadata: {
+      runtimeLane: onboardingContext?.journeyType === 'manga_webtoon' ? 'manga_webtoon' : 'film_video',
+      entryIntent: onboardingContext?.entryIntent,
+      sourceType: onboardingContext?.sourceType,
+    },
+    filmPromptId: PROMPT_IDS.NP_SINGLE_PANEL_IMAGE,
+    mangaPromptId: PROMPT_IDS.MW_PANEL_IMAGE_PROMPT,
+    stage: 'panel_image_prompt',
+  })
+}
+
 function buildPanelPrompt(params: {
   locale: TaskJobData['locale']
   aspectRatio: string
   styleText: string
   sourceText: string
   contextJson: string
+  capabilityOverrides?: string | null
 }) {
   return buildPrompt({
-    promptId: PROMPT_IDS.NP_SINGLE_PANEL_IMAGE,
+    promptId: resolvePanelPromptId(params.capabilityOverrides),
     locale: params.locale,
     variables: {
       aspect_ratio: params.aspectRatio,
@@ -219,6 +236,7 @@ export async function handlePanelImageTask(job: Job<TaskJobData>) {
     styleText: artStyle || '与参考图风格一致',
     sourceText: panel.srtSegment || panel.description || '',
     contextJson,
+    capabilityOverrides: projectData.capabilityOverrides,
   })
   logger.info({
     message: 'panel image prompt resolved',

@@ -21,6 +21,7 @@ import {
   buildLanePromptDirective,
   resolveLaneModelPolicyAdjustments,
   resolveLaneOrchestrationMetadata,
+  resolveLanePromptId,
 } from '@/lib/novel-promotion/lane-orchestration-policy'
 import { createWorkerLLMStreamCallbacks, createWorkerLLMStreamContext } from './llm-stream'
 import type { TaskJobData } from '@/lib/task/types'
@@ -132,7 +133,13 @@ export async function handleScriptToStoryboardTask(job: Job<TaskJobData>) {
     displayMode: 'detail',
   })
 
-  const phase1PlanTemplate = getPromptTemplate(PROMPT_IDS.NP_AGENT_STORYBOARD_PLAN, job.data.locale)
+  const phase1PlanPromptId = resolveLanePromptId({
+    metadata: policyMetadata,
+    filmPromptId: PROMPT_IDS.NP_AGENT_STORYBOARD_PLAN,
+    mangaPromptId: PROMPT_IDS.MW_AGENT_STORYBOARD_PLAN,
+    stage: 'script_to_storyboard_plan_prompt',
+  })
+  const phase1PlanTemplate = getPromptTemplate(phase1PlanPromptId, job.data.locale)
   const phase2CinematographyTemplate = getPromptTemplate(PROMPT_IDS.NP_AGENT_CINEMATOGRAPHER, job.data.locale)
   const phase2ActingTemplate = getPromptTemplate(PROMPT_IDS.NP_AGENT_ACTING_DIRECTION, job.data.locale)
   const phase3DetailTemplate = getPromptTemplate(PROMPT_IDS.NP_AGENT_STORYBOARD_DETAIL, job.data.locale)

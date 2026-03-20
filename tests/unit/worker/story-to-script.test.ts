@@ -82,6 +82,7 @@ vi.mock('@/lib/prompt-i18n', () => ({
     NP_AGENT_CHARACTER_PROFILE: 'a',
     NP_SELECT_LOCATION: 'b',
     NP_AGENT_CLIP: 'c',
+    MW_AGENT_CLIP: 'mw-c',
     NP_SCREENPLAY_CONVERSION: 'd',
   },
   getPromptTemplate: vi.fn(() => 'prompt-template'),
@@ -204,6 +205,23 @@ describe('worker story-to-script behavior', () => {
         screenplay: JSON.stringify({ scenes: [{ shot: 'close-up' }] }),
       },
     })
+  })
+
+  it('manga_webtoon lane uses manga clip prompt id', async () => {
+    const { getPromptTemplate } = await import('@/lib/prompt-i18n')
+    const job = buildJob({
+      episodeId: 'episode-1',
+      content: 'input content',
+      runtimeLane: 'manga_webtoon',
+      stageProfile: 'story_to_script',
+      entryIntent: 'manga_quickstart',
+      sourceType: 'blank',
+    })
+
+    await handleStoryToScriptTask(job)
+
+    expect(getPromptTemplate).toHaveBeenCalledWith('mw-c', 'zh')
+    expect(getPromptTemplate).not.toHaveBeenCalledWith('c', 'zh')
   })
 
   it('orchestrator partial failure summary -> throws explicit error', async () => {

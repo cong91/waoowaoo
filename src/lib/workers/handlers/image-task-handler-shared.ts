@@ -40,6 +40,7 @@ interface LocationLike {
 
 interface NovelProjectData {
   videoRatio?: string | null
+  capabilityOverrides?: string | null
   characters?: CharacterLike[]
   locations?: LocationLike[]
 }

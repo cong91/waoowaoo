@@ -19,6 +19,7 @@ export function useAiModifyProjectShotPrompt(projectId: string) {
                 description: string
                 type: 'character' | 'location'
             }>
+            runtimeLane?: 'film_video' | 'manga_webtoon'
         }) => {
             const response = await requestTaskResponseWithError(
                 `/api/novel-promotion/${projectId}/ai-modify-shot-prompt`,

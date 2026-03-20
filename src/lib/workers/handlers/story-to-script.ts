@@ -18,6 +18,7 @@ import {
   buildLanePromptDirective,
   resolveLaneModelPolicyAdjustments,
   resolveLaneOrchestrationMetadata,
+  resolveLanePromptId,
 } from '@/lib/novel-promotion/lane-orchestration-policy'
 import { createWorkerLLMStreamCallbacks, createWorkerLLMStreamContext } from './llm-stream'
 import type { TaskJobData } from '@/lib/task/types'
@@ -135,7 +136,13 @@ export async function handleStoryToScriptTask(job: Job<TaskJobData>) {
 
   const characterPromptTemplate = getPromptTemplate(PROMPT_IDS.NP_AGENT_CHARACTER_PROFILE, job.data.locale)
   const locationPromptTemplate = getPromptTemplate(PROMPT_IDS.NP_SELECT_LOCATION, job.data.locale)
-  const clipPromptTemplate = getPromptTemplate(PROMPT_IDS.NP_AGENT_CLIP, job.data.locale)
+  const clipPromptId = resolveLanePromptId({
+    metadata: policyMetadata,
+    filmPromptId: PROMPT_IDS.NP_AGENT_CLIP,
+    mangaPromptId: PROMPT_IDS.MW_AGENT_CLIP,
+    stage: 'story_to_script_clip_prompt',
+  })
+  const clipPromptTemplate = getPromptTemplate(clipPromptId, job.data.locale)
   const screenplayPromptTemplate = getPromptTemplate(PROMPT_IDS.NP_SCREENPLAY_CONVERSION, job.data.locale)
 
   const streamContext = createWorkerLLMStreamContext(job, 'story_to_script')
